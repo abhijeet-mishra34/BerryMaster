@@ -1,4 +1,14 @@
+import { useState } from "react";
+
+import Button from "../components/ui/Button";
+import AddCharacterModal from "../components/characters/AddCharacterModal";
+
+import type { Character } from "../types/Character";
+
 export default function CharactersPage() {
+  const [characters, setCharacters] = useState<Character[]>([]);
+  const [isAddCharacterOpen, setIsAddCharacterOpen] = useState(false);
+
   return (
     <div>
       <div className="mb-8 flex items-center justify-between">
@@ -12,20 +22,40 @@ export default function CharactersPage() {
           </p>
         </div>
 
-        <button className="rounded-lg bg-emerald-500 px-5 py-3 font-semibold text-slate-950 hover:bg-emerald-400">
+        <Button onClick={() => setIsAddCharacterOpen(true)}>
           + Add Character
-        </button>
+        </Button>
       </div>
 
-      <div className="rounded-xl border border-slate-800 bg-slate-900 p-8 text-center">
-        <h2 className="text-2xl font-semibold">
-          No characters yet
-        </h2>
+      {characters.length === 0 && (
+        <div className="rounded-xl border border-dashed border-emerald-700 bg-slate-900 p-10 text-center">
+          <h2 className="text-2xl font-bold text-emerald-400">
+            🌿 Welcome to BerryMaster!
+          </h2>
 
-        <p className="mt-3 text-slate-400">
-          Add your first farmer to begin tracking berry growth.
-        </p>
-      </div>
+          <p className="mt-3 text-slate-400">
+            You haven't added any farmers yet.
+          </p>
+
+          <p className="mt-2 text-slate-500">
+            Start by adding your first character and begin tracking your berry farming journey.
+          </p>
+
+          <div className="mt-6">
+            <Button onClick={() => setIsAddCharacterOpen(true)}>
+              + Add Your First Character
+            </Button>
+          </div>
+        </div>
+      )}
+
+      <AddCharacterModal
+        isOpen={isAddCharacterOpen}
+        onClose={() => setIsAddCharacterOpen(false)}
+        onSave={(name) => {
+          console.log(name);
+        }}
+      />
     </div>
   );
 }
