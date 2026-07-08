@@ -1,37 +1,21 @@
-import StatCard from "./components/ui/StatCard";
+import { Routes, Route } from "react-router-dom";
 
-function App() {
+import AppLayout from "./components/layout/AppLayout";
+
+import DashboardPage from "./pages/DashboardPage";
+import CharactersPage from "./pages/CharactersPage";
+import InventoryPage from "./pages/InventoryPage";
+import CalendarPage from "./pages/CalendarPage";
+import AnalyticsPage from "./pages/AnalyticsPage";
+import SettingsPage from "./pages/SettingsPage";
+
+export default function App() {
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#111827",
-        padding: "50px",
-      }}
-    >
-      <h1
-        style={{
-          color: "white",
-          marginBottom: "40px",
-        }}
-      >
-        🌿 BerryMaster Dashboard
-      </h1>
-
-      <div
-        style={{
-          display: "flex",
-          gap: "20px",
-          flexWrap: "wrap",
-        }}
-      >
-        <StatCard title="Characters" value="12" />
-        <StatCard title="Leppas Growing" value="1872" />
-        <StatCard title="Today's Profit" value="¥1,250,000" />
-        <StatCard title="Harvest Ready" value="4" />
-      </div>
-    </div>
+    <AppLayout>
+      <Routes>
+        <Route path="/" element={<DashboardPage />} />
+        <Route path="/characters" element={<CharactersPage />} />
+      </Routes>
+    </AppLayout>
   );
 }
-
-export default App;
