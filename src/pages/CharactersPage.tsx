@@ -1,60 +1,17 @@
-import { useEffect, useState } from "react";
-
 import Button from "../components/ui/Button";
 import AddCharacterModal from "../components/characters/AddCharacterModal";
 
-import type { Character } from "../types/Character";
-
-const STORAGE_KEY = "berrymaster.characters";
+import { useCharacters } from "../context/CharacterContext";
+import CharacterCard from "../components/characters/CharacterCard";
 
 export default function CharactersPage() {
-  const [characters, setCharacters] = useState<Character[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-
-      return saved ? JSON.parse(saved) : [];
-    } catch (error) {
-      console.error("Failed to load characters:", error);
-      return [];
-    }
-  });
-
-  const [isAddCharacterOpen, setIsAddCharacterOpen] = useState(false);
-
-  useEffect(() => {
-    console.log("Saving characters:", characters);
-
-    try {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(characters)
-      );
-    } catch (error) {
-      console.error("Failed to save characters:", error);
-    }
-  }, [characters]);
-
-  function handleAddCharacter(name: string) {
-    console.log("Adding character:", name);
-
-    const alreadyExists = characters.some(
-      (character) =>
-        character.name.toLowerCase() === name.toLowerCase()
-    );
-
-    if (alreadyExists) {
-      alert("A character with this name already exists.");
-      return;
-    }
-
-    const newCharacter: Character = {
-      id: crypto.randomUUID(),
-      name,
-    };
-
-    setCharacters((current) => [...current, newCharacter]);
-  }
-
+  const {
+  characters,
+  addCharacter,
+  isAddCharacterOpen,
+  openAddCharacterModal,
+  closeAddCharacterModal,
+} = useCharacters();
   return (
     <div>
       <div className="mb-8 flex items-center justify-between">
@@ -68,7 +25,7 @@ export default function CharactersPage() {
           </p>
         </div>
 
-        <Button onClick={() => setIsAddCharacterOpen(true)}>
+        <Button onClick={openAddCharacterModal}>
           + Add Character
         </Button>
       </div>
@@ -90,30 +47,19 @@ export default function CharactersPage() {
       ) : (
         <div className="space-y-4">
           {characters.map((character, index) => (
-            <div
-              key={character.id}
-              className="rounded-xl border border-slate-800 bg-slate-900 p-6"
-            >
-              <h2 className="text-xl font-bold text-emerald-400">
-                🌿 Farmer #{index + 1}
-              </h2>
-
-              <p className="mt-2 text-lg font-semibold">
-                {character.name}
-              </p>
-
-              <p className="mt-2 text-slate-400">
-                Status: Ready to Plant
-              </p>
-            </div>
-          ))}
+  <CharacterCard
+    key={character.id}
+    character={character}
+    index={index}
+  />
+))}
         </div>
       )}
 
       <AddCharacterModal
         isOpen={isAddCharacterOpen}
-        onClose={() => setIsAddCharacterOpen(false)}
-        onSave={handleAddCharacter}
+        onClose={closeAddCharacterModal}
+        onSave={addCharacter}
       />
     </div>
   );

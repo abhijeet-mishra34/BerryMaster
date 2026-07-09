@@ -1,37 +1,73 @@
+import type { Character } from "../../types/Character";
+
 type CharacterCardProps = {
-  name: string;
-  berry: string;
-  status: string;
-  lastYield: number;
+  character: Character;
+  index: number;
 };
 
 export default function CharacterCard({
-  name,
-  berry,
-  status,
-  lastYield,
+  character,
+  index,
 }: CharacterCardProps) {
+  console.log("CharacterCard props:", {
+  character,
+  index,
+});
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900 p-6 shadow-lg transition hover:border-emerald-500">
-      <h2 className="text-xl font-bold">
-        👤 {name}
-      </h2>
+    <div className="rounded-xl border border-slate-800 bg-slate-900 p-6 transition hover:border-emerald-500">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold text-emerald-400">
+          🌿 Farmer #{index + 1}
+        </h2>
 
-      <p className="mt-4 text-slate-300">
-        🌱 {berry}
-      </p>
+        <span className="rounded-full bg-emerald-500/20 px-3 py-1 text-sm text-emerald-300">
+          Ready to Plant
+        </span>
+      </div>
 
-      <p className="mt-2 text-emerald-400">
-        {status}
-      </p>
+      <div className="mt-6 space-y-4">
 
-      <p className="mt-4 text-slate-400">
-        🍓 Last Yield: {lastYield}
-      </p>
+        <div>
+          <p className="text-sm text-slate-400">
+            Character
+          </p>
 
-      <button className="mt-6 w-full rounded-lg bg-emerald-500 px-4 py-3 font-semibold text-slate-950 transition hover:bg-emerald-400">
-        Open Character
-      </button>
+          <p className="text-lg font-semibold">
+            {character.name}
+          </p>
+        </div>
+
+        <div>
+          <p className="text-sm text-slate-400">
+            Berry
+          </p>
+
+          <p>
+            —
+          </p>
+        </div>
+
+        <div>
+          <p className="text-sm text-slate-400">
+            Next Water
+          </p>
+
+          <p>
+            —
+          </p>
+        </div>
+
+        <div>
+          <p className="text-sm text-slate-400">
+            Harvest
+          </p>
+
+          <p>
+            —
+          </p>
+        </div>
+
+      </div>
     </div>
   );
 }
