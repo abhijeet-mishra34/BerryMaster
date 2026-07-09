@@ -2,7 +2,7 @@ export type Character = {
   id: string;
   name: string;
 
-  plantedBerry?: Berry;
+  plantedBerry?: string;
 
   plantedAt?: Date;
 

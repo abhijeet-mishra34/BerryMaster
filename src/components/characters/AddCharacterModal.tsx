@@ -16,6 +16,18 @@ export default function AddCharacterModal({
 }: AddCharacterModalProps) {
   const [name, setName] = useState("");
 
+  function handleSave() {
+    const trimmedName = name.trim();
+
+    if (!trimmedName) return;
+
+    onSave(trimmedName);
+
+    setName("");
+
+    onClose();
+  }
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <h2 className="mb-6 text-2xl font-bold">
@@ -31,16 +43,11 @@ export default function AddCharacterModal({
       />
 
       <div className="flex justify-end gap-3">
-        <Button onClick={onClose}>
+        <Button variant="secondary" onClick={onClose}>
           Cancel
         </Button>
 
-      <Button
-  onClick={() => {
-    alert("Save button clicked!");
-  }}
-
-        >
+        <Button onClick={handleSave}>
           Save
         </Button>
       </div>
