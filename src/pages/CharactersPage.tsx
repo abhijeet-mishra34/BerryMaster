@@ -1,17 +1,16 @@
-import Button from "../components/ui/Button";
+import CharacterCard from "../components/characters/CharacterCard";
 import AddCharacterModal from "../components/characters/AddCharacterModal";
+import Button from "../components/ui/Button";
 
 import { useCharacters } from "../context/CharacterContext";
-import CharacterCard from "../components/characters/CharacterCard";
 
 export default function CharactersPage() {
   const {
-  characters,
-  addCharacter,
-  isAddCharacterOpen,
-  openAddCharacterModal,
-  closeAddCharacterModal,
-} = useCharacters();
+    characters,
+    addCharacter,
+    deleteCharacter,
+  } = useCharacters();
+
   return (
     <div>
       <div className="mb-8 flex items-center justify-between">
@@ -25,7 +24,7 @@ export default function CharactersPage() {
           </p>
         </div>
 
-        <Button onClick={openAddCharacterModal}>
+        <Button>
           + Add Character
         </Button>
       </div>
@@ -47,18 +46,19 @@ export default function CharactersPage() {
       ) : (
         <div className="space-y-4">
           {characters.map((character, index) => (
-  <CharacterCard
-    key={character.id}
-    character={character}
-    index={index}
-  />
-))}
+            <CharacterCard
+              key={character.id}
+              character={character}
+              index={index}
+              onDelete={deleteCharacter}
+            />
+          ))}
         </div>
       )}
 
       <AddCharacterModal
-        isOpen={isAddCharacterOpen}
-        onClose={closeAddCharacterModal}
+        isOpen={false}
+        onClose={() => {}}
         onSave={addCharacter}
       />
     </div>

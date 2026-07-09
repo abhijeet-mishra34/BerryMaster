@@ -14,6 +14,8 @@ type CharacterContextType = {
 
   addCharacter: (name: string) => void;
 
+  deleteCharacter: (id: string) => void;
+
   isAddCharacterOpen: boolean;
 
   openAddCharacterModal: () => void;
@@ -71,6 +73,20 @@ export function CharacterProvider({
     closeAddCharacterModal();
   }
 
+  function deleteCharacter(id: string) {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this character?"
+    );
+
+    if (!confirmed) return;
+
+    setCharacters((current) =>
+      current.filter(
+        (character) => character.id !== id
+      )
+    );
+  }
+
   function openAddCharacterModal() {
     setIsAddCharacterOpen(true);
   }
@@ -84,6 +100,7 @@ export function CharacterProvider({
       value={{
         characters,
         addCharacter,
+        deleteCharacter,
 
         isAddCharacterOpen,
         openAddCharacterModal,
