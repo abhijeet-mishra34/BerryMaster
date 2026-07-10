@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 
 import AppLayout from "./components/layout/AppLayout";
-
+import BerryTestPage from "./pages/BerryTestPage";
 import DashboardPage from "./pages/DashboardPage";
 import CharactersPage from "./pages/CharactersPage";
 import InventoryPage from "./pages/InventoryPage";
@@ -15,6 +15,10 @@ export default function App() {
       <Routes>
         <Route path="/" element={<DashboardPage />} />
         <Route path="/characters" element={<CharactersPage />} />
+        <Route
+  path="/berries"
+  element={<BerryTestPage />}
+/>
       </Routes>
     </AppLayout>
   );
