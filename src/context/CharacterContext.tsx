@@ -14,13 +14,12 @@ type CharacterContextType = {
 
   addCharacter: (name: string) => void;
 
+  updateCharacter: (
+    id: string,
+    name: string
+  ) => void;
+
   deleteCharacter: (id: string) => void;
-
-  isAddCharacterOpen: boolean;
-
-  openAddCharacterModal: () => void;
-
-  closeAddCharacterModal: () => void;
 };
 
 const CharacterContext = createContext<
@@ -38,9 +37,6 @@ export function CharacterProvider({
     return saved ? JSON.parse(saved) : [];
   });
 
-  const [isAddCharacterOpen, setIsAddCharacterOpen] =
-    useState(false);
-
   useEffect(() => {
     localStorage.setItem(
       STORAGE_KEY,
@@ -49,28 +45,58 @@ export function CharacterProvider({
   }, [characters]);
 
   function addCharacter(name: string) {
+    const trimmedName = name.trim();
+
     const alreadyExists = characters.some(
       (character) =>
         character.name.toLowerCase() ===
-        name.toLowerCase()
+        trimmedName.toLowerCase()
     );
 
     if (alreadyExists) {
-      alert("Character already exists.");
+      alert("A character with this name already exists.");
       return;
     }
 
     const newCharacter: Character = {
       id: crypto.randomUUID(),
-      name,
+      name: trimmedName,
     };
 
     setCharacters((current) => [
       ...current,
       newCharacter,
     ]);
+  }
 
-    closeAddCharacterModal();
+  function updateCharacter(
+    id: string,
+    name: string
+  ) {
+    const trimmedName = name.trim();
+
+    const alreadyExists = characters.some(
+      (character) =>
+        character.id !== id &&
+        character.name.toLowerCase() ===
+          trimmedName.toLowerCase()
+    );
+
+    if (alreadyExists) {
+      alert("A character with this name already exists.");
+      return;
+    }
+
+    setCharacters((current) =>
+      current.map((character) =>
+        character.id === id
+          ? {
+              ...character,
+              name: trimmedName,
+            }
+          : character
+      )
+    );
   }
 
   function deleteCharacter(id: string) {
@@ -81,24 +107,13 @@ export function CharacterProvider({
     );
   }
 
-  function openAddCharacterModal() {
-    setIsAddCharacterOpen(true);
-  }
-
-  function closeAddCharacterModal() {
-    setIsAddCharacterOpen(false);
-  }
-
   return (
     <CharacterContext.Provider
       value={{
         characters,
         addCharacter,
+        updateCharacter,
         deleteCharacter,
-
-        isAddCharacterOpen,
-        openAddCharacterModal,
-        closeAddCharacterModal,
       }}
     >
       {children}

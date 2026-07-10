@@ -5,12 +5,15 @@ type CharacterCardProps = {
   character: Character;
   index: number;
 
+  onEdit: () => void;
+
   onDelete: (id: string) => void;
 };
 
 export default function CharacterCard({
   character,
   index,
+  onEdit,
   onDelete,
 }: CharacterCardProps) {
   return (
@@ -61,7 +64,9 @@ export default function CharacterCard({
             🌱 Status
           </p>
 
-          <p>Ready to Plant</p>
+          <p className="text-emerald-400 font-medium">
+            Ready to Plant
+          </p>
         </div>
 
         <div>
@@ -84,16 +89,19 @@ export default function CharacterCard({
 
       <div className="mt-8 flex justify-end gap-3 border-t border-slate-800 pt-6">
 
-       <Button variant="info">
-  ✏ Edit
-</Button>
+        <Button
+          variant="info"
+          onClick={onEdit}
+        >
+          ✏ Edit
+        </Button>
 
-<Button
-  variant="danger"
-  onClick={() => onDelete(character.id)}
->
-  🗑 Delete
-</Button>
+        <Button
+          variant="danger"
+          onClick={() => onDelete(character.id)}
+        >
+          🗑 Delete
+        </Button>
 
       </div>
 
