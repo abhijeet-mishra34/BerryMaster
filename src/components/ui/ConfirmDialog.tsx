@@ -1,8 +1,21 @@
+import Modal from "./Modal";
+import Button from "./Button";
+
 type ConfirmDialogProps = {
   isOpen: boolean;
+
   title: string;
+
   message: string;
+
+  itemName?: string;
+
+  confirmText?: string;
+
+  cancelText?: string;
+
   onConfirm: () => void;
+
   onCancel: () => void;
 };
 
@@ -10,45 +23,56 @@ export default function ConfirmDialog({
   isOpen,
   title,
   message,
+  itemName,
+
+  confirmText = "Confirm",
+
+  cancelText = "Cancel",
+
   onConfirm,
+
   onCancel,
 }: ConfirmDialogProps) {
-
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+    <Modal
+      isOpen={isOpen}
+      onClose={onCancel}
+    >
+      <h2 className="text-2xl font-bold text-red-400">
+        🗑 {title}
+      </h2>
 
-      <div className="w-full max-w-md rounded-xl border border-slate-700 bg-slate-900 p-6 shadow-xl">
+      <p className="mt-4 text-slate-400">
+        {message}
+      </p>
 
-        <h2 className="text-xl font-bold text-red-400">
-          {title}
-        </h2>
-
-        <p className="mt-3 text-slate-400">
-          {message}
-        </p>
-
-        <div className="mt-6 flex justify-end gap-3">
-
-          <button
-            onClick={onCancel}
-            className="rounded-lg bg-slate-700 px-4 py-2 text-white transition hover:bg-slate-600"
-          >
-            Cancel
-          </button>
-
-          <button
-            onClick={onConfirm}
-            className="rounded-lg bg-red-600 px-4 py-2 text-white transition hover:bg-red-700"
-          >
-            Delete
-          </button>
-
+      {itemName && (
+        <div className="mt-5 rounded-lg border border-slate-700 bg-slate-800 p-4 text-center">
+          <p className="font-semibold text-emerald-400">
+            🌿 {itemName}
+          </p>
         </div>
+      )}
 
+      <p className="mt-4 text-sm text-slate-500">
+        This action cannot be undone.
+      </p>
+
+      <div className="mt-8 flex justify-end gap-3">
+        <Button
+          variant="secondary"
+          onClick={onCancel}
+        >
+          {cancelText}
+        </Button>
+
+        <Button
+          variant="danger"
+          onClick={onConfirm}
+        >
+          {confirmText}
+        </Button>
       </div>
-
-    </div>
+    </Modal>
   );
 }

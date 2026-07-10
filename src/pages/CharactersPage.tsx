@@ -1,5 +1,8 @@
+import { useState } from "react";
+
 import CharacterCard from "../components/characters/CharacterCard";
 import AddCharacterModal from "../components/characters/AddCharacterModal";
+import ConfirmDialog from "../components/ui/ConfirmDialog";
 import Button from "../components/ui/Button";
 
 import { useCharacters } from "../context/CharacterContext";
@@ -9,7 +12,20 @@ export default function CharactersPage() {
     characters,
     addCharacter,
     deleteCharacter,
+    isAddCharacterOpen,
+    openAddCharacterModal,
+    closeAddCharacterModal,
   } = useCharacters();
+
+  const [isDeleteOpen, setIsDeleteOpen] =
+    useState(false);
+
+  const [selectedCharacter, setSelectedCharacter] =
+    useState<{
+      id: string;
+      name: string;
+      index: number;
+    } | null>(null);
 
   return (
     <div>
@@ -24,7 +40,7 @@ export default function CharactersPage() {
           </p>
         </div>
 
-        <Button>
+        <Button onClick={openAddCharacterModal}>
           + Add Character
         </Button>
       </div>
@@ -42,6 +58,12 @@ export default function CharactersPage() {
           <p className="mt-2 text-slate-500">
             Start by adding your first character and begin tracking your berry farming journey.
           </p>
+
+          <div className="mt-6">
+            <Button onClick={openAddCharacterModal}>
+              + Add Your First Character
+            </Button>
+          </div>
         </div>
       ) : (
         <div className="space-y-4">
@@ -50,16 +72,49 @@ export default function CharactersPage() {
               key={character.id}
               character={character}
               index={index}
-              onDelete={deleteCharacter}
+              onDelete={() => {
+                setSelectedCharacter({
+                  id: character.id,
+                  name: character.name,
+                  index,
+                });
+
+                setIsDeleteOpen(true);
+              }}
             />
           ))}
         </div>
       )}
 
       <AddCharacterModal
-        isOpen={false}
-        onClose={() => {}}
+        isOpen={isAddCharacterOpen}
+        onClose={closeAddCharacterModal}
         onSave={addCharacter}
+      />
+
+      <ConfirmDialog
+        isOpen={isDeleteOpen}
+        title="Delete Character"
+        message="Are you sure you want to delete this character?"
+        itemName={`Character #${String(
+          (selectedCharacter?.index ?? 0) + 1
+        ).padStart(3, "0")} • ${
+          selectedCharacter?.name ?? ""
+        }`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        onCancel={() => {
+          setSelectedCharacter(null);
+          setIsDeleteOpen(false);
+        }}
+        onConfirm={() => {
+          if (!selectedCharacter) return;
+
+          deleteCharacter(selectedCharacter.id);
+
+          setSelectedCharacter(null);
+          setIsDeleteOpen(false);
+        }}
       />
     </div>
   );

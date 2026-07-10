@@ -74,12 +74,6 @@ export function CharacterProvider({
   }
 
   function deleteCharacter(id: string) {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this character?"
-    );
-
-    if (!confirmed) return;
-
     setCharacters((current) =>
       current.filter(
         (character) => character.id !== id
