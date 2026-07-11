@@ -1,11 +1,12 @@
 import { NavLink } from "react-router-dom";
 const menuItems = [
-  { label: "Dashboard", path: "/" },
-  { label: "Characters", path: "/characters" },
-  { label: "Inventory", path: "/inventory" },
-  { label: "Calendar", path: "/calendar" },
-  { label: "Analytics", path: "/analytics" },
-  { label: "Settings", path: "/settings" },
+  { label: "🏠 Dashboard", path: "/" },
+  { label: "👤 Characters", path: "/characters" },
+  { label: "🍓 Berries", path: "/berries" },
+  { label: "📦 Inventory", path: "/inventory" },
+  { label: "📅 Calendar", path: "/calendar" },
+  { label: "📈 Analytics", path: "/analytics" },
+  { label: "⚙ Settings", path: "/settings" },
 ];
 
 export default function Sidebar() {

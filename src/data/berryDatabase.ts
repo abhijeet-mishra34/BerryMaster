@@ -1,4 +1,4 @@
-// berryDatabase.ts
+import type { Berry } from "../types/Berry";
 
 import { statusBerries } from "./berries/statusBerries";
 import { healingUtilityBerries } from "./berries/healingUtilityBerries";
@@ -7,7 +7,7 @@ import { evBerries } from "./berries/evBerries";
 import { typeResistanceBerries } from "./berries/typeResistanceBerries";
 import { specialBerries } from "./berries/specialBerries";
 
-export const berryDatabase = [
+export const berryDatabase: Berry[] = [
   ...statusBerries,
   ...healingUtilityBerries,
   ...flavorBerries,

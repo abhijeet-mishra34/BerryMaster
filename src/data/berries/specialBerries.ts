@@ -1,63 +1,15 @@
-import { Berry } from "../../types/Berry";
-
+import type { Berry } from "../../types/Berry";
+import { BerryCategories } from "../../types/BerryCategories";
 
 export const specialBerries: Berry[] = [
-
-  {
-    id: "lum",
-
-    name: "Lum Berry",
-
-    description: "Cures any status condition.",
-
-    category: "Special",
-
-    featured: true,
-
-    tags: [
-      "Competitive",
-      "High Demand",
-      "Status Cure"
-    ],
-
-    growthTime: 44,
-
-    harvestWindow: 8,
-
-    minYield: 7,
-    maxYield: 10,
-
-    recipes: [
-      {
-        name: "Official",
-
-        ingredients: [
-          { seedType: "verySpicy", quantity: 1 },
-          { seedType: "veryDry", quantity: 1 },
-          { seedType: "verySweet", quantity: 1 }
-        ]
-      }
-    ],
-
-    possibleSeedDrops: [
-      { seedType: "verySpicy" },
-      { seedType: "veryDry" },
-      { seedType: "verySweet" }
-    ]
-  },
-
-
   {
     id: "enigma",
-
     name: "Enigma Berry",
-
     description: "Restores HP after being hit by a super effective move.",
 
-    category: "Special",
+    categories: [BerryCategories.SPECIAL],
 
     growthTime: 67,
-
     harvestWindow: 8,
 
     minYield: 7,
@@ -66,34 +18,29 @@ export const specialBerries: Berry[] = [
     recipes: [
       {
         name: "Official",
-
         ingredients: [
           { seedType: "verySpicy", quantity: 1 },
           { seedType: "veryDry", quantity: 1 },
-          { seedType: "veryBitter", quantity: 1 }
-        ]
-      }
+          { seedType: "veryBitter", quantity: 1 },
+        ],
+      },
     ],
 
-    possibleSeedDrops: [
+    seedDrops: [
       { seedType: "verySpicy" },
       { seedType: "veryDry" },
-      { seedType: "veryBitter" }
-    ]
+      { seedType: "veryBitter" },
+    ],
   },
-
 
   {
     id: "lansat",
-
     name: "Lansat Berry",
-
     description: "Raises critical-hit ratio when HP is low.",
 
-    category: "Special",
+    categories: [BerryCategories.SPECIAL],
 
     growthTime: 67,
-
     harvestWindow: 8,
 
     minYield: 7,
@@ -102,34 +49,29 @@ export const specialBerries: Berry[] = [
     recipes: [
       {
         name: "Official",
-
         ingredients: [
           { seedType: "veryDry", quantity: 1 },
           { seedType: "verySweet", quantity: 1 },
-          { seedType: "verySour", quantity: 1 }
-        ]
-      }
+          { seedType: "verySour", quantity: 1 },
+        ],
+      },
     ],
 
-    possibleSeedDrops: [
+    seedDrops: [
       { seedType: "veryDry" },
       { seedType: "verySweet" },
-      { seedType: "verySour" }
-    ]
+      { seedType: "verySour" },
+    ],
   },
-
 
   {
     id: "starf",
-
     name: "Starf Berry",
-
     description: "Raises a random stat when HP is low.",
 
-    category: "Special",
+    categories: [BerryCategories.SPECIAL],
 
     growthTime: 67,
-
     harvestWindow: 8,
 
     minYield: 7,
@@ -138,34 +80,29 @@ export const specialBerries: Berry[] = [
     recipes: [
       {
         name: "Official",
-
         ingredients: [
           { seedType: "verySweet", quantity: 1 },
           { seedType: "veryBitter", quantity: 1 },
-          { seedType: "verySpicy", quantity: 1 }
-        ]
-      }
+          { seedType: "verySpicy", quantity: 1 },
+        ],
+      },
     ],
 
-    possibleSeedDrops: [
+    seedDrops: [
       { seedType: "verySweet" },
       { seedType: "veryBitter" },
-      { seedType: "verySpicy" }
-    ]
+      { seedType: "verySpicy" },
+    ],
   },
-
 
   {
     id: "micle",
-
     name: "Micle Berry",
-
     description: "Raises accuracy when HP is low.",
 
-    category: "Special",
+    categories: [BerryCategories.SPECIAL],
 
     growthTime: 67,
-
     harvestWindow: 8,
 
     minYield: 7,
@@ -174,34 +111,29 @@ export const specialBerries: Berry[] = [
     recipes: [
       {
         name: "Official",
-
         ingredients: [
           { seedType: "veryBitter", quantity: 1 },
           { seedType: "verySour", quantity: 1 },
-          { seedType: "veryDry", quantity: 1 }
-        ]
-      }
+          { seedType: "veryDry", quantity: 1 },
+        ],
+      },
     ],
 
-    possibleSeedDrops: [
+    seedDrops: [
       { seedType: "veryBitter" },
       { seedType: "verySour" },
-      { seedType: "veryDry" }
-    ]
+      { seedType: "veryDry" },
+    ],
   },
-
 
   {
     id: "custap",
-
     name: "Custap Berry",
-
     description: "Allows moves to be used first when HP is low.",
 
-    category: "Special",
+    categories: [BerryCategories.SPECIAL],
 
     growthTime: 67,
-
     harvestWindow: 8,
 
     minYield: 7,
@@ -210,34 +142,29 @@ export const specialBerries: Berry[] = [
     recipes: [
       {
         name: "Official",
-
         ingredients: [
           { seedType: "verySour", quantity: 1 },
           { seedType: "verySpicy", quantity: 1 },
-          { seedType: "veryBitter", quantity: 1 }
-        ]
-      }
+          { seedType: "veryBitter", quantity: 1 },
+        ],
+      },
     ],
 
-    possibleSeedDrops: [
+    seedDrops: [
       { seedType: "verySour" },
       { seedType: "verySpicy" },
-      { seedType: "veryBitter" }
-    ]
+      { seedType: "veryBitter" },
+    ],
   },
-
 
   {
     id: "jaboca",
-
     name: "Jaboca Berry",
-
     description: "Damages opponents that use physical attacks.",
 
-    category: "Special",
+    categories: [BerryCategories.SPECIAL],
 
     growthTime: 67,
-
     harvestWindow: 8,
 
     minYield: 7,
@@ -246,34 +173,29 @@ export const specialBerries: Berry[] = [
     recipes: [
       {
         name: "Official",
-
         ingredients: [
           { seedType: "veryDry", quantity: 1 },
           { seedType: "verySpicy", quantity: 1 },
-          { seedType: "verySweet", quantity: 1 }
-        ]
-      }
+          { seedType: "verySweet", quantity: 1 },
+        ],
+      },
     ],
 
-    possibleSeedDrops: [
+    seedDrops: [
       { seedType: "veryDry" },
       { seedType: "verySpicy" },
-      { seedType: "verySweet" }
-    ]
+      { seedType: "verySweet" },
+    ],
   },
-
 
   {
     id: "rowap",
-
     name: "Rowap Berry",
-
     description: "Damages opponents that use special attacks.",
 
-    category: "Special",
+    categories: [BerryCategories.SPECIAL],
 
     growthTime: 67,
-
     harvestWindow: 8,
 
     minYield: 7,
@@ -282,20 +204,18 @@ export const specialBerries: Berry[] = [
     recipes: [
       {
         name: "Official",
-
         ingredients: [
           { seedType: "veryBitter", quantity: 1 },
           { seedType: "veryDry", quantity: 1 },
-          { seedType: "verySweet", quantity: 1 }
-        ]
-      }
+          { seedType: "verySweet", quantity: 1 },
+        ],
+      },
     ],
 
-    possibleSeedDrops: [
+    seedDrops: [
       { seedType: "veryBitter" },
       { seedType: "veryDry" },
-      { seedType: "verySweet" }
-    ]
-  }
-
+      { seedType: "verySweet" },
+    ],
+  },
 ];

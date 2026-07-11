@@ -1,19 +1,15 @@
-import { Berry } from "../../types/Berry";
-
+import type { Berry } from "../../types/Berry";
+import { BerryCategories } from "../../types/BerryCategories";
 
 export const evBerries: Berry[] = [
-
   {
     id: "pomeg",
-
     name: "Pomeg Berry",
-
     description: "Lowers HP EVs.",
 
-    category: "EV",
+    categories: [BerryCategories.EV],
 
     growthTime: 44,
-
     harvestWindow: 8,
 
     minYield: 7,
@@ -22,34 +18,29 @@ export const evBerries: Berry[] = [
     recipes: [
       {
         name: "Official",
-
         ingredients: [
           { seedType: "verySpicy", quantity: 1 },
           { seedType: "veryDry", quantity: 1 },
-          { seedType: "plainSweet", quantity: 1 }
-        ]
-      }
+          { seedType: "plainSweet", quantity: 1 },
+        ],
+      },
     ],
 
-    possibleSeedDrops: [
+    seedDrops: [
       { seedType: "verySpicy" },
       { seedType: "veryDry" },
-      { seedType: "plainSweet" }
-    ]
+      { seedType: "plainSweet" },
+    ],
   },
-
 
   {
     id: "kelpsy",
-
     name: "Kelpsy Berry",
-
     description: "Lowers Attack EVs.",
 
-    category: "EV",
+    categories: [BerryCategories.EV],
 
     growthTime: 44,
-
     harvestWindow: 8,
 
     minYield: 7,
@@ -58,34 +49,29 @@ export const evBerries: Berry[] = [
     recipes: [
       {
         name: "Official",
-
         ingredients: [
           { seedType: "veryDry", quantity: 1 },
           { seedType: "verySweet", quantity: 1 },
-          { seedType: "plainBitter", quantity: 1 }
-        ]
-      }
+          { seedType: "plainBitter", quantity: 1 },
+        ],
+      },
     ],
 
-    possibleSeedDrops: [
+    seedDrops: [
       { seedType: "veryDry" },
       { seedType: "verySweet" },
-      { seedType: "plainBitter" }
-    ]
+      { seedType: "plainBitter" },
+    ],
   },
-
 
   {
     id: "qualot",
-
     name: "Qualot Berry",
-
     description: "Lowers Defense EVs.",
 
-    category: "EV",
+    categories: [BerryCategories.EV],
 
     growthTime: 44,
-
     harvestWindow: 8,
 
     minYield: 7,
@@ -94,34 +80,29 @@ export const evBerries: Berry[] = [
     recipes: [
       {
         name: "Official",
-
         ingredients: [
           { seedType: "verySweet", quantity: 1 },
           { seedType: "veryBitter", quantity: 1 },
-          { seedType: "plainSour", quantity: 1 }
-        ]
-      }
+          { seedType: "plainSour", quantity: 1 },
+        ],
+      },
     ],
 
-    possibleSeedDrops: [
+    seedDrops: [
       { seedType: "verySweet" },
       { seedType: "veryBitter" },
-      { seedType: "plainSour" }
-    ]
+      { seedType: "plainSour" },
+    ],
   },
-
 
   {
     id: "hondew",
-
     name: "Hondew Berry",
-
     description: "Lowers Sp. Attack EVs.",
 
-    category: "EV",
+    categories: [BerryCategories.EV],
 
     growthTime: 44,
-
     harvestWindow: 8,
 
     minYield: 7,
@@ -130,94 +111,80 @@ export const evBerries: Berry[] = [
     recipes: [
       {
         name: "Official",
-
         ingredients: [
           { seedType: "veryBitter", quantity: 1 },
           { seedType: "verySour", quantity: 1 },
-          { seedType: "plainSpicy", quantity: 1 }
-        ]
-      }
+          { seedType: "plainSpicy", quantity: 1 },
+        ],
+      },
     ],
 
-    possibleSeedDrops: [
+    seedDrops: [
       { seedType: "veryBitter" },
       { seedType: "verySour" },
-      { seedType: "plainSpicy" }
-    ]
+      { seedType: "plainSpicy" },
+    ],
   },
-
 
   {
     id: "grepa",
-
     name: "Grepa Berry",
-
     description: "Lowers Sp. Defense EVs.",
 
-    category: "EV",
+    categories: [BerryCategories.EV],
 
     growthTime: 44,
-
     harvestWindow: 8,
 
     minYield: 7,
-
     maxYield: 10,
 
     recipes: [
       {
         name: "Official",
-
         ingredients: [
           { seedType: "verySour", quantity: 1 },
           { seedType: "verySpicy", quantity: 1 },
-          { seedType: "plainDry", quantity: 1 }
-        ]
-      }
+          { seedType: "plainDry", quantity: 1 },
+        ],
+      },
     ],
 
-    possibleSeedDrops: [
+    seedDrops: [
       { seedType: "verySour" },
       { seedType: "verySpicy" },
-      { seedType: "plainDry" }
-    ]
+      { seedType: "plainDry" },
+    ],
   },
-
 
   {
     id: "tamato",
-
     name: "Tamato Berry",
-
     description: "Lowers Speed EVs.",
 
-    category: "EV",
+    categories: [BerryCategories.EV],
 
     growthTime: 44,
-
     harvestWindow: 8,
 
     minYield: 7,
-
     maxYield: 10,
 
     recipes: [
       {
         name: "Official",
-
         ingredients: [
           { seedType: "plainDry", quantity: 1 },
           { seedType: "verySweet", quantity: 1 },
-          { seedType: "verySour", quantity: 1 }
-        ]
-      }
+          { seedType: "verySour", quantity: 1 },
+        ],
+      },
     ],
 
-    possibleSeedDrops: [
+    seedDrops: [
       { seedType: "plainDry" },
       { seedType: "verySweet" },
-      { seedType: "verySour" }
-    ]
-  }
-
+      { seedType: "verySour" },
+    ],
+  },
 ];

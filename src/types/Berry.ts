@@ -1,3 +1,5 @@
+import type { BerryCategory } from "./BerryCategories";
+
 export type SeedType =
   | "plainSpicy"
   | "verySpicy"
@@ -10,22 +12,10 @@ export type SeedType =
   | "plainSour"
   | "verySour";
 
-
-export type BerryCategory =
-  | "Status"
-  | "Healing"
-  | "PP Recovery"
-  | "Flavor"
-  | "EV"
-  | "Type Resist"
-  | "Special";
-
-
 export interface SeedRequirement {
   seedType: SeedType;
   quantity: number;
 }
-
 
 export interface BerryRecipe {
   /**
@@ -37,85 +27,64 @@ export interface BerryRecipe {
   ingredients: SeedRequirement[];
 }
 
-
 export interface SeedDrop {
   seedType: SeedType;
 }
 
-
 export interface Berry {
-
   /**
    * Unique identifier
-   * Example: "leppa"
    */
   id: string;
 
-
   /**
    * Display name
-   * Example: "Leppa Berry"
    */
   name: string;
 
-
   /**
-   * Optional information shown in UI
+   * Optional UI description
    */
   description?: string;
 
-
   /**
-   * Main berry classification
+   * A berry can belong to one or more categories.
    */
-  category: BerryCategory;
-
+  categories: BerryCategory[];
 
   /**
-   * Total growth duration in hours
+   * Growth duration (hours)
    */
   growthTime: number;
 
-
   /**
-   * Time available after maturity before wilting
+   * Hours before wilting after maturity.
    */
   harvestWindow: number;
 
-
   /**
-   * Minimum possible harvest amount
+   * Harvest range
    */
   minYield: number;
-
-
-  /**
-   * Maximum possible harvest amount
-   */
   maxYield: number;
 
-
   /**
-   * Official berry planting recipe
+   * Official planting recipes.
    */
   recipes: BerryRecipe[];
 
-
   /**
-   * Seeds that can possibly drop after harvest
+   * Possible harvested seed drops.
    */
-  possibleSeedDrops: SeedDrop[];
-
+  seedDrops: SeedDrop[];
 
   /**
-   * Highlights important berries
-   * Example: Leppa, Lum
+   * Used to highlight important berries.
    */
   featured?: boolean;
 
-
   /**
-   * Extra searchable labels
+   * Extra searchable keywords.
    */
   tags?: string[];
 }

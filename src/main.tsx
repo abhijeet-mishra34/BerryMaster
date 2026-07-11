@@ -6,6 +6,9 @@ import App from "./App";
 import { CharacterProvider } from "./context/CharacterContext";
 
 import "./index.css";
+import { validateBerryDatabase } from "./utils/validation/validateBerryDatabase";
+
+validateBerryDatabase();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

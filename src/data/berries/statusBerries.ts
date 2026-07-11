@@ -1,11 +1,13 @@
-import { Berry } from "../../types/Berry";
+import type { Berry } from "../../types/Berry";
+import { BerryCategories } from "../../types/BerryCategories";
 
 export const statusBerries: Berry[] = [
   {
     id: "cheri",
     name: "Cheri Berry",
     description: "Cures paralysis.",
-    category: "Status",
+
+    categories: [BerryCategories.STATUS],
 
     growthTime: 16,
     harvestWindow: 8,
@@ -16,13 +18,11 @@ export const statusBerries: Berry[] = [
     recipes: [
       {
         name: "Official",
-        ingredients: [
-          { seedType: "plainSpicy", quantity: 3 },
-        ],
+        ingredients: [{ seedType: "plainSpicy", quantity: 3 }],
       },
     ],
 
-    possibleSeedDrops: [
+    seedDrops: [
       { seedType: "plainSpicy" },
       { seedType: "verySpicy" },
     ],
@@ -32,7 +32,8 @@ export const statusBerries: Berry[] = [
     id: "chesto",
     name: "Chesto Berry",
     description: "Cures sleep.",
-    category: "Status",
+
+    categories: [BerryCategories.STATUS],
 
     growthTime: 16,
     harvestWindow: 8,
@@ -43,13 +44,11 @@ export const statusBerries: Berry[] = [
     recipes: [
       {
         name: "Official",
-        ingredients: [
-          { seedType: "plainDry", quantity: 3 },
-        ],
+        ingredients: [{ seedType: "plainDry", quantity: 3 }],
       },
     ],
 
-    possibleSeedDrops: [
+    seedDrops: [
       { seedType: "plainDry" },
       { seedType: "veryDry" },
     ],
@@ -59,7 +58,8 @@ export const statusBerries: Berry[] = [
     id: "pecha",
     name: "Pecha Berry",
     description: "Cures poison.",
-    category: "Status",
+
+    categories: [BerryCategories.STATUS],
 
     growthTime: 16,
     harvestWindow: 8,
@@ -70,13 +70,11 @@ export const statusBerries: Berry[] = [
     recipes: [
       {
         name: "Official",
-        ingredients: [
-          { seedType: "plainSweet", quantity: 3 },
-        ],
+        ingredients: [{ seedType: "plainSweet", quantity: 3 }],
       },
     ],
 
-    possibleSeedDrops: [
+    seedDrops: [
       { seedType: "plainSweet" },
       { seedType: "verySweet" },
     ],
@@ -86,7 +84,8 @@ export const statusBerries: Berry[] = [
     id: "rawst",
     name: "Rawst Berry",
     description: "Cures burn.",
-    category: "Status",
+
+    categories: [BerryCategories.STATUS],
 
     growthTime: 16,
     harvestWindow: 8,
@@ -97,13 +96,11 @@ export const statusBerries: Berry[] = [
     recipes: [
       {
         name: "Official",
-        ingredients: [
-          { seedType: "plainBitter", quantity: 3 },
-        ],
+        ingredients: [{ seedType: "plainBitter", quantity: 3 }],
       },
     ],
 
-    possibleSeedDrops: [
+    seedDrops: [
       { seedType: "plainBitter" },
       { seedType: "veryBitter" },
     ],
@@ -113,7 +110,8 @@ export const statusBerries: Berry[] = [
     id: "aspear",
     name: "Aspear Berry",
     description: "Cures freeze.",
-    category: "Status",
+
+    categories: [BerryCategories.STATUS],
 
     growthTime: 16,
     harvestWindow: 8,
@@ -124,13 +122,11 @@ export const statusBerries: Berry[] = [
     recipes: [
       {
         name: "Official",
-        ingredients: [
-          { seedType: "plainSour", quantity: 3 },
-        ],
+        ingredients: [{ seedType: "plainSour", quantity: 3 }],
       },
     ],
 
-    possibleSeedDrops: [
+    seedDrops: [
       { seedType: "plainSour" },
       { seedType: "verySour" },
     ],
@@ -140,7 +136,8 @@ export const statusBerries: Berry[] = [
     id: "persim",
     name: "Persim Berry",
     description: "Cures confusion.",
-    category: "Status",
+
+    categories: [BerryCategories.STATUS],
 
     growthTime: 16,
     harvestWindow: 8,
@@ -159,7 +156,7 @@ export const statusBerries: Berry[] = [
       },
     ],
 
-    possibleSeedDrops: [
+    seedDrops: [
       { seedType: "plainSpicy" },
       { seedType: "verySpicy" },
       { seedType: "plainDry" },
@@ -173,7 +170,10 @@ export const statusBerries: Berry[] = [
     id: "lum",
     name: "Lum Berry",
     description: "Cures all status conditions.",
-    category: "Status",
+
+    categories: [BerryCategories.STATUS,
+                 BerryCategories.SPECIAL,
+    ],
 
     growthTime: 44,
     harvestWindow: 8,
@@ -192,7 +192,7 @@ export const statusBerries: Berry[] = [
       },
     ],
 
-    possibleSeedDrops: [
+    seedDrops: [
       { seedType: "plainSpicy" },
       { seedType: "verySpicy" },
       { seedType: "plainDry" },
