@@ -3,15 +3,18 @@ import { seedDisplay } from "../../utils/seedDisplay";
 
 interface BerryCardProps {
   berry: Berry;
-  onSelect?: (berry: Berry) => void;
+
+  actionLabel?: string;
+  onAction?: (berry: Berry) => void;
 }
 
 export default function BerryCard({
   berry,
-  onSelect,
+  actionLabel,
+  onAction,
 }: BerryCardProps) {
   return (
-    <div className="bg-slate-900 border border-slate-700 rounded-xl p-5 shadow-md hover:border-emerald-500 hover:-translate-y-1 transition-all duration-200 flex flex-col gap-4">
+    <div className="bg-slate-900 border border-slate-700 rounded-xl p-5 shadow-md hover:border-emerald-500 transition-all duration-200 flex flex-col gap-4 h-full">
 
       {/* Header */}
 
@@ -24,7 +27,7 @@ export default function BerryCard({
           </h2>
 
           <p className="text-sm text-emerald-400">
-            {berry.categories}
+            {berry.categories.join(" • ")}
           </p>
 
         </div>
@@ -54,7 +57,7 @@ export default function BerryCard({
             🌱 Growth
           </span>
 
-          <span className="text-white font-semibold">
+          <span className="font-semibold text-white">
             {berry.growthTime} hrs
           </span>
         </div>
@@ -64,7 +67,7 @@ export default function BerryCard({
             🍓 Yield
           </span>
 
-          <span className="text-white font-semibold">
+          <span className="font-semibold text-white">
             {berry.minYield}–{berry.maxYield}
           </span>
         </div>
@@ -74,7 +77,7 @@ export default function BerryCard({
             ⏰ Harvest Window
           </span>
 
-          <span className="text-white font-semibold">
+          <span className="font-semibold text-white">
             {berry.harvestWindow} hrs
           </span>
         </div>
@@ -134,7 +137,7 @@ export default function BerryCard({
 
       </div>
 
-      {/* Drops */}
+      {/* Seed Drops */}
 
       <div className="border-t border-slate-700 pt-3">
 
@@ -165,13 +168,24 @@ export default function BerryCard({
 
       </div>
 
-      {onSelect && (
+      {/* Optional Action Button */}
+
+      {actionLabel && onAction && (
 
         <button
-          onClick={() => onSelect(berry)}
-          className="mt-auto bg-emerald-600 hover:bg-emerald-500 transition-all text-white rounded-lg py-2 font-semibold"
+          onClick={() => onAction(berry)}
+          className="
+            mt-auto
+            rounded-lg
+            bg-emerald-600
+            py-3
+            font-semibold
+            text-white
+            transition-all
+            hover:bg-emerald-500
+          "
         >
-          Select Berry
+          {actionLabel}
         </button>
 
       )}

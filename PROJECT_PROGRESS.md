@@ -1,9 +1,9 @@
 # 🍓 BerryMaster — Project Progress Log
 
-**Project:** BerryMaster  
-**Author:** Abhijeet Mishra  
-**Framework:** React + TypeScript + Vite + Tailwind CSS  
-**Storage:** Local Storage (Current Version)  
+**Project:** BerryMaster
+**Author:** Abhijeet Mishra
+**Framework:** React + TypeScript + Vite + Tailwind CSS
+**Storage:** Local Storage (Current Version)
 **Status:** 🟢 Active Development
 
 ---
@@ -12,7 +12,45 @@
 
 BerryMaster is a desktop web application designed for PokeMMO players to efficiently manage berry farming.
 
-The long-term goal is to automate berry farming management by tracking characters, berries, watering schedules, harvest timers, inventory, analytics, and profits.
+The long-term goal is to create a complete berry farming management system that tracks:
+
+* Characters
+* Berry planting
+* Watering schedules
+* Harvest timers
+* Inventory
+* Seeds
+* Analytics
+* Farming profits
+
+Future goal:
+
+A smart farming assistant capable of helping players optimize their farming workflow.
+
+---
+
+# 🏗 Current Architecture
+
+Technology:
+
+```
+React
+TypeScript
+Vite
+Tailwind CSS
+React Router
+Local Storage
+```
+
+Architecture principles:
+
+* Reusable components
+* Strong TypeScript typing
+* Modular data structure
+* Context for application state
+* Pages manage UI state
+* Services handle business logic
+* Easy future expansion
 
 ---
 
@@ -22,12 +60,32 @@ The long-term goal is to automate berry farming management by tracking character
 
 Completed:
 
-- ✔ Created React + TypeScript project using Vite
-- ✔ Installed Tailwind CSS
-- ✔ Configured project structure
-- ✔ Created routing
-- ✔ Built sidebar navigation
-- ✔ Created application layout
+✔ Created React + TypeScript project using Vite
+
+✔ Installed and configured Tailwind CSS
+
+✔ Created project folder structure
+
+✔ Added React Router
+
+✔ Created application layout
+
+✔ Built Sidebar navigation
+
+Structure created:
+
+```
+src/
+
+components/
+context/
+data/
+pages/
+types/
+utils/
+constants/
+services/
+```
 
 Status:
 
@@ -35,38 +93,57 @@ Status:
 
 ---
 
-# Sprint 2 — Dashboard
-
-Completed:
-
-- ✔ Dashboard page
-- ✔ Statistics cards
-- ✔ Character preview section
-- ✔ Reusable Section component
-- ✔ Reusable Button component
-- ✔ Dashboard data structure
-
-Status:
-
-✅ Complete
-
----
-
-# Sprint 3 — Character System
+# Sprint 2 — Dashboard System
 
 Created:
 
-- Character type
-- Character Context
-- Local Storage persistence
-- CharacterProvider
+* Dashboard Page
+* Statistics Cards
+* Character Preview Section
+* Reusable Section Component
+* Reusable Button Component
+* Dashboard Data Structure
+
+Dashboard displays:
+
+* Character count
+* Farming overview
+* Application statistics
+
+Status:
+
+✅ Complete
+
+---
+
+# Sprint 3 — Character Management System
+
+Created:
+
+```
+src/types/Character.ts
+src/context/CharacterContext.tsx
+```
+
+Implemented:
+
+✔ Character type system
+
+✔ Character Provider
+
+✔ Local Storage persistence
+
+✔ Character state management
 
 Features:
 
-- ✔ Add Character
-- ✔ Duplicate name validation
-- ✔ Persistent Local Storage
-- ✔ Dashboard integration
+✔ Add Character
+
+✔ Duplicate name validation
+
+✔ Persistent storage
+
+✔ Dashboard integration
 
 Status:
 
@@ -74,13 +151,15 @@ Status:
 
 ---
 
-# Sprint 4 — Character Cards
+# Sprint 4 — Character Card System
 
 Created:
 
-- CharacterCard component
+```
+CharacterCard.tsx
+```
 
-Layout:
+Character display:
 
 ```
 Character #001
@@ -98,10 +177,10 @@ Next Water
 Harvest
 ```
 
-Buttons:
+Actions:
 
-- ✏ Edit
-- 🗑 Delete
+* ✏ Edit
+* 🗑 Delete
 
 Status:
 
@@ -113,19 +192,23 @@ Status:
 
 Created:
 
-ConfirmDialog component
+```
+ConfirmDialog.tsx
+```
 
-Features:
+Implemented:
 
-- ✔ Custom confirmation dialog
-- ✔ Cancel button
-- ✔ Delete button
-- ✔ Character number displayed
-- ✔ Character name displayed
+✔ Custom confirmation modal
+
+✔ Cancel action
+
+✔ Delete confirmation
+
+✔ Character information display
 
 Removed:
 
-- Browser confirm()
+* Browser confirm()
 
 Status:
 
@@ -133,9 +216,11 @@ Status:
 
 ---
 
-# Sprint 6 — Character CRUD
+# Sprint 6 — Character CRUD System
 
 Implemented:
+
+Complete CRUD:
 
 ✔ Create Character
 
@@ -145,39 +230,36 @@ Implemented:
 
 ✔ Delete Character
 
+Created:
 
-Implemented reusable:
-
+```
 CharacterModal
+```
 
 Supports:
 
-- Add Mode
-- Edit Mode
-
+* Add Mode
+* Edit Mode
 
 CharacterContext manages:
 
-- addCharacter()
-- updateCharacter()
-- deleteCharacter()
+```ts
+addCharacter()
 
+updateCharacter()
 
-CharactersPage manages:
-
-- Modal state
-- Delete dialog state
-
+deleteCharacter()
+```
 
 Character IDs:
 
-Displayed as:
+Display:
 
 ```
 Character #001
 ```
 
-Internally stored using:
+Internal:
 
 ```
 UUID
@@ -191,13 +273,11 @@ Status:
 
 # Sprint 7 — Berry Database System 🍓
 
-Completed:
-
-Berry system foundation has been created and refactored.
+The foundation of BerryMaster's berry system was created.
 
 ---
 
-## Berry Type System
+# Berry Type System
 
 Created:
 
@@ -207,17 +287,27 @@ src/types/Berry.ts
 
 Implemented:
 
-- ✔ Berry ID
-- ✔ Berry Name
-- ✔ Description
-- ✔ Categories
-- ✔ Growth Time
-- ✔ Harvest Window
-- ✔ Yield Range
-- ✔ Recipes
-- ✔ Seed Drops
-- ✔ Tags
-- ✔ Featured berries
+✔ Berry ID
+
+✔ Name
+
+✔ Description
+
+✔ Category
+
+✔ Growth Time
+
+✔ Harvest Window
+
+✔ Yield Range
+
+✔ Recipes
+
+✔ Seed Drops
+
+✔ Tags
+
+✔ Featured Berry support
 
 Status:
 
@@ -225,7 +315,7 @@ Status:
 
 ---
 
-## Berry Category System
+# Berry Category System
 
 Created:
 
@@ -235,12 +325,17 @@ src/types/BerryCategories.ts
 
 Categories:
 
-- ✔ Status Berries
-- ✔ Healing / Utility Berries
-- ✔ Flavor Berries
-- ✔ EV Berries
-- ✔ Type Resistance Berries
-- ✔ Special Berries
+✔ Status Berries
+
+✔ Healing / Utility Berries
+
+✔ Flavor Berries
+
+✔ EV Berries
+
+✔ Type Resistance Berries
+
+✔ Special Berries
 
 Status:
 
@@ -248,7 +343,7 @@ Status:
 
 ---
 
-## Berry Database Architecture
+# Berry Database Architecture
 
 Created:
 
@@ -269,10 +364,13 @@ berries/
 
 Benefits:
 
-- ✔ Modular database
-- ✔ Easy expansion
-- ✔ No duplicate entries
-- ✔ Ready for farming calculations
+✔ Modular database
+
+✔ Easy expansion
+
+✔ No duplicate entries
+
+✔ Ready for farming calculations
 
 Status:
 
@@ -280,7 +378,7 @@ Status:
 
 ---
 
-## Berry Database Validation
+# Berry Database Validation
 
 Created:
 
@@ -290,14 +388,21 @@ validateBerryDatabase.ts
 
 Checks:
 
-- ✔ Duplicate IDs
-- ✔ Duplicate names
-- ✔ Missing categories
-- ✔ Missing recipes
-- ✔ Missing seed drops
-- ✔ Invalid yields
-- ✔ Invalid growth times
-- ✔ Invalid harvest windows
+✔ Duplicate IDs
+
+✔ Duplicate names
+
+✔ Missing categories
+
+✔ Missing recipes
+
+✔ Missing seed drops
+
+✔ Invalid yields
+
+✔ Invalid growth times
+
+✔ Invalid harvest windows
 
 Status:
 
@@ -305,17 +410,17 @@ Status:
 
 ---
 
-## Berry Database Refactor Bug Fix
+# Berry Database Refactor Fix
 
-Problem:
+Issue:
 
 ```
 Berries Page:
 
-"No berries found"
+No berries found
 ```
 
-Console Error:
+Console:
 
 ```
 Cannot read properties of undefined (reading 'length')
@@ -323,7 +428,7 @@ Cannot read properties of undefined (reading 'length')
 
 Cause:
 
-Old property reference:
+Old property:
 
 ```
 possibleSeedDrops
@@ -337,13 +442,156 @@ seedDrops
 
 Fixed:
 
-✔ Updated validator  
-✔ Berry database loads correctly  
-✔ Validation successful
+✔ Updated validation logic
+
+✔ Database loads correctly
+
+✔ Schema consistency restored
 
 Status:
 
 ✅ Complete
+
+---
+
+# Sprint 8 — Project Cleanup & Architecture Improvement
+
+Status:
+
+🔄 In Progress
+
+Goal:
+
+Improve code quality before adding complex farming systems.
+
+---
+
+# Services Layer Created
+
+Created:
+
+```
+src/services/
+```
+
+Purpose:
+
+Separate business logic from UI components.
+
+Future services:
+
+```
+wateringService.ts
+
+harvestService.ts
+
+farmingService.ts
+
+inventoryService.ts
+```
+
+Status:
+
+✅ Folder created
+
+⏳ Logic migration planned when required
+
+---
+
+# Utilities Created
+
+Created:
+
+```
+src/utils/
+```
+
+Purpose:
+
+Reusable helper functions.
+
+Current:
+
+```
+dateFormatter.ts
+```
+
+Goal:
+
+Avoid duplicated formatting logic across:
+
+* Character Cards
+* Dashboard
+* Scheduler
+* Harvest System
+
+Status:
+
+✅ Started
+
+---
+
+# Constants System Created
+
+Created:
+
+```
+src/constants/
+```
+
+Current:
+
+```
+storageKeys.ts
+```
+
+Purpose:
+
+Remove magic values and centralize configuration.
+
+Future constants:
+
+* Timer values
+* Status labels
+* Farming rules
+
+Status:
+
+✅ Started
+
+---
+
+# Type Audit Phase ⭐
+
+Current focus:
+
+Review and improve:
+
+```
+types/
+
+Character.ts
+Berry.ts
+Seed.ts
+BerryRecipe.ts
+SeedDrop.ts
+```
+
+Goals:
+
+✔ Remove unnecessary fields
+
+✔ Improve naming
+
+✔ Prepare for watering system
+
+✔ Prepare for inventory
+
+✔ Prepare for analytics
+
+Status:
+
+🔄 Current Task
 
 ---
 
@@ -365,7 +613,6 @@ Completed:
 
 ✔ StatCard
 
-
 Pending:
 
 ⬜ BerryCard
@@ -374,21 +621,25 @@ Pending:
 
 ⬜ Berry Details UI
 
+⬜ Berries Page
+
 ---
 
 # 💾 Data Storage
 
-Current storage:
+Current:
 
+```
 Local Storage
+```
 
-Current keys:
+Current key:
 
 ```
 berrymaster.characters
 ```
 
-Character structure:
+Character example:
 
 ```json
 [
@@ -401,11 +652,9 @@ Character structure:
 
 Future:
 
-- SQLite
-- Cloud Sync
-- Export / Import
-
-(Optional)
+* SQLite
+* Cloud Sync
+* Import / Export
 
 ---
 
@@ -418,105 +667,141 @@ components/
 
 ├── characters/
 ├── dashboard/
-├── ui/
+└── ui/
+
+
+constants/
 
 context/
-
-pages/
-
-types/
 
 data/
 
 ├── berryDatabase.ts
 └── berries/
+
+
+pages/
+
+services/
+
+types/
+
+utils/
 ```
 
 ---
 
-# 🚧 Current Sprint
+# 🚧 Current Milestone
 
-# Sprint 8 — Berry UI System 🍓
+## Sprint 8.5 — Architecture Cleanup 🍓
 
-Status:
+Completed:
 
-🔄 Starting
+✔ Utilities foundation
 
-Next Tasks:
+✔ Constants foundation
 
-1. Create BerryCard component
-2. Create Berries Page
-3. Display berry database
-4. Add category filtering
-5. Add search functionality
-6. Create berry detail view
+✔ Services folder
+
+✔ Folder organization
+
+✔ Context cleanup
+
+Current:
+
+🔄 Type Audit
+
+Next:
+
+✔ Dead code cleanup
+
+✔ Final testing
 
 ---
 
 # 🗺 Future Roadmap
 
-## Sprint 9 — Planting System 🌱
+# Sprint 9 — Planting System 🌱
 
 Tasks:
 
-- Assign berries to characters
-- Store planted time
-- Calculate harvest time
-- Track active farming
+* Assign berries to characters
+* Store planting time
+* Calculate harvest time
+* Track active farms
 
 ---
 
-## Sprint 10 — Water Scheduler 💧
+# Sprint 10 — Water Scheduler 💧
 
 Tasks:
 
-- Automatic water timers
-- Countdown system
-- Notifications
-- Watering history
+* Calculate watering windows
+* Water reminders
+* Countdown timers
+* Missed watering detection
+* Water history
+
+Planned service:
+
+```
+wateringService.ts
+```
+
+Functions:
+
+```ts
+calculateNextWater()
+
+isWaterDue()
+
+missedWater()
+
+getWaterStatus()
+```
 
 ---
 
-## Sprint 11 — Harvest System 🌾
+# Sprint 11 — Harvest System 🌾
 
 Tasks:
 
-- Harvest tracker
-- Ready status
-- Yield estimation
-- Harvest history
+* Harvest tracking
+* Ready status
+* Yield estimation
+* Harvest history
 
 ---
 
-## Sprint 12 — Inventory 📦
+# Sprint 12 — Inventory System 📦
 
 Tasks:
 
-- Berry inventory
-- Seed tracking
-- Quantity management
-- Filters
+* Berry inventory
+* Seed tracking
+* Quantity management
+* Filters
 
 ---
 
-## Sprint 13 — Analytics 📈
+# Sprint 13 — Analytics System 📈
 
 Tasks:
 
-- Profit tracking
-- Farming statistics
-- Historical analysis
+* Profit tracking
+* Farming statistics
+* Historical analysis
 
 ---
 
-## Sprint 14 — Settings ⚙️
+# Sprint 14 — Settings ⚙️
 
 Tasks:
 
-- Theme
-- Notifications
-- Backup
-- Preferences
+* Theme
+* Notifications
+* Backup
+* Preferences
 
 ---
 
@@ -524,42 +809,42 @@ Tasks:
 
 ## UI Polish
 
-- Toast notifications
-- Animations
-- Better icons
-- Loading states
+* Toast notifications
+* Animations
+* Better icons
+* Loading states
 
 ---
 
 ## Future Features
 
-- Search
-- Favorite berries
-- Profit calculator
-- Farming route planner
-- Export / Import
-- Cloud Sync
-- Automation assistant
+* Berry search
+* Favorite berries
+* Profit calculator
+* Farming route planner
+* Export / Import
+* Cloud Sync
+* Automation assistant
 
 ---
 
 # 📝 Development Notes
 
-Architecture Philosophy:
+BerryMaster development philosophy:
 
-- Reusable components
-- Context only stores data
-- Pages manage UI state
-- Strong TypeScript typing
-- Modular folder structure
-- Easy to extend
-- Beginner-friendly code
+* Do not over-engineer early
+* Build features only when needed
+* Keep business logic separate
+* Keep components reusable
+* Maintain strong typing
+* Prefer scalable solutions
+* Keep the code beginner-friendly and maintainable
 
 ---
 
-# 🚀 Current Milestone
+# 🚀 Current Stable Milestone
 
-Latest Stable Version:
+Latest Completed:
 
 ```
 Berry Database Refactor Complete
@@ -571,26 +856,42 @@ Includes:
 
 ✔ Berry Categories
 
-✔ Berry Database
+✔ Modular Berry Database
 
-✔ Berry Validation
+✔ Database Validation
 
-✔ Modular Berry Architecture
+✔ Schema Bug Fix
 
-✔ Database Bug Fix
+✔ Project Structure Cleanup
 
 ---
 
 # ▶ Next Session
 
-Continue with:
+Continue:
 
-## Sprint 8 — Berry UI System
+## Sprint 8.5 — Type Audit
 
-Tasks:
+First file:
 
-1. Create BerryCard
-2. Create Berries Page
-3. Connect berryDatabase
-4. Add filtering/search
-5. Prepare Berry Selector
+```
+src/types/Character.ts
+```
+
+Review:
+
+1. Required fields
+2. Optional fields
+3. Future farming compatibility
+4. Watering support
+5. Storage format
+
+---
+
+🍓 BerryMaster Status:
+
+```
+Foundation: COMPLETE
+Architecture: CLEANUP PHASE
+Next Big System: Water Scheduler 💧
+```

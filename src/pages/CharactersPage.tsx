@@ -3,6 +3,7 @@ import { useState } from "react";
 import Button from "../components/ui/Button";
 import CharacterCard from "../components/characters/CharacterCard";
 import CharacterModal from "../components/characters/CharacterModal";
+import PlantBerryModal from "../components/characters/PlantBerryModal";
 import ConfirmDialog from "../components/ui/ConfirmDialog";
 
 import { useCharacters } from "../context/CharacterContext";
@@ -38,6 +39,9 @@ export default function CharactersPage() {
 
   const [isDeleteOpen, setIsDeleteOpen] =
     useState(false);
+
+  const [plantCharacter, setPlantCharacter] =
+    useState<Character | null>(null);
 
   function openAddModal() {
     setCharacterModal({
@@ -126,9 +130,8 @@ export default function CharactersPage() {
               key={character.id}
               character={character}
               index={index}
-              onEdit={() =>
-                openEditModal(character)
-              }
+              onPlant={() => setPlantCharacter(character)}
+              onEdit={() => openEditModal(character)}
               onDelete={() => {
                 setSelectedCharacter({
                   id: character.id,
@@ -160,6 +163,13 @@ export default function CharactersPage() {
         initialName={
           characterModal.character?.name ?? ""
         }
+      />
+
+      <PlantBerryModal
+        isOpen={plantCharacter !== null}
+        characterId={plantCharacter?.id ?? ""}
+        characterName={plantCharacter?.name ?? ""}
+        onClose={() => setPlantCharacter(null)}
       />
 
       <ConfirmDialog

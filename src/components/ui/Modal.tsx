@@ -15,7 +15,7 @@ export default function Modal({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/70">
-      <div className="w-full max-w-lg rounded-xl bg-slate-900 p-6">
+      <div className="w-full max-w-6xl rounded-xl bg-slate-900 p-6">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold">
             {title}

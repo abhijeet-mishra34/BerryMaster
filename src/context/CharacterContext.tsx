@@ -6,8 +6,10 @@ import {
 } from "react";
 
 import type { Character } from "../types/Character";
+import type { Berry } from "../types/Berry";
 
-const STORAGE_KEY = "berrymaster.characters";
+import { STORAGE_KEYS } from "../constants/storageKeys";
+import { calculatePlantTimers } from "../utils/timeCalculator";
 
 type CharacterContextType = {
   characters: Character[];
@@ -20,6 +22,11 @@ type CharacterContextType = {
   ) => void;
 
   deleteCharacter: (id: string) => void;
+
+  plantBerry: (
+    characterId: string,
+    berry: Berry
+  ) => void;
 };
 
 const CharacterContext = createContext<
@@ -32,14 +39,16 @@ export function CharacterProvider({
   children: React.ReactNode;
 }) {
   const [characters, setCharacters] = useState<Character[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = localStorage.getItem(
+      STORAGE_KEYS.CHARACTERS
+    );
 
     return saved ? JSON.parse(saved) : [];
   });
 
   useEffect(() => {
     localStorage.setItem(
-      STORAGE_KEY,
+      STORAGE_KEYS.CHARACTERS,
       JSON.stringify(characters)
     );
   }, [characters]);
@@ -107,18 +116,40 @@ export function CharacterProvider({
     );
   }
 
-  return (
-    <CharacterContext.Provider
-      value={{
-        characters,
-        addCharacter,
-        updateCharacter,
-        deleteCharacter,
-      }}
-    >
-      {children}
-    </CharacterContext.Provider>
-  );
+  function plantBerry(
+    characterId: string,
+    berry: Berry
+  ) {
+    const timers = calculatePlantTimers(berry);
+
+    setCharacters((current) =>
+      current.map((character) =>
+        character.id === characterId
+          ? {
+              ...character,
+              plantedBerryId: berry.id,
+              plantedAt: timers.plantedAt,
+              nextWaterAt: timers.nextWaterAt,
+              harvestAt: timers.harvestAt,
+            }
+          : character
+      )
+    );
+  }
+
+ return (
+  <CharacterContext.Provider
+    value={{
+      characters,
+      addCharacter,
+      updateCharacter,
+      deleteCharacter,
+      plantBerry,
+    }}
+  >
+    {children}
+  </CharacterContext.Provider>
+);
 }
 
 export function useCharacters() {

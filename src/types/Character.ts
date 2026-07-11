@@ -2,11 +2,17 @@ export type Character = {
   id: string;
   name: string;
 
-  plantedBerry?: string;
+  /**
+   * References Berry.id
+   */
+  plantedBerryId?: string;
 
-  plantedAt?: Date;
+  /**
+   * ISO date strings
+   */
+  plantedAt?: string;
 
-  nextWaterAt?: Date;
+  nextWaterAt?: string;
 
-  harvestAt?: Date;
+  harvestAt?: string;
 };
