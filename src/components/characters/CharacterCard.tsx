@@ -39,6 +39,10 @@ export default function CharacterCard({
 
   const status = getCharacterStatus(character);
 
+  const canHarvest =
+    !!character.harvestAt &&
+    new Date(character.harvestAt) <= now;
+
   const characterNumber = String(
     index + 1
   ).padStart(3, "0");
@@ -118,46 +122,52 @@ export default function CharacterCard({
           </p>
         </div>
 
+        {/* Watering */}
+
         <div>
+
           <p className={labelClass}>
-            💧 Last Watered
+            💧 Watering
           </p>
 
-          <p>
-            {formatDate(character.lastWateredAt)}
-          </p>
+          {character.nextWaterAt ? (
+
+            <div className="space-y-1">
+
+              <p className="font-semibold text-emerald-400">
+                ⏳ {formatRemainingTime(character.nextWaterAt, now)}
+              </p>
+
+              <p className="text-xs text-slate-500">
+                {formatDate(character.nextWaterAt)}
+              </p>
+
+            </div>
+
+          ) : (
+
+            <div className="space-y-1">
+
+              <p className="font-semibold text-emerald-400">
+                ✅ Watering Complete
+              </p>
+
+              <p className="text-xs text-slate-500">
+                No more watering required.
+              </p>
+
+            </div>
+
+          )}
+
         </div>
 
+        {/* Harvest */}
+
         <div>
-  <p className={labelClass}>
-    💧 Next Water
-  </p>
 
-  {character.nextWaterAt ? (
-
-    <div className="space-y-1">
-
-      <p className="font-semibold text-emerald-400">
-        ⏳ {formatRemainingTime(character.nextWaterAt, now)}
-      </p>
-
-      <p className="text-xs text-slate-500">
-        {formatDate(character.nextWaterAt)}
-      </p>
-
-    </div>
-
-  ) : (
-
-    <p className="font-semibold text-emerald-400">
-      ✅ No more watering required
-    </p>
-
-  )}
-</div>
-        <div>
           <p className={labelClass}>
-            🌾 Harvest
+            🌾 Harvest Timer
           </p>
 
           <div className="space-y-1">
@@ -171,6 +181,29 @@ export default function CharacterCard({
             </p>
 
           </div>
+
+        </div>
+
+        {/* Wilt */}
+
+        <div>
+
+          <p className={labelClass}>
+            🍂 Wilt Timer
+          </p>
+
+          <div className="space-y-1">
+
+            <p className="font-semibold text-red-400">
+              🍂 {formatRemainingTime(character.wiltAt, now)}
+            </p>
+
+            <p className="text-xs text-slate-500">
+              {formatDate(character.wiltAt)}
+            </p>
+
+          </div>
+
         </div>
 
       </div>
@@ -179,25 +212,27 @@ export default function CharacterCard({
 
       <div className="mt-8 flex flex-wrap justify-end gap-3 border-t border-slate-800 pt-6">
 
-        {status.canPlant && (
+        {!character.plantedBerryId ? (
+
           <Button onClick={onPlant}>
             🌱 Plant Berry
           </Button>
-        )}
 
-        {status.canWater && (
+        ) : canHarvest ? (
+
+          <Button onClick={onHarvest}>
+            🌾 Harvest
+          </Button>
+
+        ) : (
+
           <Button
             variant="info"
             onClick={onWater}
           >
             💧 Water
           </Button>
-        )}
 
-        {status.canHarvest && (
-          <Button onClick={onHarvest}>
-            🌾 Harvest
-          </Button>
         )}
 
         <Button

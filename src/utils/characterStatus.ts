@@ -23,7 +23,6 @@ interface CharacterStatusInfo {
 export function getCharacterStatus(
   character: Character
 ): CharacterStatusInfo {
-
   // Nothing planted
   if (
     !character.plantedBerryId ||
@@ -49,6 +48,28 @@ export function getCharacterStatus(
   const now = new Date();
 
   const harvest = new Date(character.harvestAt);
+
+  const wilt = character.wiltAt
+    ? new Date(character.wiltAt)
+    : null;
+
+  // Wilted
+  if (wilt && now >= wilt) {
+    return {
+      status: "wilted",
+
+      label: "Wilted",
+      icon: "🔴",
+
+      className:
+        "border border-red-500/30 bg-red-500/20 text-red-300",
+
+      canPlant: true,
+      canWater: false,
+      canHarvest: false,
+      isWilted: true,
+    };
+  }
 
   // Harvest Ready
   if (now >= harvest) {
