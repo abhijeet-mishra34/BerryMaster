@@ -3,9 +3,7 @@ import { useMemo, useState } from "react";
 import BerryCard from "./BerryCard";
 
 import { berryDatabase } from "../../data/berryDatabase";
-import type { Berry } from "../../types/Berry";
 import type { BerryCategory } from "../../types/BerryCategories";
-import { BerryCategories } from "../../types/BerryCategories";
 
 const categories: ("All" | BerryCategory)[] = [
   "All",
@@ -20,22 +18,27 @@ const categories: ("All" | BerryCategory)[] = [
 
 export default function BerrySelector() {
   const [search, setSearch] = useState("");
+
   const [selectedCategory, setSelectedCategory] =
     useState<"All" | BerryCategory>("All");
 
   const filteredBerries = useMemo(() => {
-    console.log(berryDatabase[0]);
-    return berryDatabase.filter((berry: Berry) => {
-      const matchesCategory =
-  selectedCategory === "All" ||
-  berry.categories.includes(selectedCategory);
+    const query = search.trim().toLowerCase();
 
-      const query = search.toLowerCase();
+    return berryDatabase.filter((berry) => {
+      const matchesCategory =
+        selectedCategory === "All" ||
+        berry.categories.includes(selectedCategory);
 
       const matchesSearch =
         berry.name.toLowerCase().includes(query) ||
         berry.id.toLowerCase().includes(query) ||
-        berry.description?.toLowerCase().includes(query);
+        berry.description
+          ?.toLowerCase()
+          .includes(query) ||
+        berry.tags?.some((tag) =>
+          tag.toLowerCase().includes(query)
+        );
 
       return matchesCategory && matchesSearch;
     });
@@ -72,7 +75,9 @@ export default function BerrySelector() {
         {categories.map((category) => (
           <button
             key={category}
-            onClick={() => setSelectedCategory(category)}
+            onClick={() =>
+              setSelectedCategory(category)
+            }
             className={`
               rounded-full
               px-4
@@ -126,7 +131,8 @@ export default function BerrySelector() {
             </p>
 
             <p className="mt-2 text-slate-400">
-              Try a different search or category.
+              Try a different search or
+              category.
             </p>
           </div>
         )}

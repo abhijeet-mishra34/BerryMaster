@@ -3,13 +3,21 @@ import Button from "../ui/Button";
 import type { Character } from "../../types/Character";
 
 import { berryDatabase } from "../../data/berryDatabase";
+
 import { getCharacterStatus } from "../../utils/characterStatus";
+import { formatDate } from "../../utils/date";
+import { formatRemainingTime } from "../../utils/countdown";
+
+import { useNow } from "../../hooks/useNow";
 
 type CharacterCardProps = {
   character: Character;
   index: number;
 
   onPlant: () => void;
+  onWater: () => void;
+  onHarvest: () => void;
+
   onEdit: () => void;
   onDelete: (id: string) => void;
 };
@@ -18,34 +26,33 @@ export default function CharacterCard({
   character,
   index,
   onPlant,
+  onWater,
+  onHarvest,
   onEdit,
   onDelete,
 }: CharacterCardProps) {
+  const now = useNow();
+
   const berry = berryDatabase.find(
-    (b) => b.id === character.plantedBerry
+    (b) => b.id === character.plantedBerryId
   );
 
   const status = getCharacterStatus(character);
 
-  function formatDate(date?: Date) {
-    if (!date) return "—";
+  const characterNumber = String(
+    index + 1
+  ).padStart(3, "0");
 
-    return new Date(date).toLocaleString([], {
-      day: "2-digit",
-      month: "short",
-      hour: "numeric",
-      minute: "2-digit",
-    });
-  }
+  const labelClass = "text-sm text-slate-400";
 
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900 p-6 transition hover:border-emerald-500">
+    <div className="rounded-xl border border-slate-800 bg-slate-900 p-6 transition-all duration-200 hover:border-emerald-500 hover:shadow-lg hover:shadow-emerald-500/10">
 
       {/* Header */}
 
       <div className="border-b border-slate-800 pb-5">
         <h2 className="text-2xl font-bold text-emerald-400">
-          🌿 Character #{String(index + 1).padStart(3, "0")}
+          🌿 Character #{characterNumber}
         </h2>
       </div>
 
@@ -54,17 +61,17 @@ export default function CharacterCard({
       <div className="mt-5 space-y-4">
 
         <div>
-          <p className="text-sm text-slate-400">
+          <p className={labelClass}>
             ID
           </p>
 
           <p className="text-lg font-semibold">
-            #{String(index + 1).padStart(3, "0")}
+            #{characterNumber}
           </p>
         </div>
 
         <div>
-          <p className="text-sm text-slate-400">
+          <p className={labelClass}>
             Name
           </p>
 
@@ -77,10 +84,10 @@ export default function CharacterCard({
 
       {/* Farming Info */}
 
-      <div className="mt-6 border-t border-slate-800 pt-6 space-y-4">
+      <div className="mt-6 space-y-5 border-t border-slate-800 pt-6">
 
         <div>
-          <p className="text-sm text-slate-400">
+          <p className={labelClass}>
             🍓 Berry
           </p>
 
@@ -90,7 +97,7 @@ export default function CharacterCard({
         </div>
 
         <div>
-          <p className="text-sm text-slate-400">
+          <p className={labelClass}>
             🌱 Status
           </p>
 
@@ -102,23 +109,68 @@ export default function CharacterCard({
         </div>
 
         <div>
-          <p className="text-sm text-slate-400">
-            💧 Next Water
+          <p className={labelClass}>
+            🌱 Planted
           </p>
 
           <p>
-            {formatDate(character.nextWaterAt)}
+            {formatDate(character.plantedAt)}
           </p>
         </div>
 
         <div>
-          <p className="text-sm text-slate-400">
-            🌾 Harvest
+          <p className={labelClass}>
+            💧 Last Watered
           </p>
 
           <p>
-            {formatDate(character.harvestAt)}
+            {formatDate(character.lastWateredAt)}
           </p>
+        </div>
+
+        <div>
+  <p className={labelClass}>
+    💧 Next Water
+  </p>
+
+  {character.nextWaterAt ? (
+
+    <div className="space-y-1">
+
+      <p className="font-semibold text-emerald-400">
+        ⏳ {formatRemainingTime(character.nextWaterAt, now)}
+      </p>
+
+      <p className="text-xs text-slate-500">
+        {formatDate(character.nextWaterAt)}
+      </p>
+
+    </div>
+
+  ) : (
+
+    <p className="font-semibold text-emerald-400">
+      ✅ No more watering required
+    </p>
+
+  )}
+</div>
+        <div>
+          <p className={labelClass}>
+            🌾 Harvest
+          </p>
+
+          <div className="space-y-1">
+
+            <p className="font-semibold text-yellow-400">
+              🌾 {formatRemainingTime(character.harvestAt, now)}
+            </p>
+
+            <p className="text-xs text-slate-500">
+              {formatDate(character.harvestAt)}
+            </p>
+
+          </div>
         </div>
 
       </div>
@@ -127,9 +179,26 @@ export default function CharacterCard({
 
       <div className="mt-8 flex flex-wrap justify-end gap-3 border-t border-slate-800 pt-6">
 
-        <Button onClick={onPlant}>
-          🌱 Plant Berry
-        </Button>
+        {status.canPlant && (
+          <Button onClick={onPlant}>
+            🌱 Plant Berry
+          </Button>
+        )}
+
+        {status.canWater && (
+          <Button
+            variant="info"
+            onClick={onWater}
+          >
+            💧 Water
+          </Button>
+        )}
+
+        {status.canHarvest && (
+          <Button onClick={onHarvest}>
+            🌾 Harvest
+          </Button>
+        )}
 
         <Button
           variant="info"

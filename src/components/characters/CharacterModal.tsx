@@ -20,11 +20,8 @@ export default function CharacterModal({
   isOpen,
   onClose,
   onSave,
-
   title = "Add Character",
-
   saveButtonText = "Save",
-
   initialName = "",
 }: CharacterModalProps) {
   const [name, setName] = useState(initialName);
@@ -32,6 +29,11 @@ export default function CharacterModal({
   useEffect(() => {
     setName(initialName);
   }, [initialName, isOpen]);
+
+  function handleClose() {
+    setName(initialName);
+    onClose();
+  }
 
   function handleSave() {
     const trimmedName = name.trim();
@@ -47,8 +49,9 @@ export default function CharacterModal({
 
   return (
     <Modal
-      isOpen={isOpen}
-      onClose={onClose}
+  isOpen={isOpen}
+  title={title}
+  onClose={handleClose}
     >
       <h2 className="mb-6 text-2xl font-bold">
         {title}
@@ -56,8 +59,14 @@ export default function CharacterModal({
 
       <input
         type="text"
+        autoFocus
         value={name}
         onChange={(e) => setName(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            handleSave();
+          }
+        }}
         placeholder="Character Name"
         className="mb-6 w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 outline-none transition focus:border-emerald-500"
       />
@@ -65,12 +74,16 @@ export default function CharacterModal({
       <div className="flex justify-end gap-3">
         <Button
           variant="secondary"
-          onClick={onClose}
+          onClick={handleClose}
+          type="button"
         >
           Cancel
         </Button>
 
-        <Button onClick={handleSave}>
+        <Button
+          onClick={handleSave}
+          type="button"
+        >
           {saveButtonText}
         </Button>
       </div>

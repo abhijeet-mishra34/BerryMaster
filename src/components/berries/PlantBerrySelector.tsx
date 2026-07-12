@@ -40,7 +40,7 @@ export default function PlantBerrySelector({
     useState<Berry | null>(null);
 
   const filteredBerries = useMemo(() => {
-    const query = search.toLowerCase();
+    const query = search.trim().toLowerCase();
 
     return berryDatabase.filter((berry) => {
       const matchesCategory =
@@ -48,7 +48,14 @@ export default function PlantBerrySelector({
         berry.categories.includes(selectedCategory);
 
       const matchesSearch =
-        berry.name.toLowerCase().includes(query);
+        berry.name.toLowerCase().includes(query) ||
+        berry.id.toLowerCase().includes(query) ||
+        berry.description
+          ?.toLowerCase()
+          .includes(query) ||
+        berry.tags?.some((tag) =>
+          tag.toLowerCase().includes(query)
+        );
 
       return matchesCategory && matchesSearch;
     });
@@ -71,7 +78,6 @@ export default function PlantBerrySelector({
 
   return (
     <div className="space-y-5">
-
       {/* Search */}
 
       <input
@@ -98,12 +104,13 @@ export default function PlantBerrySelector({
       {/* Categories */}
 
       <div className="flex flex-wrap gap-2">
-
         {categories.map((category) => (
-
           <button
             key={category}
-            onClick={() => setSelectedCategory(category)}
+            type="button"
+            onClick={() =>
+              setSelectedCategory(category)
+            }
             className={`
               rounded-full
               px-3
@@ -121,116 +128,114 @@ export default function PlantBerrySelector({
           >
             {category}
           </button>
-
         ))}
-
       </div>
 
       {/* Master / Detail Layout */}
 
-      <div className="grid grid-cols-3 gap-6">
-
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Berry List */}
 
         <div
           className="
-            col-span-1
             h-[550px]
             overflow-y-auto
             rounded-xl
             border
             border-slate-700
             bg-slate-900
+            lg:col-span-1
           "
         >
+          {filteredBerries.length === 0 ? (
+            <div className="p-8 text-center text-slate-400">
+              <div className="text-3xl">
+                🍓
+              </div>
 
-          {filteredBerries.map((berry) => {
+              <p className="mt-3">
+                No berries found.
+              </p>
+            </div>
+          ) : (
+            filteredBerries.map((berry) => {
+              const isSelected =
+                selectedBerry?.id === berry.id;
 
-            const isSelected =
-              selectedBerry?.id === berry.id;
-
-            return (
-
-              <button
-                key={berry.id}
-                onClick={() => setSelectedBerry(berry)}
-                className={`
-                  flex
-                  w-full
-                  items-center
-                  justify-between
-                  border-b
-                  border-slate-800
-                  px-4
-                  py-3
-                  text-left
-                  transition-all
-                  duration-200
-
-                  ${
-                    isSelected
-                      ? "border-l-4 border-l-emerald-500 bg-slate-800 text-white font-semibold"
-                      : "text-slate-200 hover:bg-slate-800"
+              return (
+                <button
+                  key={berry.id}
+                  type="button"
+                  onClick={() =>
+                    setSelectedBerry(berry)
                   }
-                `}
-              >
+                  className={`
+                    flex
+                    w-full
+                    items-center
+                    justify-between
+                    border-b
+                    border-slate-800
+                    px-4
+                    py-3
+                    text-left
+                    transition-all
+                    duration-200
 
-                <span>
-                  🍓 {berry.name}
-                </span>
+                    ${
+                      isSelected
+                        ? "border-l-4 border-l-emerald-500 bg-slate-800 font-semibold text-white shadow-lg shadow-emerald-500/20"
+                        : "text-slate-200 hover:bg-slate-800"
+                    }
+                  `}
+                >
+                  <span>
+                    🍓 {berry.name}
+                  </span>
 
-                {isSelected && (
-
-                  <div
-                    className="
-                      flex
-                      h-6
-                      w-6
-                      items-center
-                      justify-center
-                      rounded-full
-                      bg-emerald-500
-                      text-sm
-                      font-bold
-                      text-white
-                    "
-                  >
-                    ✓
-                  </div>
-
-                )}
-
-              </button>
-
-            );
-
-          })}
-
+                  {isSelected && (
+                    <div
+                      className="
+                        flex
+                        h-6
+                        w-6
+                        items-center
+                        justify-center
+                        rounded-full
+                        bg-emerald-500
+                        text-sm
+                        font-bold
+                        text-white
+                      "
+                    >
+                      ✓
+                    </div>
+                  )}
+                </button>
+              );
+            })
+          )}
         </div>
 
         {/* Berry Preview */}
 
         <div
           className="
-            col-span-2
             h-[550px]
             overflow-y-auto
+            lg:col-span-2
           "
         >
-
           {selectedBerry ? (
-
             <BerryCard
               berry={selectedBerry}
               actionLabel="🌱 Plant This Berry"
               onAction={(berry) => {
-                plantBerry(characterId, berry.id);
+                plantBerry(characterId, berry);
                 onClose();
               }}
             />
-
           ) : (
-
             <div
               className="
                 flex
@@ -243,9 +248,7 @@ export default function PlantBerrySelector({
                 border-slate-700
               "
             >
-
               <div className="text-center">
-
                 <div className="text-5xl">
                   🍓
                 </div>
@@ -257,17 +260,11 @@ export default function PlantBerrySelector({
                 <p className="mt-2 text-slate-400">
                   Choose a berry from the list.
                 </p>
-
               </div>
-
             </div>
-
           )}
-
         </div>
-
       </div>
-
     </div>
   );
 }

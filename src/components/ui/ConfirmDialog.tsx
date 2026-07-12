@@ -23,17 +23,15 @@ export default function ConfirmDialog({
   onCancel,
 }: ConfirmDialogProps) {
   return (
-    <Modal isOpen={isOpen} onClose={onCancel}>
+    <Modal
+      isOpen={isOpen}
+      title={title}
+      onClose={onCancel}
+    >
       <div className="space-y-6">
-        <div>
-          <h2 className="text-2xl font-bold text-red-400">
-            🗑 {title}
-          </h2>
-
-          <p className="mt-3 text-slate-400">
-            {message}
-          </p>
-        </div>
+        <p className="text-slate-400">
+          {message}
+        </p>
 
         {itemName && (
           <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4">
@@ -49,8 +47,9 @@ export default function ConfirmDialog({
           </p>
         </div>
 
-        <div className="flex justify-end gap-3 pt-2">
+        <div className="flex justify-end gap-3 pt-4">
           <Button
+            type="button"
             variant="secondary"
             onClick={onCancel}
           >
@@ -58,6 +57,7 @@ export default function ConfirmDialog({
           </Button>
 
           <Button
+            type="button"
             variant="danger"
             onClick={onConfirm}
           >

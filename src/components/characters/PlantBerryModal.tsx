@@ -3,10 +3,8 @@ import PlantBerrySelector from "../berries/PlantBerrySelector";
 
 interface PlantBerryModalProps {
   isOpen: boolean;
-
   characterId: string;
   characterName: string;
-
   onClose: () => void;
 }
 
@@ -16,11 +14,13 @@ export default function PlantBerryModal({
   characterName,
   onClose,
 }: PlantBerryModalProps) {
+  const title = `🌱 Plant Berry — ${characterName}`;
+
   return (
     <Modal
       isOpen={isOpen}
+      title={title}
       onClose={onClose}
-      title={`🌱 Plant Berry — ${characterName}`}
     >
       <PlantBerrySelector
         characterId={characterId}
