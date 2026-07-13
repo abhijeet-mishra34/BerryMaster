@@ -11,6 +11,8 @@ export function waterBerryOnCharacter(
   character: Character,
   berry: Berry
 ): Character {
+
+
   const now = new Date();
 
   const wateringCount =

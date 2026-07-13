@@ -1,3 +1,4 @@
+import NotificationBell from "../notifications/NotificationBell";
 export default function Header() {
   return (
     <header className="flex items-center justify-between border-b border-slate-800 bg-slate-900 px-8 py-4">
@@ -12,7 +13,7 @@ export default function Header() {
       </div>
 
       <div className="flex items-center gap-4 text-2xl">
-        <button>🔔</button>
+       <NotificationBell />
         <button>⚙️</button>
         <button>👤</button>
       </div>

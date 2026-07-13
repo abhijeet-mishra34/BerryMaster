@@ -5,6 +5,7 @@ import { calculatePlantTimers } from "../utils/timeCalculator";
 
 import { getFarmingProfile } from "../data/farmingProfiles";
 
+
 /**
  * Returns an updated character after planting a berry.
  * This contains all planting-related game logic.
@@ -13,6 +14,7 @@ export function plantBerryOnCharacter(
   character: Character,
   berry: Berry
 ): Character {
+
   const timers = calculatePlantTimers(berry);
 
   const profile = getFarmingProfile(
