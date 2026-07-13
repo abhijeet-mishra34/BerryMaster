@@ -87,4 +87,6 @@ export interface Berry {
    * Extra searchable keywords.
    */
   tags?: string[];
+
+  developerOnly?: boolean;
 }

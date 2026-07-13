@@ -1,16 +1,25 @@
-export function getRemainingMinutes(
+export function getRemainingMilliseconds(
   target?: string,
-  current = new Date()
+ current = new Date()
 ): number {
   if (!target) return 0;
 
   return Math.max(
     0,
-    Math.floor(
-      (new Date(target).getTime() -
-        current.getTime()) /
-        60000
-    )
+    new Date(target).getTime() -
+      current.getTime()
+  );
+}
+
+export function getRemainingMinutes(
+  target?: string,
+  current = new Date()
+): number {
+  return Math.ceil(
+    getRemainingMilliseconds(
+      target,
+      current
+    ) / 60000
   );
 }
 
@@ -20,36 +29,58 @@ export function formatRemainingTime(
 ): string {
   if (!target) return "—";
 
-  const minutes = getRemainingMinutes(
-    target,
-    current
-  );
+  const remainingMs =
+    getRemainingMilliseconds(
+      target,
+      current
+    );
 
-  if (minutes <= 0) {
+  if (remainingMs <= 0) {
     return "Ready";
   }
 
-  const days = Math.floor(minutes / 1440);
-  const hours = Math.floor((minutes % 1440) / 60);
-  const mins = minutes % 60;
+  const totalSeconds = Math.ceil(
+    remainingMs / 1000
+  );
+
+  // Final minute → show seconds
+  if (totalSeconds < 60) {
+    return `${totalSeconds}s`;
+  }
+
+  const totalMinutes = Math.ceil(
+    totalSeconds / 60
+  );
+
+  const days = Math.floor(
+    totalMinutes / 1440
+  );
+
+  const hours = Math.floor(
+    (totalMinutes % 1440) / 60
+  );
+
+  const minutes = totalMinutes % 60;
 
   if (days > 0) {
     return `${days}d ${hours}h`;
   }
 
   if (hours > 0) {
-    return `${hours}h ${mins}m`;
+    return `${hours}h ${minutes}m`;
   }
 
-  return `${mins}m`;
+  return `${minutes}m`;
 }
 
 export function isExpired(
   target?: string,
   current = new Date()
 ) {
-  return getRemainingMinutes(
-    target,
-    current
-  ) === 0;
+  return (
+    getRemainingMilliseconds(
+      target,
+      current
+    ) <= 0
+  );
 }

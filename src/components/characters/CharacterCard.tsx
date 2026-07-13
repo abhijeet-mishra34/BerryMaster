@@ -114,7 +114,7 @@ export default function CharacterCard({
 
         <div>
           <p className={labelClass}>
-            🌱 Planted
+            🍓 Berries
           </p>
 
           <p>
@@ -162,94 +162,131 @@ export default function CharacterCard({
 
         </div>
 
-        {/* Harvest */}
+      {/* Harvest */}
 
-        <div>
+<div>
 
-          <p className={labelClass}>
-            🌾 Harvest Timer
-          </p>
+  <p className={labelClass}>
+    🌾 Harvest Timer
+  </p>
 
-          <div className="space-y-1">
+  {character.plantedBerryId ? (
 
-            <p className="font-semibold text-yellow-400">
-              🌾 {formatRemainingTime(character.harvestAt, now)}
-            </p>
+    <div className="space-y-1">
 
-            <p className="text-xs text-slate-500">
-              {formatDate(character.harvestAt)}
-            </p>
+      <p className="font-semibold text-yellow-400">
+        ⏰ {
+          status.status === "wilted"
+            ? "Missed"
+            : formatRemainingTime(character.harvestAt, now)
+        }
+      </p>
 
-          </div>
+      <p className="text-xs text-slate-500">
+        {formatDate(character.harvestAt)}
+      </p>
 
-        </div>
+    </div>
 
-        {/* Wilt */}
+  ) : (
 
-        <div>
+    <p className="text-slate-500">
+      —
+    </p>
 
-          <p className={labelClass}>
-            🍂 Wilt Timer
-          </p>
+  )}
 
-          <div className="space-y-1">
+</div>
 
-            <p className="font-semibold text-red-400">
-              🍂 {formatRemainingTime(character.wiltAt, now)}
-            </p>
+       {/* Wilt */}
 
-            <p className="text-xs text-slate-500">
-              {formatDate(character.wiltAt)}
-            </p>
+<div>
 
-          </div>
+  <p className={labelClass}>
+    🍂 Wilt Timer
+  </p>
 
-        </div>
+  {character.plantedBerryId ? (
+
+    <div className="space-y-1">
+
+      <p className="font-semibold text-red-400">
+        ⏰ {
+          status.status === "wilted"
+            ? "Wilted"
+            : formatRemainingTime(character.wiltAt, now)
+        }
+      </p>
+
+      <p className="text-xs text-slate-500">
+        {formatDate(character.wiltAt)}
+      </p>
+
+    </div>
+
+  ) : (
+
+    <p className="text-slate-500">
+      —
+    </p>
+
+  )}
+
+</div>
 
       </div>
 
       {/* Actions */}
 
-      <div className="mt-8 flex flex-wrap justify-end gap-3 border-t border-slate-800 pt-6">
+<div className="mt-8 flex flex-wrap justify-end gap-3 border-t border-slate-800 pt-6">
 
-        {!character.plantedBerryId ? (
+  {!character.plantedBerryId ? (
 
-          <Button onClick={onPlant}>
-            🌱 Plant Berry
-          </Button>
+    <Button onClick={onPlant}>
+      🌱 Plant Berry
+    </Button>
 
-        ) : canHarvest ? (
+  ) : status.status === "wilted" ? (
 
-          <Button onClick={onHarvest}>
-            🌾 Harvest
-          </Button>
+    <Button
+      variant="danger"
+      onClick={onHarvest}
+    >
+      🗑 Clear Wilted Berry
+    </Button>
 
-        ) : (
+  ) : status.status === "harvestReady" ? (
 
-          <Button
-            variant="info"
-            onClick={onWater}
-          >
-            💧 Water
-          </Button>
+    <Button onClick={onHarvest}>
+      🌾 Harvest
+    </Button>
 
-        )}
+  ) : (
 
-        <Button
-          variant="info"
-          onClick={onEdit}
-        >
-          ✏ Edit
-        </Button>
+    <Button
+      variant="info"
+      onClick={onWater}
+    >
+      💧 Water
+    </Button>
 
-        <Button
-          variant="danger"
-          onClick={() => onDelete(character.id)}
-        >
-          🗑 Delete
-        </Button>
+  )}
 
-      </div>
+  <Button
+    variant="info"
+    onClick={onEdit}
+  >
+    ✏ Edit
+  </Button>
+
+  <Button
+    variant="danger"
+    onClick={() => onDelete(character.id)}
+  >
+    🗑 Delete
+  </Button>
+
+</div>
 
     </div>
   );

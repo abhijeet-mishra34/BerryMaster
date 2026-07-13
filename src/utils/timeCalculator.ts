@@ -1,9 +1,5 @@
 import type { Berry } from "../types/Berry";
 
-import { calculateWiltTime } from "./calculateWiltTime";
-
-import { getFarmingProfile } from "../data/farmingProfiles";
-
 export interface PlantTimers {
   plantedAt: string;
   nextWaterAt: string;
@@ -16,38 +12,60 @@ export function calculatePlantTimers(
 ): PlantTimers {
   const plantedAt = new Date();
 
-  const profile = getFarmingProfile(
-    berry.growthTime
-  );
+  /**
+   * Watering Strategy
+   *
+   * 16h / 20h Berries
+   * -----------------
+   * Initial watering happens while planting.
+   * One manual watering is required after 10 hours.
+   *
+   * 42h / 44h Berries
+   * -----------------
+   * No watering at planting.
+   * First watering after 4 hours.
+   * Then every 12 hours.
+   */
+
+  let firstWaterHours: number;
+
+  switch (berry.growthTime) {
+    case 16:
+    case 20:
+      firstWaterHours = 10;
+      break;
+
+    case 42:
+    case 44:
+      firstWaterHours = 4;
+      break;
+
+    default:
+      firstWaterHours = Math.floor(
+        berry.growthTime / 2
+      );
+      break;
+  }
 
   const nextWaterAt = new Date(
     plantedAt.getTime() +
-      profile.firstWaterAfterHours *
-        60 *
-        60 *
-        1000
+      firstWaterHours * 60 * 60 * 1000
   );
 
   const harvestAt = new Date(
     plantedAt.getTime() +
-      berry.growthTime *
-        60 *
-        60 *
-        1000
+      berry.growthTime * 60 * 60 * 1000
   );
 
-  const wiltAt = calculateWiltTime(
-    harvestAt,
-    profile.harvestWindowHours
+  const wiltAt = new Date(
+    harvestAt.getTime() +
+      berry.harvestWindow * 60 * 60 * 1000
   );
 
   return {
     plantedAt: plantedAt.toISOString(),
-
     nextWaterAt: nextWaterAt.toISOString(),
-
     harvestAt: harvestAt.toISOString(),
-
-    wiltAt,
+    wiltAt: wiltAt.toISOString(),
   };
 }

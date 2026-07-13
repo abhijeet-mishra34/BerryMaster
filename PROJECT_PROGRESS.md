@@ -691,207 +691,355 @@ utils/
 
 ---
 
-# 🚧 Current Milestone
+🚧 Current Milestone
+Sprint 10 — Farming Workflow 🌱💧🌾
 
-## Sprint 8.5 — Architecture Cleanup 🍓
+The project has successfully transitioned from architecture cleanup into building the complete berry farming engine.
 
-Completed:
+Completed during this phase:
 
-✔ Utilities foundation
+✔ Plant Berry workflow
 
-✔ Constants foundation
+✔ Plant Berry modal
 
-✔ Services folder
+✔ Plant Berry selector
 
-✔ Folder organization
+✔ Berry assignment to characters
 
-✔ Context cleanup
+✔ Planting service
+
+✔ Watering service
+
+✔ Harvest service foundation
+
+✔ Character farming lifecycle
+
+✔ Character status engine
+
+✔ Countdown timer engine
+
+✔ Time calculation utilities
+
+✔ Wilt timer foundation
+
+✔ Farming profile system
+
+✔ Character card redesign
+
+✔ Watering workflow
+
+✔ Last Water tracking
+
+✔ Next Water tracking
+
+✔ Harvest countdown
+
+✔ Harvest window foundation
+
+✔ Live countdown updates
 
 Current:
 
-🔄 Type Audit
+🔄 Harvest workflow
+
+🔄 Full farming lifecycle testing
 
 Next:
 
-✔ Dead code cleanup
+✔ Complete Harvest service
 
-✔ Final testing
+✔ Return character to Ready to Plant state
 
----
+✔ Final farming workflow testing
 
-# 🗺 Future Roadmap
+🌱 Farming Engine Architecture
 
-# Sprint 9 — Planting System 🌱
+BerryMaster now follows a layered farming architecture.
 
-Tasks:
+Berry Database
+        │
+        ▼
+Farming Profiles
+        │
+        ▼
+Time Calculator
+        │
+        ▼
+Planting Service
+        │
+        ▼
+Watering Service
+        │
+        ▼
+Harvest Service
+        │
+        ▼
+Character Context
+        │
+        ▼
+Character Cards
 
-* Assign berries to characters
-* Store planting time
-* Calculate harvest time
-* Track active farms
+Business logic is now completely separated from UI components.
 
----
+Benefits:
 
-# Sprint 10 — Water Scheduler 💧
+✔ Easier maintenance
 
-Tasks:
+✔ Easier future expansion
 
-* Calculate watering windows
-* Water reminders
-* Countdown timers
-* Missed watering detection
-* Water history
+✔ Cleaner code
 
-Planned service:
+✔ Better testing
 
-```
-wateringService.ts
-```
+✔ Supports future notification engine
 
-Functions:
+🌾 Farming Profiles
 
-```ts
-calculateNextWater()
+BerryMaster now supports multiple farming strategies based on berry growth time.
 
-isWaterDue()
+16 Hour Berries
 
-missedWater()
+✔ Automatically watered on planting
 
-getWaterStatus()
-```
+✔ Second watering after 10 hours
 
----
+✔ Harvest window: 8 hours
 
-# Sprint 11 — Harvest System 🌾
+20 Hour Berries
 
-Tasks:
+✔ Automatically watered on planting
 
-* Harvest tracking
-* Ready status
-* Yield estimation
-* Harvest history
+✔ Second watering after 10 hours
 
----
+✔ Harvest window: 8 hours
 
-# Sprint 12 — Inventory System 📦
+42 Hour Berries
 
-Tasks:
+✔ No automatic watering
 
-* Berry inventory
-* Seed tracking
-* Quantity management
-* Filters
+✔ First watering after 3 hours
 
----
+✔ Repeat watering every 12 hours
 
-# Sprint 13 — Analytics System 📈
+✔ Harvest window: 8 hours
 
-Tasks:
+44 Hour Berries
 
-* Profit tracking
-* Farming statistics
-* Historical analysis
+✔ No automatic watering
 
----
+✔ First watering after 3 hours
 
-# Sprint 14 — Settings ⚙️
+✔ Repeat watering every 12 hours
 
-Tasks:
+✔ Harvest window: 8 hours
 
-* Theme
-* Notifications
-* Backup
-* Preferences
+67 Hour Berries
 
----
+✔ No automatic watering
 
-# 💡 Planned Improvements
+✔ First watering after 3 hours
 
-## UI Polish
+✔ Repeat watering every 12 hours
 
-* Toast notifications
-* Animations
-* Better icons
-* Loading states
+✔ Harvest window: 8 hours
 
----
+🗺 Updated Roadmap
+Sprint 9 — Farming Engine 🌱
 
-## Future Features
+Completed:
 
-* Berry search
-* Favorite berries
-* Profit calculator
-* Farming route planner
-* Export / Import
-* Cloud Sync
-* Automation assistant
+✔ Berry planting
 
----
+✔ Berry assignment
 
-# 📝 Development Notes
+✔ Plant Berry modal
+
+✔ Plant Berry selector
+
+✔ Character farming state
+
+✔ Planting service
+
+✔ Harvest timer
+
+✔ Countdown timer
+
+✔ Character status badges
+
+✔ Farming profile architecture
+
+Status:
+
+✅ Complete
+
+Sprint 10 — Farming Workflow 💧🌾
+
+Completed:
+
+✔ Watering service
+
+✔ Water tracking
+
+✔ Water counters
+
+✔ Last Water support
+
+✔ Next Water support
+
+✔ Countdown engine
+
+✔ Harvest timer
+
+✔ Wilt timer
+
+✔ Farming profiles
+
+✔ Character card redesign
+
+Current:
+
+🔄 Harvest workflow
+
+🔄 Harvest service
+
+🔄 Full farming lifecycle
+
+Status:
+
+🔄 In Progress
+
+Sprint 11 — Notification Engine 🔔
+
+Planned:
+
+Desktop notifications
+Water reminders
+Harvest reminders
+Wilt reminders
+Notification Center
+Foundation for Mobile Companion
+Sprint 12 — Inventory System 📦
+
+Current plan:
+
+Berry inventory
+Quantity management
+Filters
+Search
+
+Design Decision:
+
+Seed conversion has been postponed.
+
+Reason:
+
+Berry yields are deterministic.
+
+Seed yields are probabilistic.
+
+BerryMaster Version 1 focuses on assisting berry farming rather than simulating every game mechanic.
+
+Sprint 13 — Analytics 📈
+
+Planned:
+
+Farming statistics
+Berry production
+Harvest history
+Farming efficiency
+Profit analysis
+Sprint 14 — Settings ⚙
+
+Planned:
+
+Theme
+Notifications
+Backup
+Preferences
+💡 Planned Improvements
+UI Polish
+Toast notifications
+Animations
+Better icons
+Loading states
+Improved dashboard
+Future Features
+Berry search
+Favorite berries
+Profit calculator
+Farming route planner
+Export / Import
+Cloud Sync
+Automation assistant
+Mobile companion
+📝 Development Notes
 
 BerryMaster development philosophy:
 
-* Do not over-engineer early
-* Build features only when needed
-* Keep business logic separate
-* Keep components reusable
-* Maintain strong typing
-* Prefer scalable solutions
-* Keep the code beginner-friendly and maintainable
-
----
-
-# 🚀 Current Stable Milestone
+Build features only when required
+Keep UI components reusable
+Keep business logic inside services
+Keep calculations inside utilities
+Prefer modular architecture
+Strong TypeScript typing
+Design for long-term scalability
+Keep the project beginner-friendly and maintainable
+Avoid over-engineering while keeping expansion simple
+🚀 Current Stable Milestone
 
 Latest Completed:
 
-```
-Berry Database Refactor Complete
-```
+Berry Farming Engine
 
 Includes:
 
-✔ Berry Type System
+✔ Character CRUD
 
-✔ Berry Categories
+✔ Berry Database
 
-✔ Modular Berry Database
+✔ Planting System
 
-✔ Database Validation
+✔ Watering System
 
-✔ Schema Bug Fix
+✔ Countdown Engine
 
-✔ Project Structure Cleanup
+✔ Character Status System
 
----
+✔ Farming Profiles
 
-# ▶ Next Session
+✔ Time Calculation Utilities
+
+✔ Services Architecture
+
+✔ Modular Utilities
+
+✔ Architecture Cleanup
+
+▶ Next Session
 
 Continue:
 
-## Sprint 8.5 — Type Audit
+Sprint 10 — Harvest Workflow
 
-First file:
+Tasks:
 
-```
-src/types/Character.ts
-```
-
-Review:
-
-1. Required fields
-2. Optional fields
-3. Future farming compatibility
-4. Watering support
-5. Storage format
-
----
+Complete Harvest Service
+Reset character after harvesting
+Complete farming lifecycle
+Test all supported berry growth profiles
+Prepare Notification Engine
 
 🍓 BerryMaster Status:
 
-```
 Foundation: COMPLETE
-Architecture: CLEANUP PHASE
-Next Big System: Water Scheduler 💧
-```
+
+Architecture: COMPLETE
+
+Berry Database: COMPLETE
+
+Farming Engine: COMPLETE
+
+Farming Workflow: IN PROGRESS
+
+Next Big System:
+🔔 Notification Engine

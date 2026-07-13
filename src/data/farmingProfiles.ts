@@ -14,6 +14,23 @@ export interface FarmingProfile {
 
 export const farmingProfiles: FarmingProfile[] = [
   {
+  growthTime: 0.0333,
+
+  autoWaterOnPlant: false,
+
+  // 1 minute after planting
+  firstWaterAfterHours: 0.0167,
+
+  // Every minute afterwards
+  repeatWaterEveryHours: 0.0167,
+
+  // One manual watering only
+  totalWaterings: 1,
+
+  // 1 minute harvest window
+  harvestWindowHours: 0.0167,
+},
+  {
     growthTime: 16,
 
     autoWaterOnPlant: true,
