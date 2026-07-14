@@ -2,12 +2,12 @@ import type { Berry } from "../../types/Berry";
 import { BerryCategories } from "../../types/BerryCategories";
 
 export const debugBerry: Berry = {
-  id: "debug",
+  id: "debugBerry",
 
   name: "🧪 Debug Berry",
 
   description:
-    "The 'GOD OF BERRIES ☢️',the official fuel of BerryMaster development. Grows faster than your code compiles. Beware ⚠️ : 🛠️ ONLY FOR DEVELOPERS USE,PLANT IT ON YOUR OWN RiSK ⚡",
+    "The 'GOD OF BERRIES ☢️',the official fuel of BerryMaster development. Grows faster than your code compiles 😄 . Beware ⚠️ : 🛠️ ONLY FOR DEVELOPERS USE,PLANT IT ON YOUR OWN RiSK ⚡",
 
   categories: [BerryCategories.SPECIAL],
 

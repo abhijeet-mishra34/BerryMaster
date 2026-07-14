@@ -1,5 +1,6 @@
 import type { Berry } from "../../types/Berry";
 import { seedDisplay } from "../../utils/seedDisplay";
+import { useFavorites } from "../../context/FavoritesContext";
 
 interface BerryCardProps {
   berry: Berry;
@@ -13,6 +14,12 @@ export default function BerryCard({
   actionLabel,
   onAction,
 }: BerryCardProps) {
+  const {
+  isFavorite,
+  toggleFavorite,
+} = useFavorites();
+
+const favorite = isFavorite(berry.id);
   return (
     <div className="bg-slate-900 border border-slate-700 rounded-xl p-5 shadow-md hover:border-emerald-500 transition-all duration-200 flex flex-col gap-4 h-full">
 
@@ -20,25 +27,45 @@ export default function BerryCard({
 
       <div className="flex justify-between items-start">
 
-        <div>
+  <div>
 
-          <h2 className="text-xl font-bold text-white">
-            🍓 {berry.name}
-          </h2>
+    <h2 className="text-xl font-bold text-white">
+      🍓 {berry.name}
+    </h2>
 
-          <p className="text-sm text-emerald-400">
-            {berry.categories.join(" • ")}
-          </p>
+    <p className="text-sm text-emerald-400">
+      {berry.categories.join(" • ")}
+    </p>
 
-        </div>
+  </div>
 
-        {berry.featured && (
-          <span className="bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded-full text-xs font-semibold">
-            ⭐ Featured
-          </span>
-        )}
+  <div className="flex items-center gap-2">
 
-      </div>
+    {berry.featured && (
+      <span className="bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded-full text-xs font-semibold">
+        ⭐ Featured
+      </span>
+    )}
+
+    <button
+      type="button"
+      onClick={() =>
+        toggleFavorite(berry.id)
+      }
+      className="
+        text-2xl
+        transition-transform
+        duration-200
+        hover:scale-110
+        active:scale-95
+      "
+    >
+      {favorite ? "❤️" : "🤍"}
+    </button>
+
+  </div>
+
+</div>
 
       {/* Description */}
 

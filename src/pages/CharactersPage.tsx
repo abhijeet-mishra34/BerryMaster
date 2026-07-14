@@ -18,7 +18,6 @@ export default function CharactersPage() {
     addCharacter,
     updateCharacter,
     deleteCharacter,
-    plantBerry,
     waterBerry,
     harvestBerry,
   } = useCharacters();
@@ -32,6 +31,12 @@ export default function CharactersPage() {
   const [plantCharacter, setPlantCharacter] =
     useState<Character | null>(null);
 
+  const [changeBerryCharacter, setChangeBerryCharacter] =
+    useState<Character | null>(null);
+
+  const [isChangeBerryOpen, setIsChangeBerryOpen] =
+    useState(false);
+
   const [isDeleteOpen, setIsDeleteOpen] =
     useState(false);
 
@@ -41,6 +46,12 @@ export default function CharactersPage() {
       name: string;
       index: number;
     } | null>(null);
+
+  // NEW
+  const [
+    highlightedCharacterId,
+    setHighlightedCharacterId,
+  ] = useState<string | null>(null);
 
   function openAddModal() {
     setEditingCharacter(null);
@@ -71,12 +82,26 @@ export default function CharactersPage() {
     setIsDeleteOpen(false);
   }
 
+  // NEW
+  function highlightCharacter(characterId: string) {
+    setHighlightedCharacterId(characterId);
+
+     window.setTimeout(() => {
+    setHighlightedCharacterId((current) =>
+      current === characterId ? null : current
+    );
+  }, 2000);
+}
+
   return (
     <div className="space-y-8">
+
       {/* Header */}
 
       <div className="flex items-center justify-between">
+
         <div>
+
           <h1 className="text-3xl font-bold text-white">
             Characters
           </h1>
@@ -84,33 +109,53 @@ export default function CharactersPage() {
           <p className="mt-1 text-slate-400">
             Manage your berry farming characters.
           </p>
+
         </div>
 
         <Button onClick={openAddModal}>
           ➕ Add Character
         </Button>
+
       </div>
 
       {/* Character Grid */}
 
       <div className="grid gap-6 lg:grid-cols-2">
+
         {characters.map((character, index) => (
+
           <CharacterCard
             key={character.id}
             character={character}
             index={index}
+
+            highlight={
+              highlightedCharacterId === character.id
+                ? "plant"
+                : null
+            }
+
             onPlant={() =>
               setPlantCharacter(character)
             }
+
             onWater={() =>
               waterBerry(character.id)
             }
+
             onHarvest={() =>
               harvestBerry(character.id)
             }
+
+            onChangeBerry={() => {
+              setChangeBerryCharacter(character);
+              setIsChangeBerryOpen(true);
+            }}
+
             onEdit={() =>
               openEditModal(character)
             }
+
             onDelete={() => {
               setSelectedCharacter({
                 id: character.id,
@@ -121,10 +166,12 @@ export default function CharactersPage() {
               setIsDeleteOpen(true);
             }}
           />
+
         ))}
+
       </div>
 
-      {/* Add / Edit Character */}
+            {/* Add / Edit Character */}
 
       <CharacterModal
         isOpen={isCharacterModalOpen}
@@ -151,18 +198,25 @@ export default function CharactersPage() {
 
       <Modal
         isOpen={plantCharacter !== null}
-        title="🌱 Plant Berry"
+        title={
+          plantCharacter?.plantedBerryId
+            ? "🔄 Change Berry"
+            : "🌱 Plant Berry"
+        }
         onClose={() =>
           setPlantCharacter(null)
         }
       >
         {plantCharacter && (
           <PlantBerrySelector
-            characterId={plantCharacter.id}
-            onClose={() =>
-              setPlantCharacter(null)
-            }
-          />
+  characterId={plantCharacter.id}
+  onClose={() =>
+    setPlantCharacter(null)
+  }
+  onPlantSuccess={() =>
+    highlightCharacter(plantCharacter.id)
+  }
+/>
         )}
       </Modal>
 
@@ -181,6 +235,27 @@ export default function CharactersPage() {
           setIsDeleteOpen(false);
         }}
       />
+
+      {/* Change Berry Confirmation */}
+
+      <ConfirmDialog
+        isOpen={isChangeBerryOpen}
+        title="Change Planted Berry"
+        message="Changing the planted berry will reset the watering progress, harvest timer, wilt timer, and begin a brand-new farming cycle."
+        itemName={changeBerryCharacter?.name}
+        confirmText="Choose New Berry"
+        cancelText="Cancel"
+        onConfirm={() => {
+          setPlantCharacter(changeBerryCharacter);
+          setChangeBerryCharacter(null);
+          setIsChangeBerryOpen(false);
+        }}
+        onCancel={() => {
+          setChangeBerryCharacter(null);
+          setIsChangeBerryOpen(false);
+        }}
+      />
+
     </div>
   );
 }

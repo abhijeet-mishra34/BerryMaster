@@ -1,4 +1,7 @@
-import { useEffect } from "react";
+import {
+  useEffect,
+  useRef,
+} from "react";
 
 type ModalProps = {
   isOpen: boolean;
@@ -13,32 +16,80 @@ export default function Modal({
   children,
   onClose,
 }: ModalProps) {
+
+  const previousFocus =
+    useRef<HTMLElement | null>(null);
+
+
   useEffect(() => {
     if (!isOpen) return;
+
+
+    // Store currently focused element
+    previousFocus.current =
+      document.activeElement as HTMLElement;
+
+
+    // Lock background scrolling
+    const originalOverflow =
+      document.body.style.overflow;
+
+    document.body.style.overflow =
+      "hidden";
+
 
     function handleKeyDown(
       event: KeyboardEvent
     ) {
+
       if (event.key === "Escape") {
+        event.preventDefault();
+
         onClose();
       }
+
     }
+
 
     window.addEventListener(
       "keydown",
       handleKeyDown
     );
 
-    return () =>
+
+    return () => {
+
       window.removeEventListener(
         "keydown",
         handleKeyDown
       );
-  }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+
+      // Restore scrolling
+      document.body.style.overflow =
+        originalOverflow;
+
+
+      // Restore focus
+      previousFocus.current?.focus();
+
+    };
+
+  }, [
+    isOpen,
+    onClose,
+  ]);
+
+
+
+  if (!isOpen) {
+    return null;
+  }
+
+
 
   return (
+
     <div
       className="
         fixed
@@ -52,9 +103,12 @@ export default function Modal({
       "
       onClick={onClose}
     >
+
+
       <div
         role="dialog"
         aria-modal="true"
+        aria-labelledby="modal-title"
         className="
           w-full
           max-w-6xl
@@ -62,17 +116,34 @@ export default function Modal({
           bg-slate-900
           p-6
           shadow-2xl
-          transition-all
-          duration-200
         "
-        onClick={(e) =>
-          e.stopPropagation()
+        onClick={(event) =>
+          event.stopPropagation()
         }
       >
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold">
+
+
+        <div
+          className="
+            mb-6
+            flex
+            items-center
+            justify-between
+          "
+        >
+
+          <h2
+            id="modal-title"
+            className="
+              text-2xl
+              font-bold
+              text-white
+            "
+          >
             {title}
           </h2>
+
+
 
           <button
             type="button"
@@ -85,13 +156,23 @@ export default function Modal({
               hover:bg-slate-800
               hover:text-white
             "
+            aria-label="Close modal"
           >
             ✕
           </button>
+
+
         </div>
 
+
+
         {children}
+
+
       </div>
+
+
     </div>
+
   );
 }

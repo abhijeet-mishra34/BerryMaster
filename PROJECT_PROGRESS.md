@@ -691,71 +691,114 @@ utils/
 
 ---
 
-🚧 Current Milestone
-Sprint 10 — Farming Workflow 🌱💧🌾
+---
 
-The project has successfully transitioned from architecture cleanup into building the complete berry farming engine.
+# 🚧 Current Milestone
+
+## Sprint 11 — Notification Engine 🔔
+
+The BerryMaster farming engine is now fully operational and has entered its first quality-of-life phase.
+
+Sprint 11 focused on creating a complete notification ecosystem that keeps players informed throughout the entire farming lifecycle.
 
 Completed during this phase:
 
-✔ Plant Berry workflow
+✔ Notification Context
 
-✔ Plant Berry modal
+✔ Notification Service
 
-✔ Plant Berry selector
+✔ Browser Notification Service
 
-✔ Berry assignment to characters
+✔ Notification History
 
-✔ Planting service
+✔ Notification Bell
 
-✔ Watering service
+✔ Notification Dropdown
 
-✔ Harvest service foundation
+✔ Live notification badge
 
-✔ Character farming lifecycle
+✔ Browser Notification API integration
 
-✔ Character status engine
+✔ Notification permission handling
 
-✔ Countdown timer engine
+✔ Water reminders
 
-✔ Time calculation utilities
+✔ Harvest reminders
 
-✔ Wilt timer foundation
+✔ Wilt reminders
 
-✔ Farming profile system
+✔ Priority-based notification ordering
 
-✔ Character card redesign
+✔ Notification deduplication
 
-✔ Watering workflow
+✔ Live notification updates
 
-✔ Last Water tracking
+✔ Multi-character notification support
 
-✔ Next Water tracking
+✔ Infinite farming cycle notification support
 
-✔ Harvest countdown
+✔ Notification synchronization
 
-✔ Harvest window foundation
+✔ Farming cycle notification architecture
 
-✔ Live countdown updates
+Status:
 
-Current:
+✅ Complete
 
-🔄 Harvest workflow
+---
 
-🔄 Full farming lifecycle testing
+# 🔔 Notification Engine Architecture
 
-Next:
+BerryMaster now includes a dedicated notification system separated from the farming engine.
 
-✔ Complete Harvest service
+```
+Character Context
+        │
+        ▼
+Notification Service
+        │
+        ▼
+Notification Context
+        │
+        ▼
+Browser Notification Service
+        │
+        ▼
+Notification History
+        │
+        ▼
+Notification Bell
+        │
+        ▼
+Notification Dropdown
+        │
+        ▼
+Desktop Notifications
+```
 
-✔ Return character to Ready to Plant state
+Benefits:
 
-✔ Final farming workflow testing
+✔ Live notification updates
 
-🌱 Farming Engine Architecture
+✔ Browser notification support
+
+✔ No duplicate notifications
+
+✔ Multi-character support
+
+✔ Infinite notification cycles
+
+✔ Clear separation of responsibilities
+
+✔ Ready for future mobile notifications
+
+---
+
+# 🌱 Farming Engine Architecture
 
 BerryMaster now follows a layered farming architecture.
 
+```
 Berry Database
         │
         ▼
@@ -774,10 +817,20 @@ Watering Service
 Harvest Service
         │
         ▼
+Notification Service
+        │
+        ▼
+Notification Context
+        │
+        ▼
+Browser Notifications
+        │
+        ▼
 Character Context
         │
         ▼
 Character Cards
+```
 
 Business logic is now completely separated from UI components.
 
@@ -785,66 +838,23 @@ Benefits:
 
 ✔ Easier maintenance
 
-✔ Easier future expansion
+✔ Easier testing
 
-✔ Cleaner code
+✔ Better scalability
 
-✔ Better testing
+✔ Cleaner architecture
 
-✔ Supports future notification engine
+✔ Reusable services
 
-🌾 Farming Profiles
+✔ Modular notification engine
 
-BerryMaster now supports multiple farming strategies based on berry growth time.
+✔ Ready for future inventory integration
 
-16 Hour Berries
+---
 
-✔ Automatically watered on planting
+# 🗺 Updated Roadmap
 
-✔ Second watering after 10 hours
-
-✔ Harvest window: 8 hours
-
-20 Hour Berries
-
-✔ Automatically watered on planting
-
-✔ Second watering after 10 hours
-
-✔ Harvest window: 8 hours
-
-42 Hour Berries
-
-✔ No automatic watering
-
-✔ First watering after 3 hours
-
-✔ Repeat watering every 12 hours
-
-✔ Harvest window: 8 hours
-
-44 Hour Berries
-
-✔ No automatic watering
-
-✔ First watering after 3 hours
-
-✔ Repeat watering every 12 hours
-
-✔ Harvest window: 8 hours
-
-67 Hour Berries
-
-✔ No automatic watering
-
-✔ First watering after 3 hours
-
-✔ Repeat watering every 12 hours
-
-✔ Harvest window: 8 hours
-
-🗺 Updated Roadmap
-Sprint 9 — Farming Engine 🌱
+## Sprint 9 — Farming Engine 🌱
 
 Completed:
 
@@ -872,7 +882,9 @@ Status:
 
 ✅ Complete
 
-Sprint 10 — Farming Workflow 💧🌾
+---
+
+## Sprint 10 — Farming Workflow 💧🌾🍂
 
 Completed:
 
@@ -882,164 +894,418 @@ Completed:
 
 ✔ Water counters
 
-✔ Last Water support
+✔ Last Water tracking
 
-✔ Next Water support
+✔ Next Water tracking
 
-✔ Countdown engine
+✔ Harvest service
 
-✔ Harvest timer
+✔ Harvest workflow
 
 ✔ Wilt timer
 
-✔ Farming profiles
+✔ Harvest window
+
+✔ Countdown engine
+
+✔ Live countdown updates
+
+✔ Character lifecycle
+
+✔ Character reset after harvesting
+
+✔ Farming profile implementation
 
 ✔ Character card redesign
 
-Current:
+✔ Debug Berry testing
 
-🔄 Harvest workflow
-
-🔄 Harvest service
-
-🔄 Full farming lifecycle
+✔ Complete farming lifecycle validation
 
 Status:
 
-🔄 In Progress
+✅ Complete
 
-Sprint 11 — Notification Engine 🔔
+---
+
+## Sprint 11 — Notification Engine 🔔
+
+Completed:
+
+✔ Notification Context
+
+✔ Notification Service
+
+✔ Browser Notification Service
+
+✔ Notification History
+
+✔ Notification Bell
+
+✔ Notification Dropdown
+
+✔ Browser Notification API integration
+
+✔ Notification permission request
+
+✔ Desktop notifications
+
+✔ Water reminders
+
+✔ Harvest reminders
+
+✔ Wilt reminders
+
+✔ Live notification badge
+
+✔ Priority-based notifications
+
+✔ Notification deduplication
+
+✔ Multi-character notifications
+
+✔ Infinite farming cycle notifications
+
+✔ Live synchronization
+
+✔ Farming-cycle notification IDs
+
+✔ Browser notification architecture
+
+Major Improvements:
+
+✔ Notification IDs now uniquely identify each farming cycle using:
+
+```
+Character ID
+        +
+Plant Time
+        +
+Notification Type
+```
+
+instead of:
+
+```
+Character ID
+        +
+Notification Type
+```
+
+This guarantees reliable notifications across every farming cycle while preventing duplicates.
+
+Status:
+
+✅ Complete
+
+---
+
+## Sprint 12 — Application Polish ✨
+
+Current Focus:
+
+The core farming engine is now considered feature-complete for the first playable version.
+
+Sprint 12 shifts the focus from building core mechanics to improving the overall application experience.
 
 Planned:
 
-Desktop notifications
-Water reminders
-Harvest reminders
-Wilt reminders
-Notification Center
-Foundation for Mobile Companion
-Sprint 12 — Inventory System 📦
+⬜ Notification Center improvements
 
-Current plan:
+⬜ Notification history
 
-Berry inventory
-Quantity management
-Filters
-Search
+⬜ Notification actions
 
-Design Decision:
+⬜ Better notification styling
 
-Seed conversion has been postponed.
+⬜ Improved Character Cards
 
-Reason:
+⬜ Better Dashboard overview
 
-Berry yields are deterministic.
+⬜ UI consistency improvements
 
-Seed yields are probabilistic.
+⬜ Additional reusable UI components
 
-BerryMaster Version 1 focuses on assisting berry farming rather than simulating every game mechanic.
+⬜ Performance optimization
 
-Sprint 13 — Analytics 📈
+⬜ Codebase cleanup
 
-Planned:
+⬜ Developer experience improvements
 
-Farming statistics
-Berry production
-Harvest history
-Farming efficiency
-Profit analysis
-Sprint 14 — Settings ⚙
+Goal:
+
+Transform BerryMaster from a functional farming tool into a polished desktop application.
+
+Status:
+
+🚧 In Progress
+
+---
+
+## Future Roadmap
+
+### Sprint 13 — Inventory System 📦
 
 Planned:
 
-Theme
-Notifications
-Backup
-Preferences
-💡 Planned Improvements
-UI Polish
-Toast notifications
-Animations
-Better icons
-Loading states
-Improved dashboard
-Future Features
-Berry search
-Favorite berries
-Profit calculator
-Farming route planner
-Export / Import
-Cloud Sync
-Automation assistant
-Mobile companion
-📝 Development Notes
+⬜ Berry Inventory
 
-BerryMaster development philosophy:
+⬜ Seed Inventory
 
-Build features only when required
-Keep UI components reusable
-Keep business logic inside services
-Keep calculations inside utilities
-Prefer modular architecture
-Strong TypeScript typing
-Design for long-term scalability
-Keep the project beginner-friendly and maintainable
-Avoid over-engineering while keeping expansion simple
-🚀 Current Stable Milestone
+⬜ Harvest storage
 
-Latest Completed:
+⬜ Inventory statistics
 
-Berry Farming Engine
+⬜ Inventory management
 
-Includes:
+---
 
-✔ Character CRUD
+### Sprint 14 — Calendar 📅
 
-✔ Berry Database
+Planned:
 
-✔ Planting System
+⬜ Farming Calendar
 
-✔ Watering System
+⬜ Daily schedule
 
-✔ Countdown Engine
+⬜ Harvest planner
 
-✔ Character Status System
+⬜ Watering planner
 
-✔ Farming Profiles
+⬜ Character overview
 
-✔ Time Calculation Utilities
+---
 
-✔ Services Architecture
+### Sprint 15 — Analytics 📊
 
-✔ Modular Utilities
+Planned:
 
-✔ Architecture Cleanup
+⬜ Harvest analytics
 
-▶ Next Session
+⬜ Berry statistics
 
-Continue:
+⬜ Farming efficiency
 
-Sprint 10 — Harvest Workflow
+⬜ Character productivity
 
-Tasks:
+⬜ Growth reports
 
-Complete Harvest Service
-Reset character after harvesting
-Complete farming lifecycle
-Test all supported berry growth profiles
-Prepare Notification Engine
+⬜ Historical data
 
-🍓 BerryMaster Status:
+---
 
-Foundation: COMPLETE
+### Sprint 16 — Quality of Life 🌟
 
-Architecture: COMPLETE
+Ideas:
 
-Berry Database: COMPLETE
+⬜ Search
 
-Farming Engine: COMPLETE
+⬜ Filtering
 
-Farming Workflow: IN PROGRESS
+⬜ Sorting
 
-Next Big System:
-🔔 Notification Engine
+⬜ Keyboard shortcuts
+
+⬜ Bulk actions
+
+⬜ Better animations
+
+⬜ Theme improvements
+
+⬜ Accessibility improvements
+
+---
+
+### Sprint 17 — PWA & Mobile 📱
+
+Planned:
+
+⬜ Progressive Web App
+
+⬜ Installable desktop app
+
+⬜ Installable mobile app
+
+⬜ Mobile responsive layout
+
+⬜ Offline support
+
+⬜ Push Notifications
+
+⬜ Background notification support
+
+---
+
+# 💡 Planned Improvements
+
+Future improvements that are intentionally postponed until the core application is complete.
+
+### UI Polish
+
+⬜ Modern dashboard
+
+⬜ Beautiful backgrounds
+
+⬜ Better color palette
+
+⬜ Improved spacing
+
+⬜ Glassmorphism effects
+
+⬜ Smooth animations
+
+⬜ Better typography
+
+⬜ Consistent icons
+
+⬜ Better empty states
+
+⬜ Loading animations
+
+⬜ Professional design system
+
+---
+
+### Performance
+
+⬜ Context optimization
+
+⬜ Memoization
+
+⬜ Better rendering performance
+
+⬜ Reduced re-renders
+
+⬜ Faster filtering
+
+⬜ Lazy loading
+
+---
+
+### Architecture
+
+⬜ Further service separation
+
+⬜ Better utility organization
+
+⬜ Additional reusable hooks
+
+⬜ Better testing support
+
+⬜ Improved documentation
+
+---
+
+# 📒 Development Notes
+
+BerryMaster follows a feature-first development philosophy.
+
+General principles:
+
+✔ Build the architecture first.
+
+✔ Keep business logic outside UI components.
+
+✔ Avoid premature abstractions.
+
+✔ Refactor only when necessary.
+
+✔ Prefer readability over clever code.
+
+✔ Complete one subsystem before starting another.
+
+✔ Test every feature thoroughly before moving forward.
+
+Every sprint should leave the project in a stable, deployable state.
+
+---
+
+# 🏆 Current Stable Milestone
+
+BerryMaster currently includes:
+
+✅ Project Architecture
+
+✅ Routing
+
+✅ Dashboard
+
+✅ Character Management
+
+✅ Berry Database
+
+✅ Farming Profiles
+
+✅ Planting Engine
+
+✅ Watering Engine
+
+✅ Harvest Engine
+
+✅ Wilt Engine
+
+✅ Countdown Timers
+
+✅ Character Status System
+
+✅ Notification Engine
+
+✅ Browser Notifications
+
+✅ Notification Center
+
+BerryMaster has now evolved into a fully functional berry farming companion capable of managing the complete farming lifecycle.
+
+---
+
+# ▶ Next Session
+
+Sprint 12 will continue with application polish.
+
+Immediate goals:
+
+• Improve Notification Center UI
+
+• Continue dashboard improvements
+
+• Begin overall application polish
+
+• Prepare the application for future PWA support
+
+The focus now shifts toward making BerryMaster feel as polished and enjoyable as professional desktop applications.
+
+---
+
+# 🍓 BerryMaster Status
+
+Project Phase:
+
+**Core Systems Complete**
+
+Overall Progress:
+
+🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜
+
+≈ **80% of the planned core application**
+
+Current Direction:
+
+The remaining work primarily consists of:
+
+• Inventory
+
+• Calendar
+
+• Analytics
+
+• UI Polish
+
+• PWA Support
+
+The foundation of BerryMaster is now solid, scalable, and ready for future expansion.
+
+---
+
+*"Great software isn't built in one giant leap. It's built one well-designed sprint at a time."*
+
+— BerryMaster Development Journal

@@ -46,29 +46,7 @@ export default function BerrySelector() {
 
   return (
     <div className="space-y-6">
-      {/* Search */}
-
-      <input
-        type="text"
-        placeholder="Search berries..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="
-          w-full
-          rounded-lg
-          border
-          border-slate-700
-          bg-slate-900
-          px-4
-          py-3
-          text-white
-          placeholder:text-slate-500
-          outline-none
-          transition
-          focus:border-emerald-500
-        "
-      />
-
+      
       {/* Category Buttons */}
 
       <div className="flex flex-wrap gap-3">
