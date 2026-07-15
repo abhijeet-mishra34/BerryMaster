@@ -46,10 +46,6 @@ export default function CharacterCard({
 
   const status = getCharacterStatus(character);
 
-  const canHarvest =
-    !!character.harvestAt &&
-    new Date(character.harvestAt) <= now;
-
   const characterNumber = String(
     index + 1
   ).padStart(3, "0");

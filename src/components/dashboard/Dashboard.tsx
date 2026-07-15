@@ -1,62 +1,147 @@
 import { useCharacters } from "../../context/CharacterContext";
-import StatCard from "../ui/StatCard";
+
 import Section from "../ui/Section";
-import Button from "../ui/Button";
+import StatCard from "../ui/StatCard";
+
+import { calculateFarmStats } from "../../utils/farmStats";
 
 export default function Dashboard() {
   const { characters } = useCharacters();
+
+  const stats = calculateFarmStats(characters);
+
+  // =====================================
+  // Greeting (uses the player's local time)
+  // =====================================
+
+  const hour = new Date().getHours();
+
+  let greetingTitle = "";
+  let greetingSubtitle = "";
+
+  if (hour < 12) {
+    greetingTitle = "🌞 Good Morning!";
+    greetingSubtitle =
+      "Your berry farm is ready for another productive day.";
+  } else if (hour < 18) {
+    greetingTitle = "☀️ Good Afternoon!";
+    greetingSubtitle =
+      "Keep your berry farm healthy and thriving.";
+  } else {
+    greetingTitle = "🌙 Good Evening!";
+    greetingSubtitle =
+      "Time to check on your berries before calling it a day.";
+  }
+
+  // =====================================
+  // Dashboard Cards
+  // =====================================
+
+  const topStats = [
+    {
+      title: "Characters",
+      value: stats.totalCharacters,
+      icon: "👤",
+      color: "emerald" as const,
+    },
+    {
+      title: "Planted",
+      value: `${stats.planted}/${stats.totalCharacters}`,
+      icon: "🌱",
+      color: "green" as const,
+    },
+    {
+      title: "Need Water",
+      value: stats.needWater,
+      icon: "💧",
+      color: "blue" as const,
+    },
+  ];
+
+  const bottomStats = [
+    {
+      title: "Harvest Ready",
+      value: stats.readyHarvest,
+      icon: "🌾",
+      color: "amber" as const,
+    },
+    {
+      title: "Wilted",
+      value: stats.wilted,
+      icon: "🍂",
+      color: "red" as const,
+    },
+  ];
+
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold">
-          Dashboard
+    <div className="space-y-12">
+      {/* =====================================
+          Greeting
+      ===================================== */}
+
+      <div className="space-y-3">
+        <h1 className="text-5xl font-bold tracking-tight text-white">
+          {greetingTitle}
         </h1>
 
-        <p className="mt-2 text-slate-400">
-          Manage all your berry farming characters in one place.
+        <p className="max-w-2xl text-lg text-slate-400">
+          {greetingSubtitle}
         </p>
-
-        <div className="mt-6">
-          <Button>
-            + Add Character
-          </Button>
-        </div>
       </div>
 
+      {/* =====================================
+          Farm Overview
+      ===================================== */}
+
       <Section
-        title="Overview"
-        subtitle="Your farming activity at a glance."
+        title="Farm Overview"
+        subtitle="A live summary of your farming progress."
       >
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          {[
-  {
-    title: "Characters",
-    value: characters.length,
-    color: "emerald",
-  },
-  {
-    title: "Active Farms",
-    value: 0,
-    color: "amber",
-  },
-  {
-    title: "Need Water",
-    value: 0,
-    color: "blue",
-  },
-  {
-    title: "Ready to Harvest",
-    value: 0,
-    color: "green",
-  },
-].map((stat) => (
+        {/* Top Row */}
+
+        <div className="grid gap-6 lg:grid-cols-3">
+          {topStats.map((stat) => (
             <StatCard
               key={stat.title}
               title={stat.title}
               value={stat.value}
+              icon={stat.icon}
               color={stat.color}
             />
           ))}
+        </div>
+
+        {/* Bottom Row */}
+
+        <div className="mt-8 flex justify-center gap-6">
+  {bottomStats.map((stat) => (
+    <div
+      key={stat.title}
+      className="w-full max-w-md"
+    >
+      <StatCard
+        title={stat.title}
+        value={stat.value}
+        icon={stat.icon}
+        color={stat.color}
+      />
+    </div>
+  ))}
+</div>
+      </Section>
+
+      {/* =====================================
+          Farm Status
+      ===================================== */}
+
+      <Section
+        title="Farm Status"
+        subtitle="Overall farm condition."
+      >
+        <div className="flex h-96 items-center justify-center rounded-2xl border border-dashed border-slate-700 bg-slate-900/40">
+          <p className="text-lg text-slate-500">
+            🥧 Farm Status Pie Chart Coming Soon
+          </p>
         </div>
       </Section>
     </div>
