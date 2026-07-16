@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+
 const menuItems = [
   { label: "🏠 Dashboard", path: "/" },
   { label: "👤 Characters", path: "/characters" },
@@ -6,7 +7,9 @@ const menuItems = [
   { label: "📦 Inventory", path: "/inventory" },
   { label: "📅 Calendar", path: "/calendar" },
   { label: "📈 Analytics", path: "/analytics" },
-  { label: "⚙ Settings", path: "/settings" },
+  { label: "⚙️ Settings", path: "/settings" },
+  { label: "💬 Feedback", path: "/feedback" },
+  { label: "🌐 About", path: "/about" },
 ];
 
 export default function Sidebar() {
@@ -20,19 +23,19 @@ export default function Sidebar() {
 
       <nav className="p-4">
         {menuItems.map((item) => (
-         <NavLink
-  key={item.path}
-  to={item.path}
-  className={({ isActive }) =>
-    `mb-2 block w-full rounded-lg px-4 py-3 transition ${
-      isActive
-        ? "bg-emerald-500 text-slate-950 font-semibold"
-        : "hover:bg-slate-800"
-    }`
-  }
->
-  {item.label}
-</NavLink>
+          <NavLink
+            key={item.path}
+            to={item.path}
+            className={({ isActive }) =>
+              `mb-2 block w-full rounded-lg px-4 py-3 transition ${
+                isActive
+                  ? "bg-emerald-500 font-semibold text-slate-950"
+                  : "hover:bg-slate-800"
+              }`
+            }
+          >
+            {item.label}
+          </NavLink>
         ))}
       </nav>
     </aside>

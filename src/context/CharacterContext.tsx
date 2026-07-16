@@ -16,6 +16,8 @@ import { plantBerryOnCharacter } from "../services/plantingService";
 import { waterBerryOnCharacter } from "../services/wateringService";
 import { harvestBerryOnCharacter } from "../services/harvestService";
 
+import { useActivities } from "./ActivityContext";
+
 type CharacterContextType = {
   characters: Character[];
 
@@ -37,9 +39,9 @@ type CharacterContextType = {
     characterId: string
   ) => void;
 
- harvestBerry: (
-  characterId: string
-) => void;
+  harvestBerry: (
+    characterId: string
+  ) => void;
 };
 
 const CharacterContext = createContext<
@@ -51,13 +53,16 @@ export function CharacterProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [characters, setCharacters] = useState<Character[]>(() => {
-    const saved = localStorage.getItem(
-      STORAGE_KEYS.CHARACTERS
-    );
+  const [characters, setCharacters] =
+    useState<Character[]>(() => {
+      const saved = localStorage.getItem(
+        STORAGE_KEYS.CHARACTERS
+      );
 
-    return saved ? JSON.parse(saved) : [];
-  });
+      return saved ? JSON.parse(saved) : [];
+    });
+
+  const { addActivity } = useActivities();
 
   useEffect(() => {
     localStorage.setItem(
@@ -151,6 +156,15 @@ export function CharacterProvider({
     characterId: string,
     berry: Berry
   ) {
+    const character = characters.find(
+      (character) =>
+        character.id === characterId
+    );
+
+    if (!character) {
+      return;
+    }
+
     setCharacters((current) =>
       current.map((character) =>
         character.id === characterId
@@ -161,28 +175,45 @@ export function CharacterProvider({
           : character
       )
     );
+
+    addActivity(
+      "planted",
+      `Planted ${berry.name} on ${character.name}`
+    );
   }
 
   /**
    * Waters the currently planted berry.
    */
-  function waterBerry(characterId: string) {
+  function waterBerry(
+    characterId: string
+  ) {
+    const character = characters.find(
+      (character) =>
+        character.id === characterId
+    );
+
+    if (
+      !character ||
+      !character.plantedBerryId
+    ) {
+      return;
+    }
+
+    const berry = berryDatabase.find(
+      (b) =>
+        b.id === character.plantedBerryId
+    );
+
+    if (!berry) {
+      return;
+    }
+
     setCharacters((current) =>
       current.map((character) => {
         if (
-          character.id !== characterId ||
-          !character.plantedBerryId
+          character.id !== characterId
         ) {
-          return character;
-        }
-
-        const berry = berryDatabase.find(
-          (b) =>
-            b.id ===
-            character.plantedBerryId
-        );
-
-        if (!berry) {
           return character;
         }
 
@@ -192,19 +223,70 @@ export function CharacterProvider({
         );
       })
     );
+
+    addActivity(
+      "watered",
+      `Watered ${character.name}'s ${berry.name}`
+    );
   }
 
-  /**
-   * Harvests the planted berry.
-   */
-  function harvestBerry(characterId: string) {
+ /**
+ * Harvests a ready berry or removes a wilted berry.
+ */
+function harvestBerry(
+  characterId: string
+) {
+  const character = characters.find(
+    (character) =>
+      character.id === characterId
+  );
+
+  if (
+    !character ||
+    !character.plantedBerryId
+  ) {
+    return;
+  }
+
+  const berry = berryDatabase.find(
+    (b) =>
+      b.id === character.plantedBerryId
+  );
+
+  if (!berry) {
+    return;
+  }
+
+  const now = Date.now();
+
+  const isWilted =
+    character.wiltAt &&
+    now >=
+      new Date(
+        character.wiltAt
+      ).getTime();
+
   setCharacters((current) =>
     current.map((character) =>
       character.id === characterId
-        ? harvestBerryOnCharacter(character)
+        ? harvestBerryOnCharacter(
+            character
+          )
         : character
     )
   );
+
+  if (isWilted) {
+    addActivity(
+      "wilted",
+      `Removed wilted ${berry.name} from ${character.name}`
+    );
+  } else {
+    addActivity(
+      "harvested",
+      `Harvested ${berry.name} from ${character.name}`
+    );
+  }
 }
 
   return (
@@ -225,7 +307,9 @@ export function CharacterProvider({
 }
 
 export function useCharacters() {
-  const context = useContext(CharacterContext);
+  const context = useContext(
+    CharacterContext
+  );
 
   if (!context) {
     throw new Error(

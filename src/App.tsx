@@ -8,6 +8,7 @@ import InventoryPage from "./pages/InventoryPage";
 import CalendarPage from "./pages/CalendarPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import SettingsPage from "./pages/SettingsPage";
+import AboutPage from "./pages/AboutPage";
 
 export default function App() {
   return (
@@ -15,7 +16,9 @@ export default function App() {
       <Routes>
         <Route path="/" element={<DashboardPage />} />
         <Route path="/characters" element={<CharactersPage />} />
-        <Route path="/berries" element={<BerriesPage />}
+        <Route path="/berries" element={<BerriesPage />}/>
+        <Route path="/settings" element={<SettingsPage />}/>
+        <Route path="/about" element={<AboutPage />}
 />
       </Routes>
     </AppLayout>

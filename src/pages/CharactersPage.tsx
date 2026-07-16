@@ -1,4 +1,12 @@
-import { useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
+import {
+  useLocation,
+} from "react-router-dom";
 
 import CharacterCard from "../components/characters/CharacterCard";
 import CharacterModal from "../components/characters/CharacterModal";
@@ -13,6 +21,8 @@ import { useCharacters } from "../context/CharacterContext";
 import type { Character } from "../types/Character";
 
 export default function CharactersPage() {
+  const location = useLocation();
+
   const {
     characters,
     addCharacter,
@@ -22,50 +32,124 @@ export default function CharactersPage() {
     harvestBerry,
   } = useCharacters();
 
-  const [isCharacterModalOpen, setIsCharacterModalOpen] =
-    useState(false);
+  const [
+    isCharacterModalOpen,
+    setIsCharacterModalOpen,
+  ] = useState(false);
 
-  const [editingCharacter, setEditingCharacter] =
-    useState<Character | null>(null);
+  const [
+    editingCharacter,
+    setEditingCharacter,
+  ] = useState<Character | null>(null);
 
-  const [plantCharacter, setPlantCharacter] =
-    useState<Character | null>(null);
+  const [
+    plantCharacter,
+    setPlantCharacter,
+  ] = useState<Character | null>(null);
 
-  const [changeBerryCharacter, setChangeBerryCharacter] =
-    useState<Character | null>(null);
+  const [
+    changeBerryCharacter,
+    setChangeBerryCharacter,
+  ] = useState<Character | null>(null);
 
-  const [isChangeBerryOpen, setIsChangeBerryOpen] =
-    useState(false);
+  const [
+    isChangeBerryOpen,
+    setIsChangeBerryOpen,
+  ] = useState(false);
 
-  const [isDeleteOpen, setIsDeleteOpen] =
-    useState(false);
+  const [
+    isDeleteOpen,
+    setIsDeleteOpen,
+  ] = useState(false);
 
-  const [selectedCharacter, setSelectedCharacter] =
-    useState<{
-      id: string;
-      name: string;
-      index: number;
-    } | null>(null);
+  const [
+    selectedCharacter,
+    setSelectedCharacter,
+  ] = useState<{
+    id: string;
+    name: string;
+    index: number;
+  } | null>(null);
 
-  // NEW
   const [
     highlightedCharacterId,
     setHighlightedCharacterId,
   ] = useState<string | null>(null);
+
+  const characterRefs =
+    useRef<
+      Record<
+        string,
+        HTMLDivElement | null
+      >
+    >({});
+
+  // =====================================
+  // Navigate To & Highlight Character
+  // =====================================
+
+  useEffect(() => {
+    const characterId =
+      location.state?.highlightCharacterId;
+
+    if (!characterId) {
+      return;
+    }
+
+    setHighlightedCharacterId(characterId);
+
+    const scrollTimer =
+      window.setTimeout(() => {
+        characterRefs.current[
+          characterId
+        ]?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }, 100);
+
+    const highlightTimer =
+      window.setTimeout(() => {
+        setHighlightedCharacterId(
+          null
+        );
+      }, 2200);
+
+    return () => {
+      window.clearTimeout(
+        scrollTimer
+      );
+
+      window.clearTimeout(
+        highlightTimer
+      );
+    };
+  }, [location.state]);
+
+  // =====================================
+  // Character Actions
+  // =====================================
 
   function openAddModal() {
     setEditingCharacter(null);
     setIsCharacterModalOpen(true);
   }
 
-  function openEditModal(character: Character) {
+  function openEditModal(
+    character: Character
+  ) {
     setEditingCharacter(character);
     setIsCharacterModalOpen(true);
   }
 
-  function handleSaveCharacter(name: string) {
+  function handleSaveCharacter(
+    name: string
+  ) {
     if (editingCharacter) {
-      updateCharacter(editingCharacter.id, name);
+      updateCharacter(
+        editingCharacter.id,
+        name
+      );
     } else {
       addCharacter(name);
     }
@@ -74,29 +158,41 @@ export default function CharactersPage() {
   }
 
   function handleDelete() {
-    if (!selectedCharacter) return;
+    if (!selectedCharacter) {
+      return;
+    }
 
-    deleteCharacter(selectedCharacter.id);
+    deleteCharacter(
+      selectedCharacter.id
+    );
 
     setSelectedCharacter(null);
     setIsDeleteOpen(false);
   }
 
-  // NEW
-  function highlightCharacter(characterId: string) {
-    setHighlightedCharacterId(characterId);
-
-     window.setTimeout(() => {
-    setHighlightedCharacterId((current) =>
-      current === characterId ? null : current
+  function highlightCharacter(
+    characterId: string
+  ) {
+    setHighlightedCharacterId(
+      characterId
     );
-  }, 2000);
-}
+
+    window.setTimeout(() => {
+      setHighlightedCharacterId(
+        (current) =>
+          current === characterId
+            ? null
+            : current
+      );
+    }, 2000);
+  }
 
   return (
     <div className="space-y-8">
 
-      {/* Header */}
+      {/* =====================================
+          Header
+      ===================================== */}
 
       <div className="flex items-center justify-between">
 
@@ -112,73 +208,110 @@ export default function CharactersPage() {
 
         </div>
 
-        <Button onClick={openAddModal}>
+        <Button
+          onClick={openAddModal}
+        >
           ➕ Add Character
         </Button>
 
       </div>
 
-      {/* Character Grid */}
+      {/* =====================================
+          Character Grid
+      ===================================== */}
 
       <div className="grid gap-6 lg:grid-cols-2">
 
-        {characters.map((character, index) => (
+        {characters.map(
+          (character, index) => (
 
-          <CharacterCard
-            key={character.id}
-            character={character}
-            index={index}
+            <CharacterCard
+              key={character.id}
 
-            highlight={
-              highlightedCharacterId === character.id
-                ? "plant"
-                : null
-            }
+              ref={(element) => {
+                characterRefs.current[
+                  character.id
+                ] = element;
+              }}
 
-            onPlant={() =>
-              setPlantCharacter(character)
-            }
+              character={character}
+              index={index}
 
-            onWater={() =>
-              waterBerry(character.id)
-            }
+              highlight={
+                highlightedCharacterId ===
+                character.id
+                  ? "plant"
+                  : null
+              }
 
-            onHarvest={() =>
-              harvestBerry(character.id)
-            }
+              onPlant={() =>
+                setPlantCharacter(
+                  character
+                )
+              }
 
-            onChangeBerry={() => {
-              setChangeBerryCharacter(character);
-              setIsChangeBerryOpen(true);
-            }}
+              onWater={() =>
+                waterBerry(
+                  character.id
+                )
+              }
 
-            onEdit={() =>
-              openEditModal(character)
-            }
+              onHarvest={() =>
+                harvestBerry(
+                  character.id
+                )
+              }
 
-            onDelete={() => {
-              setSelectedCharacter({
-                id: character.id,
-                name: character.name,
-                index,
-              });
+              onChangeBerry={() => {
+                setChangeBerryCharacter(
+                  character
+                );
 
-              setIsDeleteOpen(true);
-            }}
-          />
+                setIsChangeBerryOpen(
+                  true
+                );
+              }}
 
-        ))}
+              onEdit={() =>
+                openEditModal(
+                  character
+                )
+              }
+
+              onDelete={() => {
+                setSelectedCharacter({
+                  id: character.id,
+                  name: character.name,
+                  index,
+                });
+
+                setIsDeleteOpen(
+                  true
+                );
+              }}
+            />
+
+          )
+        )}
 
       </div>
 
-            {/* Add / Edit Character */}
+      {/* =====================================
+          Add / Edit Character
+      ===================================== */}
 
       <CharacterModal
-        isOpen={isCharacterModalOpen}
-        onClose={() =>
-          setIsCharacterModalOpen(false)
+        isOpen={
+          isCharacterModalOpen
         }
-        onSave={handleSaveCharacter}
+        onClose={() =>
+          setIsCharacterModalOpen(
+            false
+          )
+        }
+        onSave={
+          handleSaveCharacter
+        }
         title={
           editingCharacter
             ? "Edit Character"
@@ -190,14 +323,19 @@ export default function CharactersPage() {
             : "Add Character"
         }
         initialName={
-          editingCharacter?.name ?? ""
+          editingCharacter?.name ??
+          ""
         }
       />
 
-      {/* Plant Berry */}
+      {/* =====================================
+          Plant Berry
+      ===================================== */}
 
       <Modal
-        isOpen={plantCharacter !== null}
+        isOpen={
+          plantCharacter !== null
+        }
         title={
           plantCharacter?.plantedBerryId
             ? "🔄 Change Berry"
@@ -207,52 +345,92 @@ export default function CharactersPage() {
           setPlantCharacter(null)
         }
       >
+
         {plantCharacter && (
+
           <PlantBerrySelector
-  characterId={plantCharacter.id}
-  onClose={() =>
-    setPlantCharacter(null)
-  }
-  onPlantSuccess={() =>
-    highlightCharacter(plantCharacter.id)
-  }
-/>
+            characterId={
+              plantCharacter.id
+            }
+            onClose={() =>
+              setPlantCharacter(
+                null
+              )
+            }
+            onPlantSuccess={() =>
+              highlightCharacter(
+                plantCharacter.id
+              )
+            }
+          />
+
         )}
+
       </Modal>
 
-      {/* Delete Confirmation */}
+      {/* =====================================
+          Delete Confirmation
+      ===================================== */}
 
       <ConfirmDialog
         isOpen={isDeleteOpen}
         title="Delete Character"
         message="Are you sure you want to delete this character?"
-        itemName={selectedCharacter?.name}
+        itemName={
+          selectedCharacter?.name
+        }
         confirmText="Delete"
         cancelText="Cancel"
-        onConfirm={handleDelete}
+        onConfirm={
+          handleDelete
+        }
         onCancel={() => {
-          setSelectedCharacter(null);
-          setIsDeleteOpen(false);
+          setSelectedCharacter(
+            null
+          );
+
+          setIsDeleteOpen(
+            false
+          );
         }}
       />
 
-      {/* Change Berry Confirmation */}
+      {/* =====================================
+          Change Berry Confirmation
+      ===================================== */}
 
       <ConfirmDialog
-        isOpen={isChangeBerryOpen}
+        isOpen={
+          isChangeBerryOpen
+        }
         title="Change Planted Berry"
         message="Changing the planted berry will reset the watering progress, harvest timer, wilt timer, and begin a brand-new farming cycle."
-        itemName={changeBerryCharacter?.name}
+        itemName={
+          changeBerryCharacter?.name
+        }
         confirmText="Choose New Berry"
         cancelText="Cancel"
         onConfirm={() => {
-          setPlantCharacter(changeBerryCharacter);
-          setChangeBerryCharacter(null);
-          setIsChangeBerryOpen(false);
+          setPlantCharacter(
+            changeBerryCharacter
+          );
+
+          setChangeBerryCharacter(
+            null
+          );
+
+          setIsChangeBerryOpen(
+            false
+          );
         }}
         onCancel={() => {
-          setChangeBerryCharacter(null);
-          setIsChangeBerryOpen(false);
+          setChangeBerryCharacter(
+            null
+          );
+
+          setIsChangeBerryOpen(
+            false
+          );
         }}
       />
 

@@ -2,7 +2,9 @@ import { useCharacters } from "../../context/CharacterContext";
 
 import Section from "../ui/Section";
 import StatCard from "../ui/StatCard";
-
+import FarmStatusChart from "./FarmStatusChart";
+import NeedsAttention from "./NeedsAttention";
+import RecentActivity from "./RecentActivity";
 import { calculateFarmStats } from "../../utils/farmStats";
 
 export default function Dashboard() {
@@ -11,7 +13,7 @@ export default function Dashboard() {
   const stats = calculateFarmStats(characters);
 
   // =====================================
-  // Greeting (uses the player's local time)
+  // Greeting
   // =====================================
 
   const hour = new Date().getHours();
@@ -75,6 +77,7 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-12">
+
       {/* =====================================
           Greeting
       ===================================== */}
@@ -88,6 +91,7 @@ export default function Dashboard() {
           {greetingSubtitle}
         </p>
       </div>
+
 
       {/* =====================================
           Farm Overview
@@ -114,21 +118,46 @@ export default function Dashboard() {
         {/* Bottom Row */}
 
         <div className="mt-8 flex justify-center gap-6">
-  {bottomStats.map((stat) => (
-    <div
-      key={stat.title}
-      className="w-full max-w-md"
-    >
-      <StatCard
-        title={stat.title}
-        value={stat.value}
-        icon={stat.icon}
-        color={stat.color}
-      />
-    </div>
-  ))}
-</div>
+          {bottomStats.map((stat) => (
+            <div
+              key={stat.title}
+              className="w-full max-w-md"
+            >
+              <StatCard
+                title={stat.title}
+                value={stat.value}
+                icon={stat.icon}
+                color={stat.color}
+              />
+            </div>
+          ))}
+        </div>
       </Section>
+
+
+      {/* =====================================
+          Needs Attention
+      ===================================== */}
+
+      <Section
+        title="Needs Attention"
+        subtitle="Important actions that may require your attention."
+      >
+        <NeedsAttention characters={characters} />
+      </Section>
+
+
+      {/* =====================================
+    Recent Activity
+===================================== */}
+
+<Section
+  title="Recent Activity"
+  subtitle="Your latest farming actions."
+>
+  <RecentActivity />
+</Section>
+
 
       {/* =====================================
           Farm Status
@@ -138,12 +167,9 @@ export default function Dashboard() {
         title="Farm Status"
         subtitle="Overall farm condition."
       >
-        <div className="flex h-96 items-center justify-center rounded-2xl border border-dashed border-slate-700 bg-slate-900/40">
-          <p className="text-lg text-slate-500">
-            🥧 Farm Status Pie Chart Coming Soon
-          </p>
-        </div>
+        <FarmStatusChart stats={stats} />
       </Section>
+
     </div>
   );
 }

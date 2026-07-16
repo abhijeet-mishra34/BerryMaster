@@ -3,6 +3,7 @@ import type { Character } from "../types/Character";
 export type CharacterStatus =
   | "ready"
   | "growing"
+  | "needWater"
   | "harvestReady"
   | "wilted";
 
@@ -43,6 +44,10 @@ export function getCharacterStatus(
     character.wiltAt
   );
 
+  const nextWaterAt = character.nextWaterAt
+    ? new Date(character.nextWaterAt)
+    : null;
+
   // Wilted (highest priority)
   if (now >= wiltAt) {
     return {
@@ -62,6 +67,20 @@ export function getCharacterStatus(
       icon: "🌾",
       className:
         "bg-violet-500/20 text-violet-300 border border-violet-500/30",
+    };
+  }
+
+  // Needs watering
+  if (
+    nextWaterAt &&
+    now >= nextWaterAt
+  ) {
+    return {
+      status: "needWater",
+      label: "Needs Water",
+      icon: "💧",
+      className:
+        "bg-sky-500/20 text-sky-300 border border-sky-500/30",
     };
   }
 

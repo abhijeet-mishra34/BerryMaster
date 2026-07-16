@@ -1,3 +1,5 @@
+import { forwardRef } from "react";
+
 import Button from "../ui/Button";
 
 import type { Character } from "../../types/Character";
@@ -25,19 +27,25 @@ type CharacterCardProps = {
   onDelete: (id: string) => void;
 };
 
-export default function CharacterCard({
-  character,
-  index,
-  highlight,
+const CharacterCard = forwardRef<
+  HTMLDivElement,
+  CharacterCardProps
+>(function CharacterCard(
+  {
+    character,
+    index,
+    highlight,
 
-  onPlant,
-  onWater,
-  onHarvest,
-  onChangeBerry,
+    onPlant,
+    onWater,
+    onHarvest,
+    onChangeBerry,
 
-  onEdit,
-  onDelete,
-}: CharacterCardProps) {
+    onEdit,
+    onDelete,
+  },
+  ref
+) {
   const now = useNow();
 
   const berry = berryDatabase.find(
@@ -54,6 +62,7 @@ export default function CharacterCard({
 
   return (
     <div
+      ref={ref}
       className={`
         rounded-xl
         border
@@ -67,11 +76,11 @@ export default function CharacterCard({
           highlight === "plant"
             ? `
               scale-[1.02]
-border-emerald-400
-shadow-2xl
-shadow-emerald-400/40
-ring-2
-ring-emerald-500/20
+              border-emerald-400
+              shadow-2xl
+              shadow-emerald-400/40
+              ring-2
+              ring-emerald-500/20
             `
             : `
               border-slate-800
@@ -127,6 +136,8 @@ ring-emerald-500/20
 
       <div className="mt-6 space-y-5 border-t border-slate-800 pt-6">
 
+        {/* Berry */}
+
         <div>
 
           <p className={labelClass}>
@@ -139,6 +150,8 @@ ring-emerald-500/20
 
         </div>
 
+        {/* Status */}
+
         <div>
 
           <p className={labelClass}>
@@ -146,12 +159,23 @@ ring-emerald-500/20
           </p>
 
           <span
-            className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold ${status.className}`}
+            className={`
+              inline-flex
+              items-center
+              rounded-full
+              px-3
+              py-1
+              text-sm
+              font-semibold
+              ${status.className}
+            `}
           >
             {status.icon} {status.label}
           </span>
 
         </div>
+
+        {/* Planted */}
 
         <div>
 
@@ -178,7 +202,11 @@ ring-emerald-500/20
             <div className="space-y-1">
 
               <p className="font-semibold text-emerald-400">
-                ⏳ {formatRemainingTime(character.nextWaterAt, now)}
+                ⏳{" "}
+                {formatRemainingTime(
+                  character.nextWaterAt,
+                  now
+                )}
               </p>
 
               <p className="text-xs text-slate-500">
@@ -218,10 +246,14 @@ ring-emerald-500/20
             <div className="space-y-1">
 
               <p className="font-semibold text-yellow-400">
-                ⏰ {
+                ⏰{" "}
+                {
                   status.status === "wilted"
                     ? "Missed"
-                    : formatRemainingTime(character.harvestAt, now)
+                    : formatRemainingTime(
+                        character.harvestAt,
+                        now
+                      )
                 }
               </p>
 
@@ -254,10 +286,14 @@ ring-emerald-500/20
             <div className="space-y-1">
 
               <p className="font-semibold text-red-400">
-                ⏰ {
+                ⏰{" "}
+                {
                   status.status === "wilted"
                     ? "Wilted"
-                    : formatRemainingTime(character.wiltAt, now)
+                    : formatRemainingTime(
+                        character.wiltAt,
+                        now
+                      )
                 }
               </p>
 
@@ -278,7 +314,8 @@ ring-emerald-500/20
         </div>
 
       </div>
-            {/* Actions */}
+
+      {/* Actions */}
 
       <div className="mt-8 flex flex-wrap justify-end gap-3 border-t border-slate-800 pt-6">
 
@@ -315,16 +352,15 @@ ring-emerald-500/20
         )}
 
         {character.plantedBerryId &&
-          status.status === "growing" && (
-
-            <Button
-              variant="secondary"
-              onClick={onChangeBerry}
-            >
-              🔄 Change Berry
-            </Button>
-
-          )}
+  (status.status === "growing" ||
+    status.status === "needWater") && (
+    <Button
+      variant="secondary"
+      onClick={onChangeBerry}
+    >
+      🔄 Change Berry
+    </Button>
+  )}
 
         <Button
           variant="info"
@@ -335,7 +371,9 @@ ring-emerald-500/20
 
         <Button
           variant="danger"
-          onClick={() => onDelete(character.id)}
+          onClick={() =>
+            onDelete(character.id)
+          }
         >
           🗑 Delete
         </Button>
@@ -344,4 +382,6 @@ ring-emerald-500/20
 
     </div>
   );
-}
+});
+
+export default CharacterCard;

@@ -1000,227 +1000,427 @@ Status:
 
 ---
 
-## Sprint 12 — Application Polish ✨
-
+Sprint 12 — Application Polish ✨
 Current Focus:
 
 The core farming engine is now considered feature-complete for the first playable version.
 
-Sprint 12 shifts the focus from building core mechanics to improving the overall application experience.
+Sprint 12 shifted the focus from building core mechanics to improving the overall application experience.
+
+The Dashboard was expanded into a connected farming command center capable of summarizing the entire farm and directing the player toward characters requiring attention.
+
+Completed:
+
+✔ Dashboard Farm Overview improvements
+
+✔ Dashboard statistics integration with the farming engine
+
+✔ Characters statistic card
+
+✔ Planted berries statistic card
+
+✔ Need Water statistic card
+
+✔ Harvest Ready statistic card
+
+✔ Wilted statistic card
+
+✔ Farm status calculation system
+
+✔ Growing status tracking
+
+✔ Need Water status tracking
+
+✔ Ready to Harvest status tracking
+
+✔ Wilted status tracking
+
+✔ Empty character slot tracking
+
+✔ Farm Status donut chart
+
+✔ Dynamic status breakdown
+
+✔ Status-based color system
+
+✔ Status icons
+
+✔ Responsive Farm Status layout
+
+✔ Dynamic chart filtering for active statuses
+
+✔ Dashboard Needs Attention section
+
+✔ Character-specific attention items
+
+✔ Need Water attention detection
+
+✔ Ready to Harvest attention detection
+
+✔ Wilted berry attention detection
+
+✔ Direct navigation from Dashboard to Characters
+
+✔ Exact character targeting
+
+✔ Automatic scrolling to the target character
+
+✔ Character highlight animation
+
+✔ Cross-page Dashboard → Character interaction
+
+Dashboard Architecture:
+
+BerryMaster's Dashboard now follows a connected data flow:
+
+Character Context
+        │
+        ▼
+Farm Statistics
+        │
+        ▼
+Dashboard Overview
+        │
+        ├──► Farm Status Chart
+        │
+        ├──► Needs Attention
+        │
+        └──► Character Navigation
+                    │
+                    ▼
+             Exact Character
+                    │
+                    ▼
+             Auto Scroll
+                    │
+                    ▼
+             Visual Highlight
+
+Benefits:
+
+✔ The Dashboard now reflects real farming data
+
+✔ Players can immediately see the overall condition of their farm
+
+✔ Important actions are surfaced automatically
+
+✔ Players can jump directly to the affected character
+
+✔ No manual searching through large character lists
+
+✔ The system remains scalable for large farming operations
+
+Recent Activity System:
+
+BerryMaster now includes a dedicated farming activity tracking system.
+
+Implemented:
+
+✔ Activity Context
+
+✔ Activity state management
+
+✔ Activity persistence
+
+✔ Recent Activity dashboard section
+
+✔ Activity timestamps
+
+✔ Activity type tracking
+
+✔ Activity history limit
+
+✔ Maximum of 100 stored activities
+
+✔ Automatic removal of older activities when the limit is exceeded
+
+Tracked Activities:
+
+✔ Berry planting
+
+✔ Berry watering
+
+✔ Berry harvesting
+
+✔ Wilted berry clearing
+
+Each activity records information such as:
+
+Activity Type
+Character
+Berry
+Timestamp
+
+Example:
+
+Planted Leppa Berry on Alpha
+Watered Alpha's Leppa Berry
+Harvested Leppa Berry from Alpha
+Cleared wilted Leppa Berry from Alpha
+Farming Activity Integration:
+
+Character actions now automatically create activity records.
+
+Character Action
+        │
+        ▼
+Character Context
+        │
+        ├──► Update Character
+        │
+        └──► Create Activity
+                    │
+                    ▼
+             Activity Context
+                    │
+                    ▼
+             Recent Activity
+
+Benefits:
+
+✔ Farming history is automatically generated
+
+✔ No manual logging required
+
+✔ Recent actions are visible from the Dashboard
+
+✔ Activity history remains limited and manageable
+
+✔ The system is ready for future statistics and analytics
+
+Wilted Berry Workflow Improvement:
+
+The wilted berry workflow was refined to distinguish between harvesting and clearing a failed farming cycle.
+
+Implemented:
+
+✔ Wilted berries can be cleared
+
+✔ Wilted berry removal no longer represents a successful harvest
+
+✔ Harvest-ready berries are recorded as harvested
+
+✔ Wilted berries are recorded as cleared
+
+✔ Activity history now accurately reflects farming outcomes
+
+This creates a clearer distinction between:
+
+Successful Farming Cycle
+        │
+        ▼
+Harvested Berry
+
+and:
+
+Missed Farming Cycle
+        │
+        ▼
+Wilted Berry
+        │
+        ▼
+Cleared Wilted Berry
+Character Navigation System:
+
+The Dashboard and Characters page are now directly connected.
+
+When a player selects a character from the Needs Attention section:
+
+Needs Attention
+        │
+        ▼
+Selected Character ID
+        │
+        ▼
+Navigate to Characters Page
+        │
+        ▼
+Find Exact Character
+        │
+        ▼
+Scroll Into View
+        │
+        ▼
+Highlight Character
+
+The system uses the character's unique ID rather than its position in the character list.
+
+This means the system remains reliable even when:
+
+✔ Characters are added
+
+✔ Characters are deleted
+
+✔ The character list becomes large
+
+✔ Character ordering changes
+
+UI Improvements:
+
+Completed:
+
+✔ Dashboard section organization
+
+✔ Farm Overview layout
+
+✔ Farm Status section
+
+✔ Needs Attention section
+
+✔ Recent Activity section
+
+✔ Responsive Dashboard layouts
+
+✔ Dynamic status indicators
+
+✔ Status color consistency
+
+✔ Character highlight animation
+
+✔ Improved visual hierarchy
+
+✔ Improved dashboard navigation flow
+
+Current Status:
+
+✅ Dashboard functionality complete
+
+✅ Farm monitoring complete
+
+✅ Needs Attention system complete
+
+✅ Recent Activity system complete
+
+✅ Character navigation complete
+
+✅ Exact character scrolling complete
+
+✅ Character highlighting complete
+
+⏳ Final UI polish pending
+
+🧭 Pre-Launch Feature Audit
+
+BerryMaster has now reached the point where the major core systems are implemented.
+
+The next development phase is no longer focused on blindly adding features.
+
+The project is now entering a structured pre-launch audit.
+
+The purpose of this phase is to verify that every existing system works together correctly before final polish and release preparation.
+
+Audit Areas:
+Dashboard:
+
+⬜ Verify empty farm state
+
+⬜ Verify no-character state
+
+⬜ Verify farm statistics
+
+⬜ Verify donut chart
+
+⬜ Verify status breakdown
+
+⬜ Verify Needs Attention
+
+⬜ Verify Recent Activity
+
+⬜ Verify direct character navigation
+
+⬜ Verify automatic scrolling
+
+⬜ Verify character highlighting
+
+Character System:
+
+⬜ Add character
+
+⬜ Edit character
+
+⬜ Delete character
+
+⬜ Plant berry
+
+⬜ Change berry
+
+⬜ Water berry
+
+⬜ Harvest berry
+
+⬜ Clear wilted berry
+
+⬜ Verify harvest timer
+
+⬜ Verify watering timer
+
+⬜ Verify wilt timer
+
+⬜ Verify character status
+
+⬜ Verify activity logging
+
+Berry System:
+
+⬜ Verify berry database
+
+⬜ Verify berry categories
+
+⬜ Verify berry filtering
+
+⬜ Verify berry search
+
+⬜ Verify favorite berries
+
+⬜ Verify planting flow
+
+Persistence:
+
+⬜ Refresh browser
+
+⬜ Verify characters remain
+
+⬜ Verify farming timers remain
+
+⬜ Verify activities remain
+
+⬜ Verify favorites remain
+
+⬜ Verify notification data remains
+
+✨ Final Polish Run
+
+After the Pre-Launch Feature Audit is complete, BerryMaster will enter the final visual polish phase.
 
 Planned:
 
-⬜ Notification Center improvements
+⬜ Fix remaining card sizing inconsistencies
 
-⬜ Notification history
+⬜ Improve spacing consistency
 
-⬜ Notification actions
+⬜ Improve typography
 
-⬜ Better notification styling
+⬜ Improve responsive layouts
 
-⬜ Improved Character Cards
+⬜ Improve empty states
 
-⬜ Better Dashboard overview
+⬜ Improve animations
 
-⬜ UI consistency improvements
+⬜ Improve hover interactions
 
-⬜ Additional reusable UI components
+⬜ Improve color consistency
 
-⬜ Performance optimization
+⬜ Improve dashboard visual hierarchy
 
-⬜ Codebase cleanup
+⬜ Improve notification UI
 
-⬜ Developer experience improvements
+⬜ Improve loading states
 
-Goal:
+⬜ Improve error states
 
-Transform BerryMaster from a functional farming tool into a polished desktop application.
+⬜ Perform final UX refinement
 
-Status:
-
-🚧 In Progress
-
----
-
-## Future Roadmap
-
-### Sprint 13 — Inventory System 📦
-
-Planned:
-
-⬜ Berry Inventory
-
-⬜ Seed Inventory
-
-⬜ Harvest storage
-
-⬜ Inventory statistics
-
-⬜ Inventory management
-
----
-
-### Sprint 14 — Calendar 📅
-
-Planned:
-
-⬜ Farming Calendar
-
-⬜ Daily schedule
-
-⬜ Harvest planner
-
-⬜ Watering planner
-
-⬜ Character overview
-
----
-
-### Sprint 15 — Analytics 📊
-
-Planned:
-
-⬜ Harvest analytics
-
-⬜ Berry statistics
-
-⬜ Farming efficiency
-
-⬜ Character productivity
-
-⬜ Growth reports
-
-⬜ Historical data
-
----
-
-### Sprint 16 — Quality of Life 🌟
-
-Ideas:
-
-⬜ Search
-
-⬜ Filtering
-
-⬜ Sorting
-
-⬜ Keyboard shortcuts
-
-⬜ Bulk actions
-
-⬜ Better animations
-
-⬜ Theme improvements
-
-⬜ Accessibility improvements
-
----
-
-### Sprint 17 — PWA & Mobile 📱
-
-Planned:
-
-⬜ Progressive Web App
-
-⬜ Installable desktop app
-
-⬜ Installable mobile app
-
-⬜ Mobile responsive layout
-
-⬜ Offline support
-
-⬜ Push Notifications
-
-⬜ Background notification support
-
----
-
-# 💡 Planned Improvements
-
-Future improvements that are intentionally postponed until the core application is complete.
-
-### UI Polish
-
-⬜ Modern dashboard
-
-⬜ Beautiful backgrounds
-
-⬜ Better color palette
-
-⬜ Improved spacing
-
-⬜ Glassmorphism effects
-
-⬜ Smooth animations
-
-⬜ Better typography
-
-⬜ Consistent icons
-
-⬜ Better empty states
-
-⬜ Loading animations
-
-⬜ Professional design system
-
----
-
-### Performance
-
-⬜ Context optimization
-
-⬜ Memoization
-
-⬜ Better rendering performance
-
-⬜ Reduced re-renders
-
-⬜ Faster filtering
-
-⬜ Lazy loading
-
----
-
-### Architecture
-
-⬜ Further service separation
-
-⬜ Better utility organization
-
-⬜ Additional reusable hooks
-
-⬜ Better testing support
-
-⬜ Improved documentation
-
----
-
-# 📒 Development Notes
-
-BerryMaster follows a feature-first development philosophy.
-
-General principles:
-
-✔ Build the architecture first.
-
-✔ Keep business logic outside UI components.
-
-✔ Avoid premature abstractions.
-
-✔ Refactor only when necessary.
-
-✔ Prefer readability over clever code.
-
-✔ Complete one subsystem before starting another.
-
-✔ Test every feature thoroughly before moving forward.
-
-Every sprint should leave the project in a stable, deployable state.
-
----
-
-# 🏆 Current Stable Milestone
+🏆 Current Stable Milestone
 
 BerryMaster currently includes:
 
@@ -1254,58 +1454,80 @@ BerryMaster currently includes:
 
 ✅ Notification Center
 
-BerryMaster has now evolved into a fully functional berry farming companion capable of managing the complete farming lifecycle.
+✅ Farm Statistics
 
----
+✅ Farm Status Donut Chart
 
-# ▶ Next Session
+✅ Dynamic Status Breakdown
 
-Sprint 12 will continue with application polish.
+✅ Needs Attention System
+
+✅ Recent Activity System
+
+✅ Activity History Limit
+
+✅ Direct Character Navigation
+
+✅ Automatic Character Scrolling
+
+✅ Character Highlighting
+
+BerryMaster has now evolved into a connected farming management system capable of managing the complete farming lifecycle while actively guiding the player toward characters requiring attention.
+
+▶ Next Session
+
+The next development phase will begin with the Pre-Launch Feature Audit.
 
 Immediate goals:
 
-• Improve Notification Center UI
+• Verify all existing core systems
 
-• Continue dashboard improvements
+• Test Dashboard edge cases
 
-• Begin overall application polish
+• Test Character workflows
 
-• Prepare the application for future PWA support
+• Verify Local Storage persistence
 
-The focus now shifts toward making BerryMaster feel as polished and enjoyable as professional desktop applications.
+• Identify remaining launch blockers
 
----
+• Complete final bug fixes
 
-# 🍓 BerryMaster Status
+• Begin the Final Polish Run
+
+The focus now shifts from building the core application to ensuring that every existing feature works reliably as one cohesive system.
+
+🍓 BerryMaster Status
 
 Project Phase:
 
-**Core Systems Complete**
+Pre-Launch Feature Audit
 
 Overall Progress:
 
-🟩🟩🟩🟩🟩🟩🟩🟩⬜⬜
+🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜
 
-≈ **80% of the planned core application**
+≈ 90% of the planned first-version application
 
 Current Direction:
 
 The remaining work primarily consists of:
 
-• Inventory
+• Pre-Launch Feature Audit
 
-• Calendar
-
-• Analytics
+• Final Bug Fixes
 
 • UI Polish
 
-• PWA Support
+• UX Refinement
 
-The foundation of BerryMaster is now solid, scalable, and ready for future expansion.
+• Final Testing
 
----
+• Launch Preparation
 
-*"Great software isn't built in one giant leap. It's built one well-designed sprint at a time."*
+The foundation of BerryMaster is now solid, scalable, and fully connected.
 
-— BerryMaster Development Journal
+The project has successfully moved from a collection of independent systems into a cohesive farming companion capable of monitoring the player's farm, identifying problems, tracking activity, and guiding the player directly to the characters requiring attention.
+
+"Great software isn't built in one giant leap. It's built one well-designed sprint at a time."
+
+— BerryMaster Development Journal  
