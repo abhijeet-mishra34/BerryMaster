@@ -76,7 +76,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="space-y-12">
+    <div className="flex flex-col gap-16">
 
       {/* =====================================
           Greeting
@@ -96,45 +96,47 @@ export default function Dashboard() {
       {/* =====================================
           Farm Overview
       ===================================== */}
+<Section
+  title="Farm Overview"
+  subtitle="A live summary of your farming progress."
+>
+  <div className="flex flex-col gap-12">
 
-      <Section
-        title="Farm Overview"
-        subtitle="A live summary of your farming progress."
-      >
-        {/* Top Row */}
+    {/* Top Row */}
 
-        <div className="grid gap-6 lg:grid-cols-3">
-          {topStats.map((stat) => (
-            <StatCard
-              key={stat.title}
-              title={stat.title}
-              value={stat.value}
-              icon={stat.icon}
-              color={stat.color}
-            />
-          ))}
+    <div className="grid gap-8 lg:grid-cols-3">
+      {topStats.map((stat) => (
+        <StatCard
+          key={stat.title}
+          title={stat.title}
+          value={stat.value}
+          icon={stat.icon}
+          color={stat.color}
+        />
+      ))}
+    </div>
+
+
+    {/* Bottom Row */}
+
+    <div className="flex justify-center gap-8">
+      {bottomStats.map((stat) => (
+        <div
+          key={stat.title}
+          className="w-full max-w-md"
+        >
+          <StatCard
+            title={stat.title}
+            value={stat.value}
+            icon={stat.icon}
+            color={stat.color}
+          />
         </div>
+      ))}
+    </div>
 
-        {/* Bottom Row */}
-
-        <div className="mt-8 flex justify-center gap-6">
-          {bottomStats.map((stat) => (
-            <div
-              key={stat.title}
-              className="w-full max-w-md"
-            >
-              <StatCard
-                title={stat.title}
-                value={stat.value}
-                icon={stat.icon}
-                color={stat.color}
-              />
-            </div>
-          ))}
-        </div>
-      </Section>
-
-
+  </div>
+</Section>
       {/* =====================================
           Needs Attention
       ===================================== */}

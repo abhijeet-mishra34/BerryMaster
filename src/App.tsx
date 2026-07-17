@@ -9,7 +9,7 @@ import CalendarPage from "./pages/CalendarPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import SettingsPage from "./pages/SettingsPage";
 import AboutPage from "./pages/AboutPage";
-
+import FeedbackPage from "./pages/FeedbackPage";
 export default function App() {
   return (
     <AppLayout>
@@ -18,8 +18,8 @@ export default function App() {
         <Route path="/characters" element={<CharactersPage />} />
         <Route path="/berries" element={<BerriesPage />}/>
         <Route path="/settings" element={<SettingsPage />}/>
-        <Route path="/about" element={<AboutPage />}
-/>
+        <Route path="/about" element={<AboutPage />}/>
+        <Route path="/feedback"element={<FeedbackPage />}/>
       </Routes>
     </AppLayout>
   );

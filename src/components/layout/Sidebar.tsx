@@ -1,5 +1,9 @@
 import { NavLink } from "react-router-dom";
 
+type SidebarProps = {
+  isOpen: boolean;
+};
+
 const menuItems = [
   { label: "🏠 Dashboard", path: "/" },
   { label: "👤 Characters", path: "/characters" },
@@ -12,9 +16,26 @@ const menuItems = [
   { label: "🌐 About", path: "/about" },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({
+  isOpen,
+}: SidebarProps) {
   return (
-    <aside className="w-64 border-r border-slate-800 bg-slate-900">
+    <aside
+      className={`
+        shrink-0
+        border-r
+        border-slate-800
+        bg-slate-900
+        transition-all
+        duration-300
+        ${
+          isOpen
+            ? "w-64"
+            : "w-0"
+        }
+        overflow-hidden
+      `}
+    >
       <div className="border-b border-slate-800 p-6">
         <h1 className="text-2xl font-bold text-emerald-400">
           🌿 BerryMaster

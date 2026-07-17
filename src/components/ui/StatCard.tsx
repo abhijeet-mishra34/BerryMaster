@@ -14,6 +14,13 @@ const colorClasses = {
   red: "text-red-400",
 };
 
+const backgroundClasses = {
+  emerald: "bg-emerald-500/10",
+  blue: "bg-sky-500/10",
+  amber: "bg-amber-500/10",
+  red: "bg-red-500/10",
+};
+
 export default function StatCard({
   title,
   value,
@@ -22,24 +29,29 @@ export default function StatCard({
 }: StatCardProps) {
   return (
     <div
-      className="
-        group
-        rounded-2xl
-        border
-        border-slate-800
-        bg-gradient-to-b
-        from-slate-900
-        to-slate-950
-        p-8
-        text-center
-        transition-all
-        duration-300
-        hover:-translate-y-1
-        hover:border-emerald-500
-        hover:shadow-xl
-        hover:shadow-emerald-500/10
-      "
-    >
+  className="
+    group
+    flex
+    min-h-[220px]
+    flex-col
+    items-center
+    justify-center
+    rounded-2xl
+    border
+    border-slate-800
+    bg-gradient-to-b
+    from-slate-900
+    to-slate-950
+    p-8
+    text-center
+    transition-all
+    duration-300
+    hover:-translate-y-1
+    hover:border-emerald-500
+    hover:shadow-xl
+    hover:shadow-emerald-500/10
+  "
+>
       <div
         className={`
           mx-auto
@@ -48,8 +60,8 @@ export default function StatCard({
           w-16
           items-center
           justify-center
-          rounded-full
-          bg-slate-800
+          rounded-2xl
+          ${backgroundClasses[color]}
           text-3xl
           transition-transform
           duration-300
@@ -60,12 +72,27 @@ export default function StatCard({
         {icon}
       </div>
 
-      <h3 className="mt-5 text-sm font-medium tracking-wide text-slate-400 uppercase">
+      <h3
+        className="
+          mt-5
+          text-xs
+          font-semibold
+          uppercase
+          tracking-[0.18em]
+          text-slate-500
+        "
+      >
         {title}
       </h3>
 
       <p
-        className={`mt-3 text-4xl font-bold ${colorClasses[color]}`}
+        className={`
+          mt-2
+          text-4xl
+          font-bold
+          tracking-tight
+          ${colorClasses[color]}
+        `}
       >
         {value}
       </p>
