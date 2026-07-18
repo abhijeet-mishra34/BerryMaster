@@ -32,6 +32,11 @@ export default function CharactersPage() {
     harvestBerry,
   } = useCharacters();
 
+
+  // =====================================
+  // Modal State
+  // =====================================
+
   const [
     isCharacterModalOpen,
     setIsCharacterModalOpen,
@@ -62,6 +67,11 @@ export default function CharactersPage() {
     setIsDeleteOpen,
   ] = useState(false);
 
+
+  // =====================================
+  // Selected Character
+  // =====================================
+
   const [
     selectedCharacter,
     setSelectedCharacter,
@@ -71,10 +81,16 @@ export default function CharactersPage() {
     index: number;
   } | null>(null);
 
+
+  // =====================================
+  // Highlighted Character
+  // =====================================
+
   const [
     highlightedCharacterId,
     setHighlightedCharacterId,
   ] = useState<string | null>(null);
+
 
   const characterRefs =
     useRef<
@@ -83,6 +99,7 @@ export default function CharactersPage() {
         HTMLDivElement | null
       >
     >({});
+
 
   // =====================================
   // Navigate To & Highlight Character
@@ -96,7 +113,9 @@ export default function CharactersPage() {
       return;
     }
 
-    setHighlightedCharacterId(characterId);
+    setHighlightedCharacterId(
+      characterId
+    );
 
     const scrollTimer =
       window.setTimeout(() => {
@@ -126,21 +145,32 @@ export default function CharactersPage() {
     };
   }, [location.state]);
 
+
   // =====================================
   // Character Actions
   // =====================================
 
   function openAddModal() {
     setEditingCharacter(null);
-    setIsCharacterModalOpen(true);
+
+    setIsCharacterModalOpen(
+      true
+    );
   }
+
 
   function openEditModal(
     character: Character
   ) {
-    setEditingCharacter(character);
-    setIsCharacterModalOpen(true);
+    setEditingCharacter(
+      character
+    );
+
+    setIsCharacterModalOpen(
+      true
+    );
   }
+
 
   function handleSaveCharacter(
     name: string
@@ -154,8 +184,11 @@ export default function CharactersPage() {
       addCharacter(name);
     }
 
-    setIsCharacterModalOpen(false);
+    setIsCharacterModalOpen(
+      false
+    );
   }
+
 
   function handleDelete() {
     if (!selectedCharacter) {
@@ -166,9 +199,15 @@ export default function CharactersPage() {
       selectedCharacter.id
     );
 
-    setSelectedCharacter(null);
-    setIsDeleteOpen(false);
+    setSelectedCharacter(
+      null
+    );
+
+    setIsDeleteOpen(
+      false
+    );
   }
+
 
   function highlightCharacter(
     characterId: string
@@ -187,114 +226,361 @@ export default function CharactersPage() {
     }, 2000);
   }
 
+
   return (
-    <div className="space-y-8">
+    <div
+      className="
+        space-y-12
+      "
+    >
+
 
       {/* =====================================
-          Header
+          Page Header
       ===================================== */}
 
-      <div className="flex items-center justify-between">
+      <div
+        className="
+          overflow-hidden
+          rounded-3xl
+          border
+          border-white/[0.08]
+          bg-gradient-to-br
+          from-slate-900
+          via-slate-900/90
+          to-slate-950
+          shadow-xl
+          shadow-black/20
+        "
+      >
 
-        <div>
+        <div
+          className="
+            flex
+            flex-col
+            gap-8
+            p-6
+            sm:p-8
+            lg:flex-row
+            lg:items-center
+            lg:justify-between
+          "
+        >
 
-          <h1 className="text-3xl font-bold text-white">
-            Characters
-          </h1>
+          {/* Page Identity */}
 
-          <p className="mt-1 text-slate-400">
-            Manage your berry farming characters.
-          </p>
+          <div
+            className="
+              flex
+              items-center
+              gap-4
+            "
+          >
+
+            <div
+              className="
+                flex
+                h-14
+                w-14
+                shrink-0
+                items-center
+                justify-center
+                rounded-2xl
+                border
+                border-emerald-400/20
+                bg-emerald-500/10
+                text-3xl
+                shadow-lg
+                shadow-emerald-500/10
+              "
+            >
+              👤
+            </div>
+
+
+            <div>
+
+              <h1
+                className="
+                  text-3xl
+                  font-bold
+                  tracking-tight
+                  text-white
+                "
+              >
+                Characters
+              </h1>
+
+              <p
+                className="
+                  mt-1
+                  max-w-xl
+                  text-sm
+                  leading-relaxed
+                  text-slate-400
+                "
+              >
+                Manage and monitor your berry farming characters.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          {/* Add Character */}
+
+          <Button
+            onClick={openAddModal}
+          >
+            ➕ Add Character
+          </Button>
 
         </div>
 
-        <Button
-          onClick={openAddModal}
+
+        {/* Character Count */}
+
+        <div
+          className="
+            flex
+            items-center
+            gap-3
+            border-t
+            border-white/[0.08]
+            bg-white/[0.02]
+            px-6
+            py-4
+            sm:px-8
+          "
         >
-          ➕ Add Character
-        </Button>
+
+          <div
+            className="
+              flex
+              items-center
+              gap-2
+              rounded-xl
+              border
+              border-emerald-400/20
+              bg-emerald-500/10
+              px-3
+              py-2
+            "
+          >
+
+            <span className="text-sm">
+              👥
+            </span>
+
+            <span
+              className="
+                text-sm
+                font-bold
+                text-emerald-400
+              "
+            >
+              {characters.length}
+            </span>
+
+          </div>
+
+
+          <span
+            className="
+              text-sm
+              text-slate-500
+            "
+          >
+            {characters.length === 1
+              ? "character in your farming team"
+              : "characters in your farming team"}
+          </span>
+
+        </div>
 
       </div>
+
 
       {/* =====================================
-          Character Grid
+          Character Content
       ===================================== */}
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      {characters.length === 0 ? (
 
-        {characters.map(
-          (character, index) => (
+        <div
+          className="
+            flex
+            min-h-[400px]
+            flex-col
+            items-center
+            justify-center
+            rounded-3xl
+            border
+            border-dashed
+            border-slate-700
+            bg-slate-900/50
+            px-6
+            py-16
+            text-center
+            shadow-lg
+            shadow-black/10
+          "
+        >
 
-            <CharacterCard
-              key={character.id}
+          <div
+            className="
+              flex
+              h-24
+              w-24
+              items-center
+              justify-center
+              rounded-3xl
+              border
+              border-emerald-400/20
+              bg-emerald-500/10
+              text-5xl
+            "
+          >
+            👤
+          </div>
 
-              ref={(element) => {
-                characterRefs.current[
+
+          <h2
+            className="
+              mt-7
+              text-2xl
+              font-bold
+              text-white
+            "
+          >
+            No characters yet
+          </h2>
+
+
+          <p
+            className="
+              mt-2
+              max-w-md
+              text-sm
+              leading-relaxed
+              text-slate-400
+            "
+          >
+            Add your first character to begin managing your berry farming operation.
+          </p>
+
+
+          <div
+            className="
+              mt-7
+            "
+          >
+
+            <Button
+              onClick={openAddModal}
+            >
+              ➕ Add Your First Character
+            </Button>
+
+          </div>
+
+        </div>
+
+      ) : (
+
+        <div
+          className="
+            grid
+            gap-8
+            xl:grid-cols-2
+          "
+        >
+
+          {characters.map(
+            (
+              character,
+              index
+            ) => (
+
+              <CharacterCard
+                key={character.id}
+
+                ref={(element) => {
+                  characterRefs.current[
+                    character.id
+                  ] = element;
+                }}
+
+                character={character}
+                index={index}
+
+                highlight={
+                  highlightedCharacterId ===
                   character.id
-                ] = element;
-              }}
+                    ? "plant"
+                    : null
+                }
 
-              character={character}
-              index={index}
+                onPlant={() =>
+                  setPlantCharacter(
+                    character
+                  )
+                }
 
-              highlight={
-                highlightedCharacterId ===
-                character.id
-                  ? "plant"
-                  : null
-              }
+                onWater={() =>
+                  waterBerry(
+                    character.id
+                  )
+                }
 
-              onPlant={() =>
-                setPlantCharacter(
-                  character
-                )
-              }
+                onHarvest={() =>
+                  harvestBerry(
+                    character.id
+                  )
+                }
 
-              onWater={() =>
-                waterBerry(
-                  character.id
-                )
-              }
+                onChangeBerry={() => {
 
-              onHarvest={() =>
-                harvestBerry(
-                  character.id
-                )
-              }
+                  setChangeBerryCharacter(
+                    character
+                  );
 
-              onChangeBerry={() => {
-                setChangeBerryCharacter(
-                  character
-                );
+                  setIsChangeBerryOpen(
+                    true
+                  );
 
-                setIsChangeBerryOpen(
-                  true
-                );
-              }}
+                }}
 
-              onEdit={() =>
-                openEditModal(
-                  character
-                )
-              }
+                onEdit={() =>
+                  openEditModal(
+                    character
+                  )
+                }
 
-              onDelete={() => {
-                setSelectedCharacter({
-                  id: character.id,
-                  name: character.name,
-                  index,
-                });
+                onDelete={() => {
 
-                setIsDeleteOpen(
-                  true
-                );
-              }}
-            />
+                  setSelectedCharacter({
+                    id: character.id,
+                    name: character.name,
+                    index,
+                  });
 
-          )
-        )}
+                  setIsDeleteOpen(
+                    true
+                  );
 
-      </div>
+                }}
+
+              />
+
+            )
+          )}
+
+        </div>
+
+      )}
+
 
       {/* =====================================
           Add / Edit Character
@@ -304,29 +590,35 @@ export default function CharactersPage() {
         isOpen={
           isCharacterModalOpen
         }
+
         onClose={() =>
           setIsCharacterModalOpen(
             false
           )
         }
+
         onSave={
           handleSaveCharacter
         }
+
         title={
           editingCharacter
             ? "Edit Character"
             : "Add Character"
         }
+
         saveButtonText={
           editingCharacter
             ? "Save Changes"
             : "Add Character"
         }
+
         initialName={
           editingCharacter?.name ??
           ""
         }
       />
+
 
       {/* =====================================
           Plant Berry
@@ -336,13 +628,17 @@ export default function CharactersPage() {
         isOpen={
           plantCharacter !== null
         }
+
         title={
           plantCharacter?.plantedBerryId
             ? "🔄 Change Berry"
             : "🌱 Plant Berry"
         }
+
         onClose={() =>
-          setPlantCharacter(null)
+          setPlantCharacter(
+            null
+          )
         }
       >
 
@@ -352,39 +648,53 @@ export default function CharactersPage() {
             characterId={
               plantCharacter.id
             }
+
             onClose={() =>
               setPlantCharacter(
                 null
               )
             }
+
             onPlantSuccess={() =>
               highlightCharacter(
                 plantCharacter.id
               )
             }
+
           />
 
         )}
 
       </Modal>
 
+
       {/* =====================================
           Delete Confirmation
       ===================================== */}
 
       <ConfirmDialog
-        isOpen={isDeleteOpen}
+        isOpen={
+          isDeleteOpen
+        }
+
         title="Delete Character"
+
         message="Are you sure you want to delete this character?"
+
         itemName={
           selectedCharacter?.name
         }
+
         confirmText="Delete"
+
         cancelText="Cancel"
+
         onConfirm={
           handleDelete
         }
+
         onCancel={() => {
+
           setSelectedCharacter(
             null
           );
@@ -392,8 +702,11 @@ export default function CharactersPage() {
           setIsDeleteOpen(
             false
           );
+
         }}
+
       />
+
 
       {/* =====================================
           Change Berry Confirmation
@@ -403,14 +716,21 @@ export default function CharactersPage() {
         isOpen={
           isChangeBerryOpen
         }
+
         title="Change Planted Berry"
+
         message="Changing the planted berry will reset the watering progress, harvest timer, wilt timer, and begin a brand-new farming cycle."
+
         itemName={
           changeBerryCharacter?.name
         }
+
         confirmText="Choose New Berry"
+
         cancelText="Cancel"
+
         onConfirm={() => {
+
           setPlantCharacter(
             changeBerryCharacter
           );
@@ -422,8 +742,11 @@ export default function CharactersPage() {
           setIsChangeBerryOpen(
             false
           );
+
         }}
+
         onCancel={() => {
+
           setChangeBerryCharacter(
             null
           );
@@ -431,7 +754,9 @@ export default function CharactersPage() {
           setIsChangeBerryOpen(
             false
           );
+
         }}
+
       />
 
     </div>

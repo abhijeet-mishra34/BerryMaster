@@ -2,27 +2,67 @@ import { NavLink } from "react-router-dom";
 
 type SidebarProps = {
   isOpen: boolean;
+  onToggleSidebar: () => void;
 };
 
 const menuItems = [
-  { label: "🏠 Dashboard", path: "/" },
-  { label: "👤 Characters", path: "/characters" },
-  { label: "🍓 Berries", path: "/berries" },
-  { label: "📦 Inventory", path: "/inventory" },
-  { label: "📅 Calendar", path: "/calendar" },
-  { label: "📈 Analytics", path: "/analytics" },
-  { label: "⚙️ Settings", path: "/settings" },
-  { label: "💬 Feedback", path: "/feedback" },
-  { label: "🌐 About", path: "/about" },
+  {
+    label: "Dashboard",
+    icon: "🏠",
+    path: "/",
+  },
+  {
+    label: "Characters",
+    icon: "👤",
+    path: "/characters",
+  },
+  {
+    label: "Berries",
+    icon: "🍓",
+    path: "/berries",
+  },
+  {
+    label: "Inventory",
+    icon: "📦",
+    path: "/inventory",
+  },
+  {
+    label: "Calendar",
+    icon: "📅",
+    path: "/calendar",
+  },
+  {
+    label: "Analytics",
+    icon: "📈",
+    path: "/analytics",
+  },
+  {
+    label: "Settings",
+    icon: "⚙️",
+    path: "/settings",
+  },
+  {
+    label: "Feedback",
+    icon: "💬",
+    path: "/feedback",
+  },
+  {
+    label: "About Us",
+    icon: "🌐",
+    path: "/about",
+  },
 ];
 
 export default function Sidebar({
   isOpen,
+  onToggleSidebar,
 }: SidebarProps) {
   return (
     <aside
       className={`
+        flex
         shrink-0
+        flex-col
         border-r
         border-slate-800
         bg-slate-900
@@ -31,34 +71,114 @@ export default function Sidebar({
         ${
           isOpen
             ? "w-64"
-            : "w-0"
+            : "w-20"
         }
-        overflow-hidden
       `}
     >
-      <div className="border-b border-slate-800 p-6">
-        <h1 className="text-2xl font-bold text-emerald-400">
-          🌿 BerryMaster
-        </h1>
+
+      {/* =====================================
+          Sidebar Header
+      ===================================== */}
+
+      <div
+        className={`
+          flex
+          items-center
+          border-b
+          border-slate-800
+          p-4
+          ${
+            isOpen
+              ? "justify-between"
+              : "justify-center"
+          }
+        `}
+      >
+
+        {isOpen && (
+
+          <h1 className="text-2xl font-bold text-emerald-400">
+            🌿 BerryMaster
+          </h1>
+
+        )}
+
+        <button
+          type="button"
+          onClick={onToggleSidebar}
+          className="
+            rounded-lg
+            p-2
+            text-lg
+            text-slate-400
+            transition
+            hover:bg-slate-800
+            hover:text-white
+          "
+          aria-label="Toggle sidebar"
+        >
+          {isOpen ? "◀" : "▶"}
+        </button>
+
       </div>
 
-      <nav className="p-4">
+
+      {/* =====================================
+          Navigation
+      ===================================== */}
+
+      <nav className="flex flex-1 flex-col gap-2 p-3">
+
         {menuItems.map((item) => (
+
           <NavLink
             key={item.path}
             to={item.path}
+            title={
+              !isOpen
+                ? item.label
+                : undefined
+            }
             className={({ isActive }) =>
-              `mb-2 block w-full rounded-lg px-4 py-3 transition ${
-                isActive
-                  ? "bg-emerald-500 font-semibold text-slate-950"
-                  : "hover:bg-slate-800"
-              }`
+              `
+                flex
+                items-center
+                rounded-lg
+                py-3
+                transition-all
+                duration-200
+                ${
+                  isOpen
+                    ? "gap-3 px-4"
+                    : "justify-center px-2"
+                }
+                ${
+                  isActive
+                    ? "bg-emerald-500 font-semibold text-slate-950"
+                    : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                }
+              `
             }
           >
-            {item.label}
+
+            <span className="text-xl">
+              {item.icon}
+            </span>
+
+            {isOpen && (
+
+              <span>
+                {item.label}
+              </span>
+
+            )}
+
           </NavLink>
+
         ))}
+
       </nav>
+
     </aside>
   );
 }

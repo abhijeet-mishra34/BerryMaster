@@ -1,11 +1,18 @@
-import { useMemo, useState } from "react";
+import {
+  useMemo,
+  useState,
+} from "react";
 
 import BerryCard from "./BerryCard";
 
 import { berryDatabase } from "../../data/berryDatabase";
+
 import type { BerryCategory } from "../../types/BerryCategories";
 
-const categories: ("All" | BerryCategory)[] = [
+const categories: (
+  | "All"
+  | BerryCategory
+)[] = [
   "All",
   "Status",
   "Healing",
@@ -19,102 +26,453 @@ const categories: ("All" | BerryCategory)[] = [
 export default function BerrySelector() {
   const [search, setSearch] = useState("");
 
-  const [selectedCategory, setSelectedCategory] =
-    useState<"All" | BerryCategory>("All");
+  const [
+    selectedCategory,
+    setSelectedCategory,
+  ] = useState<
+    "All" | BerryCategory
+  >("All");
 
   const filteredBerries = useMemo(() => {
-    const query = search.trim().toLowerCase();
+    const query = search
+      .trim()
+      .toLowerCase();
 
-    return berryDatabase.filter((berry) => {
-      const matchesCategory =
-        selectedCategory === "All" ||
-        berry.categories.includes(selectedCategory);
+    return berryDatabase.filter(
+      (berry) => {
+        const matchesCategory =
+          selectedCategory === "All" ||
+          berry.categories.includes(
+            selectedCategory
+          );
 
-      const matchesSearch =
-        berry.name.toLowerCase().includes(query) ||
-        berry.id.toLowerCase().includes(query) ||
-        berry.description
-          ?.toLowerCase()
-          .includes(query) ||
-        berry.tags?.some((tag) =>
-          tag.toLowerCase().includes(query)
+        const matchesSearch =
+          berry.name
+            .toLowerCase()
+            .includes(query) ||
+          berry.id
+            .toLowerCase()
+            .includes(query) ||
+          berry.description
+            ?.toLowerCase()
+            .includes(query) ||
+          berry.tags?.some((tag) =>
+            tag
+              .toLowerCase()
+              .includes(query)
+          );
+
+        return (
+          matchesCategory &&
+          matchesSearch
         );
+      }
+    );
+  }, [
+    search,
+    selectedCategory,
+  ]);
 
-      return matchesCategory && matchesSearch;
-    });
-  }, [search, selectedCategory]);
+  const hasActiveFilters =
+    search.trim() !== "" ||
+    selectedCategory !== "All";
+
+  function clearFilters() {
+    setSearch("");
+    setSelectedCategory("All");
+  }
 
   return (
-    <div className="space-y-6">
-      
-      {/* Category Buttons */}
+    <div className="space-y-8">
 
-      <div className="flex flex-wrap gap-3">
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() =>
-              setSelectedCategory(category)
-            }
-            className={`
-              rounded-full
-              px-4
-              py-2
+      {/* =====================================
+          Search & Filters
+      ===================================== */}
+
+      <div
+        className="
+          rounded-2xl
+          border
+          border-white/[0.08]
+          bg-slate-900/50
+          p-6
+          shadow-lg
+          shadow-black/10
+          backdrop-blur-xl
+        "
+      >
+
+        {/* Search */}
+
+        <div>
+
+          <label
+            htmlFor="berry-search"
+            className="
+              mb-2
+              block
               text-sm
-              font-medium
-              transition-all
-
-              ${
-                selectedCategory === category
-                  ? "bg-emerald-600 text-white"
-                  : "bg-slate-800 text-slate-300 hover:bg-slate-700"
-              }
-            `}
+              font-semibold
+              text-slate-300
+            "
           >
-            {category}
-          </button>
-        ))}
+            Search Berries
+          </label>
+
+          <div className="flex items-center gap-3">
+
+            {/* Search Icon */}
+
+            <div
+              className="
+                flex
+                h-12
+                w-12
+                shrink-0
+                items-center
+                justify-center
+                rounded-xl
+                border
+                border-slate-700
+                bg-slate-950/70
+                text-lg
+              "
+            >
+              🔍
+            </div>
+
+            {/* Search Input */}
+
+            <input
+              id="berry-search"
+              type="text"
+              value={search}
+              onChange={(event) =>
+                setSearch(
+                  event.target.value
+                )
+              }
+              placeholder="Search by berry name, ID, description, or tag..."
+              className="
+                min-w-0
+                flex-1
+                rounded-xl
+                border
+                border-slate-700
+                bg-slate-950/70
+                px-4
+                py-3
+                text-white
+                outline-none
+                transition-all
+                placeholder:text-slate-500
+                focus:border-emerald-500
+                focus:bg-slate-950
+                focus:ring-2
+                focus:ring-emerald-500/20
+              "
+            />
+
+          </div>
+
+        </div>
+
+
+        {/* Divider */}
+
+        <div className="my-6 h-px bg-slate-800" />
+
+
+        {/* Categories */}
+
+        <div>
+
+          <div className="mb-3 flex items-center justify-between">
+
+            <p
+              className="
+                text-sm
+                font-semibold
+                text-slate-300
+              "
+            >
+              Categories
+            </p>
+
+            {hasActiveFilters && (
+
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="
+                  text-xs
+                  font-medium
+                  text-emerald-400
+                  transition
+                  hover:text-emerald-300
+                "
+              >
+                Clear filters
+              </button>
+
+            )}
+
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+
+            {categories.map(
+              (category) => {
+
+                const isSelected =
+                  selectedCategory ===
+                  category;
+
+                return (
+
+                  <button
+                    key={category}
+                    type="button"
+                    onClick={() =>
+                      setSelectedCategory(
+                        category
+                      )
+                    }
+                    className={`
+
+                      rounded-xl
+                      border
+                      px-4
+                      py-2
+                      text-sm
+                      font-medium
+                      transition-all
+                      duration-200
+
+                      ${
+                        isSelected
+                          ? `
+                            border-emerald-400
+                            bg-emerald-500
+                            text-slate-950
+                            shadow-lg
+                            shadow-emerald-500/20
+                          `
+                          : `
+                            border-slate-700
+                            bg-slate-800/70
+                            text-slate-300
+                            hover:border-slate-500
+                            hover:bg-slate-700
+                          `
+                      }
+
+                    `}
+                  >
+                    {category}
+                  </button>
+
+                );
+
+              }
+            )}
+
+          </div>
+
+        </div>
+
       </div>
 
-      {/* Results */}
 
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-slate-400">
-          Showing{" "}
+      {/* =====================================
+          Results Summary
+      ===================================== */}
+
+      <div
+        className="
+          flex
+          flex-col
+          gap-3
+          sm:flex-row
+          sm:items-center
+          sm:justify-between
+        "
+      >
+
+        <div
+          className="
+            inline-flex
+            w-fit
+            items-center
+            gap-2
+            rounded-full
+            border
+            border-slate-800
+            bg-slate-900/70
+            px-4
+            py-2
+            text-sm
+            text-slate-400
+          "
+        >
+
+          <span className="text-emerald-400">
+            🍓
+          </span>
+
+          <span>
+            Showing
+          </span>
+
           <span className="font-semibold text-white">
             {filteredBerries.length}
-          </span>{" "}
-          of{" "}
+          </span>
+
+          <span>
+            of
+          </span>
+
           <span className="font-semibold text-white">
             {berryDatabase.length}
-          </span>{" "}
-          berries
-        </p>
-      </div>
+          </span>
 
-      {/* Berry Grid */}
+          <span>
+            berries
+          </span>
 
-      <div className="grid gap-6 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
-        {filteredBerries.length > 0 ? (
-          filteredBerries.map((berry) => (
-            <BerryCard
-              key={berry.id}
-              berry={berry}
-            />
-          ))
-        ) : (
-          <div className="col-span-full rounded-xl border border-slate-700 bg-slate-900 p-8 text-center">
-            <p className="text-lg font-semibold text-white">
-              No berries found
-            </p>
+        </div>
 
-            <p className="mt-2 text-slate-400">
-              Try a different search or
-              category.
-            </p>
-          </div>
+
+        {hasActiveFilters && (
+
+          <button
+            type="button"
+            onClick={clearFilters}
+            className="
+              text-sm
+              font-medium
+              text-emerald-400
+              transition
+              hover:text-emerald-300
+            "
+          >
+            Reset filters
+          </button>
+
         )}
+
       </div>
+
+
+      {/* =====================================
+          Berry Grid
+      ===================================== */}
+
+      {filteredBerries.length > 0 ? (
+
+        <div
+          className="
+            grid
+            gap-8
+            sm:grid-cols-1
+            lg:grid-cols-2
+            xl:grid-cols-3
+          "
+        >
+
+          {filteredBerries.map(
+            (berry) => (
+
+              <BerryCard
+                key={berry.id}
+                berry={berry}
+              />
+
+            )
+          )}
+
+        </div>
+
+      ) : (
+
+        <div
+          className="
+            flex
+            min-h-[320px]
+            flex-col
+            items-center
+            justify-center
+            rounded-2xl
+            border
+            border-dashed
+            border-slate-700
+            bg-slate-900/50
+            px-6
+            py-16
+            text-center
+            backdrop-blur-xl
+          "
+        >
+
+          <div
+            className="
+              flex
+              h-20
+              w-20
+              items-center
+              justify-center
+              rounded-2xl
+              bg-emerald-500/10
+              text-4xl
+            "
+          >
+            🍓
+          </div>
+
+          <h2
+            className="
+              mt-6
+              text-2xl
+              font-bold
+              text-white
+            "
+          >
+            No berries found
+          </h2>
+
+          <p
+            className="
+              mt-2
+              max-w-md
+              text-slate-400
+            "
+          >
+            Try adjusting your search or selecting a different category.
+          </p>
+
+          <button
+            type="button"
+            onClick={clearFilters}
+            className="
+              mt-6
+              rounded-xl
+              bg-emerald-500
+              px-5
+              py-2.5
+              text-sm
+              font-semibold
+              text-slate-950
+              transition
+              hover:bg-emerald-400
+            "
+          >
+            Reset Filters
+          </button>
+
+        </div>
+
+      )}
+
     </div>
   );
 }

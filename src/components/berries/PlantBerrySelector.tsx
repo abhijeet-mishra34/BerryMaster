@@ -1,290 +1,440 @@
 import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
+useEffect,
+useMemo,
+useRef,
+useState,
 } from "react";
 
 import BerryCard from "./BerryCard";
-
-import { berryDatabase } from "../../data/berryDatabase";
-import { useCharacters } from "../../context/CharacterContext";
-import type { Berry } from "../../types/Berry";
-import type { BerryCategory } from "../../types/BerryCategories";
-import { BerryCategories } from "../../types/BerryCategories";
-import { useFavorites } from "../../context/FavoritesContext";
 import BerryList from "./BerryList";
 import BerryFilters from "./BerryFilters";
 
-interface PlantBerrySelectorProps {
-  characterId: string;
-  onClose: () => void;
+import { berryDatabase } from "../../data/berryDatabase";
+import { useCharacters } from "../../context/CharacterContext";
+import { useFavorites } from "../../context/FavoritesContext";
 
-  onPlantSuccess?: () => void;
+import type { Berry } from "../../types/Berry";
+import type { BerryCategory } from "../../types/BerryCategories";
+
+import { BerryCategories } from "../../types/BerryCategories";
+
+interface PlantBerrySelectorProps {
+characterId: string;
+onClose: () => void;
+onPlantSuccess?: () => void;
 }
 
 const categories: ("All" | BerryCategory)[] = [
-  "All",
-  BerryCategories.STATUS,
-  BerryCategories.HEALING,
-  BerryCategories.PP_RECOVERY,
-  BerryCategories.FLAVOR,
-  BerryCategories.EV,
-  BerryCategories.TYPE_RESIST,
-  BerryCategories.SPECIAL,
+"All",
+BerryCategories.STATUS,
+BerryCategories.HEALING,
+BerryCategories.PP_RECOVERY,
+BerryCategories.FLAVOR,
+BerryCategories.EV,
+BerryCategories.TYPE_RESIST,
+BerryCategories.SPECIAL,
 ];
 
 export default function PlantBerrySelector({
-  characterId,
-  onClose,
-  onPlantSuccess,
+characterId,
+onClose,
+onPlantSuccess,
 }: PlantBerrySelectorProps) {
-  const { plantBerry } = useCharacters();
-  const {
-  isFavorite,
-} = useFavorites();
+const { plantBerry } = useCharacters();
+const { isFavorite } = useFavorites();
 
-  const [search, setSearch] = useState("");
+const [search, setSearch] = useState("");
 
-  const [selectedCategory, setSelectedCategory] =
-    useState<"All" | BerryCategory>("All");
+const [
+selectedCategory,
+setSelectedCategory,
+] = useState<"All" | BerryCategory>("All");
 
-  const [selectedBerry, setSelectedBerry] =
-    useState<Berry | null>(null);
+const [selectedBerry, setSelectedBerry] =
+useState<Berry | null>(null);
 
-  const selectorRef =
-    useRef<HTMLDivElement>(null);
+const selectorRef =
+useRef<HTMLDivElement>(null);
 
-  const itemRefs =
-    useRef<(HTMLButtonElement | null)[]>([]);
+const itemRefs =
+useRef<(HTMLButtonElement | null)[]>([]);
 
-  const filteredBerries = useMemo(() => {
-  const query = search.trim().toLowerCase();
+// =====================================
+// Filter & Sort Berries
+// =====================================
 
-  return berryDatabase
-    .filter((berry) => {
-      const matchesCategory =
-        selectedCategory === "All" ||
-        berry.categories.includes(selectedCategory);
+const filteredBerries = useMemo(() => {
+const query = search.trim().toLowerCase();
 
-      const matchesSearch =
-        berry.name.toLowerCase().includes(query) ||
-        berry.id.toLowerCase().includes(query) ||
-        berry.description
-          ?.toLowerCase()
-          .includes(query) ||
-        berry.tags?.some((tag) =>
-          tag.toLowerCase().includes(query)
-        );
 
-      return (
-        matchesCategory &&
-        matchesSearch
+return berryDatabase
+  .filter((berry) => {
+    const matchesCategory =
+      selectedCategory === "All" ||
+      berry.categories.includes(
+        selectedCategory
       );
-    })
-    .sort((a, b) => {
-  const aFavorite = isFavorite(a.id);
-  const bFavorite = isFavorite(b.id);
 
-  // Favorites always first
-  if (aFavorite !== bFavorite) {
-    return aFavorite ? -1 : 1;
-  }
+    const matchesSearch =
+      berry.name
+        .toLowerCase()
+        .includes(query) ||
+      berry.id
+        .toLowerCase()
+        .includes(query) ||
+      berry.description
+        ?.toLowerCase()
+        .includes(query) ||
+      berry.tags?.some((tag) =>
+        tag
+          .toLowerCase()
+          .includes(query)
+      );
 
-  // Keep Debug Berry at the bottom of non-favorites
-  if (a.id === "debugBerry") return 1;
-  if (b.id === "debugBerry") return -1;
+    return (
+      matchesCategory &&
+      matchesSearch
+    );
+  })
+  .sort((a, b) => {
+    const aFavorite =
+      isFavorite(a.id);
 
-  // Alphabetical order
-  return a.name.localeCompare(b.name);
-});
+    const bFavorite =
+      isFavorite(b.id);
+
+    // Favorites first
+    if (
+      aFavorite !== bFavorite
+    ) {
+      return aFavorite
+        ? -1
+        : 1;
+    }
+
+    // Debug berry stays at the bottom
+    if (
+      a.id === "debugBerry"
+    ) {
+      return 1;
+    }
+
+    if (
+      b.id === "debugBerry"
+    ) {
+      return -1;
+    }
+
+    // Alphabetical order
+    return a.name.localeCompare(
+      b.name
+    );
+  });
+
+
 }, [
-  search,
-  selectedCategory,
-  isFavorite,
+search,
+selectedCategory,
+isFavorite,
 ]);
 
-  useEffect(() => {
-    if (
-      filteredBerries.length > 0 &&
-      !filteredBerries.some(
-        (berry) =>
-          berry.id === selectedBerry?.id
-      )
-    ) {
-      setSelectedBerry(
-        filteredBerries[0]
-      );
-    }
+// =====================================
+// Keep Selection Valid
+// =====================================
 
-    if (
-      filteredBerries.length === 0
-    ) {
-      setSelectedBerry(null);
-    }
-  }, [
-    filteredBerries,
-    selectedBerry,
-  ]);
+useEffect(() => {
+if (
+filteredBerries.length > 0 &&
+!filteredBerries.some(
+(berry) =>
+berry.id ===
+selectedBerry?.id
+)
+) {
+setSelectedBerry(
+filteredBerries[0]
+);
+}
 
-  useEffect(() => {
-    selectorRef.current?.focus();
-  }, []);
 
-  useEffect(() => {
-    if (!selectedBerry) return;
+if (
+  filteredBerries.length === 0
+) {
+  setSelectedBerry(null);
+}
 
-    const index =
-      filteredBerries.findIndex(
-        (berry) =>
-          berry.id ===
-          selectedBerry.id
-      );
 
-    itemRefs.current[index]?.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-    });
-  }, [
-    selectedBerry,
-    filteredBerries,
-  ]);
+}, [
+filteredBerries,
+selectedBerry,
+]);
 
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLDivElement>
-  ) => {
-    if (!filteredBerries.length) {
+// =====================================
+// Focus Selector
+// =====================================
+
+useEffect(() => {
+selectorRef.current?.focus();
+}, []);
+
+// =====================================
+// Scroll Selected Berry Into View
+// =====================================
+
+useEffect(() => {
+if (!selectedBerry) {
+return;
+}
+
+
+const index =
+  filteredBerries.findIndex(
+    (berry) =>
+      berry.id ===
+      selectedBerry.id
+  );
+
+itemRefs.current[index]
+  ?.scrollIntoView({
+    behavior: "smooth",
+    block: "nearest",
+  });
+
+
+}, [
+selectedBerry,
+filteredBerries,
+]);
+
+// =====================================
+// Plant Selected Berry
+// =====================================
+
+function handlePlant(
+berry: Berry
+) {
+plantBerry(
+characterId,
+berry
+);
+
+
+onPlantSuccess?.();
+
+onClose();
+
+
+}
+
+// =====================================
+// Keyboard Navigation
+// =====================================
+
+function handleKeyDown(
+event: React.KeyboardEvent<HTMLDivElement>
+) {
+if (
+filteredBerries.length === 0
+) {
+return;
+}
+
+
+const currentIndex =
+  filteredBerries.findIndex(
+    (berry) =>
+      berry.id ===
+      selectedBerry?.id
+  );
+
+switch (event.key) {
+  case "ArrowDown": {
+    event.preventDefault();
+
+    const nextIndex =
+      currentIndex <
+      filteredBerries.length - 1
+        ? currentIndex + 1
+        : 0;
+
+    setSelectedBerry(
+      filteredBerries[nextIndex]
+    );
+
+    break;
+  }
+
+  case "ArrowUp": {
+    event.preventDefault();
+
+    const previousIndex =
+      currentIndex > 0
+        ? currentIndex - 1
+        : filteredBerries.length - 1;
+
+    setSelectedBerry(
+      filteredBerries[
+        previousIndex
+      ]
+    );
+
+    break;
+  }
+
+  case "Enter": {
+    if (!selectedBerry) {
       return;
     }
 
-    const currentIndex =
-      filteredBerries.findIndex(
-        (berry) =>
-          berry.id ===
-          selectedBerry?.id
-      );
+    event.preventDefault();
 
-    switch (e.key) {
-      case "ArrowDown": {
-        e.preventDefault();
+    handlePlant(
+      selectedBerry
+    );
 
-        const next =
-          currentIndex <
-          filteredBerries.length - 1
-            ? currentIndex + 1
-            : 0;
+    break;
+  }
 
-        setSelectedBerry(
-          filteredBerries[next]
-        );
+  case "Escape": {
+    event.preventDefault();
 
-        break;
-      }
+    onClose();
 
-      case "ArrowUp": {
-        e.preventDefault();
+    break;
+  }
+}
 
-        const previous =
-          currentIndex > 0
-            ? currentIndex - 1
-            : filteredBerries.length - 1;
 
-        setSelectedBerry(
-          filteredBerries[
-            previous
-          ]
-        );
+}
 
-        break;
-      }
+return ( <div
+   ref={selectorRef}
+   tabIndex={0}
+   onKeyDown={handleKeyDown}
+   className="
+     space-y-9
+     outline-none
+   "
+ >
 
-      case "Enter": {
-        if (!selectedBerry) {
-          return;
-        }
 
-        e.preventDefault();
+  {/* =====================================
+      Filters
+  ===================================== */}
 
-        plantBerry(
-          characterId,
-          selectedBerry
-        );
-
-        onPlantSuccess?.();
-
-        onClose();
-
-        break;
-      }
-
-      case "Escape": {
-        e.preventDefault();
-
-        onClose();
-
-        break;
-      }
+  <BerryFilters
+    search={search}
+    onSearchChange={setSearch}
+    categories={categories}
+    selectedCategory={
+      selectedCategory
     }
-  };
+    onCategoryChange={
+      setSelectedCategory
+    }
+  />
 
-  return (
-        <div
-      ref={selectorRef}
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
+
+  {/* =====================================
+      Master / Detail Layout
+  ===================================== */}
+
+  <div
+    className="
+      grid
+      grid-cols-1
+      gap-6
+      lg:grid-cols-3
+    "
+  >
+
+    {/* =====================================
+        Berry List
+    ===================================== */}
+
+    <div
       className="
-        space-y-6
-        outline-none
+        overflow-hidden
+        rounded-2xl
+        border
+        border-white/[0.08]
+        bg-slate-900/60
+        shadow-xl
+        shadow-black/10
+        backdrop-blur-xl
       "
     >
 
-      {/* Filters */}
+      <BerryList
+        berries={filteredBerries}
+        selectedBerry={
+          selectedBerry
+        }
+        onSelectBerry={
+          setSelectedBerry
+        }
+        itemRefs={itemRefs}
+      />
 
-     <BerryFilters
-  search={search}
-  onSearchChange={setSearch}
-  categories={categories}
-  selectedCategory={selectedCategory}
-  onCategoryChange={setSelectedCategory}
-/>
+    </div>
 
-      {/* Master / Detail Layout */}
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                {/* Berry List */}
+    {/* =====================================
+        Berry Details
+    ===================================== */}
 
-       <BerryList
-  berries={filteredBerries}
-  selectedBerry={selectedBerry}
-  onSelectBerry={setSelectedBerry}
-  itemRefs={itemRefs}
-/>
-             {/* Berry Details */}
+    <div
+      className="
+        overflow-hidden
+        rounded-2xl
+        border
+        border-white/[0.08]
+        bg-slate-900/60
+        shadow-xl
+        shadow-black/10
+        backdrop-blur-xl
+        lg:col-span-2
+      "
+    >
+
+      {/* Details Header */}
+
+      <div
+        className="
+          border-b
+          border-white/[0.08]
+          bg-white/[0.02]
+          px-5
+          py-4
+        "
+      >
 
         <div
           className="
-            rounded-xl
-            border
-            border-slate-700
-            bg-slate-900
-            lg:col-span-2
-            overflow-hidden
+            flex
+            items-center
+            justify-between
+            gap-4
           "
         >
 
-          {/* Header */}
+          <div>
 
-          <div
-            className="
-              border-b
-              border-slate-800
-              px-5
-              py-4
-            "
-          >
+            <p
+              className="
+                text-xs
+                font-semibold
+                uppercase
+                tracking-[0.16em]
+                text-emerald-400
+              "
+            >
+              Berry Information
+            </p>
 
             <h2
               className="
+                mt-1
                 text-lg
                 font-semibold
                 text-white
@@ -300,97 +450,111 @@ export default function PlantBerrySelector({
                 text-slate-400
               "
             >
-              View berry information before planting.
+              Review the berry before planting it.
             </p>
 
           </div>
 
-          {/* Details Content */}
-
           <div
             className="
-              h-[550px]
-              overflow-y-auto
-              p-5
+              hidden
+              rounded-lg
+              border
+              border-white/[0.06]
+              bg-slate-950/40
+              px-3
+              py-2
+              text-xs
+              text-slate-500
+              sm:block
             "
           >
-
-            {selectedBerry ? (
-
-              <BerryCard
-                berry={selectedBerry}
-                actionLabel="🌱 Plant This Berry"
-                onAction={(berry) => {
-
-                  plantBerry(
-                    characterId,
-                    berry
-                  );
-
-                  onPlantSuccess?.();
-
-                  onClose();
-
-                }}
-              />
-
-            ) : (
-
-              <div
-                className="
-                  flex
-                  h-full
-                  items-center
-                  justify-center
-                  rounded-xl
-                  border
-                  border-dashed
-                  border-slate-700
-                "
-              >
-
-                <div
-                  className="
-                    text-center
-                  "
-                >
-
-                  <div className="text-5xl">
-                    🍓
-                  </div>
-
-                  <h2
-                    className="
-                      mt-4
-                      text-xl
-                      font-semibold
-                      text-white
-                    "
-                  >
-                    No Berry Selected
-                  </h2>
-
-                  <p
-                    className="
-                      mt-2
-                      text-slate-400
-                    "
-                  >
-                    Choose a berry from the list.
-                  </p>
-
-                </div>
-
-              </div>
-
-            )}
-
+            Use ↑ ↓ to navigate
           </div>
 
         </div>
 
       </div>
 
+
+      {/* Details Content */}
+
+      <div
+        className="
+          h-[550px]
+          overflow-y-auto
+          p-5
+        "
+      >
+
+        {selectedBerry ? (
+
+          <BerryCard
+            berry={selectedBerry}
+            actionLabel="🌱 Plant This Berry"
+            onAction={handlePlant}
+          />
+
+        ) : (
+
+          <div
+            className="
+              flex
+              h-full
+              items-center
+              justify-center
+              rounded-xl
+              border
+              border-dashed
+              border-white/[0.08]
+              bg-white/[0.02]
+            "
+          >
+
+            <div
+              className="
+                text-center
+              "
+            >
+
+              <div className="text-5xl">
+                🍓
+              </div>
+
+              <h2
+                className="
+                  mt-4
+                  text-xl
+                  font-semibold
+                  text-white
+                "
+              >
+                No Berry Selected
+              </h2>
+
+              <p
+                className="
+                  mt-2
+                  text-slate-400
+                "
+              >
+                Choose a berry from the list.
+              </p>
+
+            </div>
+
+          </div>
+
+        )}
+
+      </div>
+
     </div>
-  );
+
+  </div>
+
+</div>
+
+
+);
 }

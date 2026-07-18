@@ -22,13 +22,12 @@ export default function AppLayout({
 
       <Sidebar
         isOpen={sidebarOpen}
+        onToggleSidebar={toggleSidebar}
       />
 
       <div className="flex flex-1 flex-col">
 
-        <Header
-          onToggleSidebar={toggleSidebar}
-        />
+        <Header />
 
         <main className="flex-1 overflow-y-auto">
 
