@@ -1,7 +1,11 @@
+import ComingSoon from "../components/ui/ComingSoon";
+
 export default function CalendarPage() {
   return (
-    <h1 className="text-4xl font-bold">
-      Calendar
-    </h1>
+    <ComingSoon
+      icon="📅"
+      title="Calendar"
+      description="A farming calendar for tracking planting schedules, watering times, harvest windows, and upcoming activities is coming to BerryMaster."
+    />
   );
 }

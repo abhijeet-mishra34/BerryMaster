@@ -1,5 +1,88 @@
 @import "tailwindcss";
 
+@keyframes leafFall {
+  0% {
+    transform: translate3d(0, -10vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  50% {
+    transform: translate3d(80px, 50vh, 0) rotate(180deg);
+  }
+
+  90% {
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: translate3d(-60px, 110vh, 0) rotate(360deg);
+    opacity: 0;
+  }
+}
+/* =====================================
+   Wheat Field
+===================================== */
+
+.wheat-field {
+  position: absolute;
+  bottom: -12px;
+  left: 0;
+  right: 0;
+
+  height: 180px;
+
+  display: flex;
+  align-items: flex-end;
+
+  overflow: hidden;
+
+  opacity: 0.22;
+
+  mask-image: linear-gradient(
+    to top,
+    black 0%,
+    black 55%,
+    transparent 100%
+  );
+}
+
+
+.wheat-stalk {
+  position: absolute;
+
+  bottom: -10px;
+
+  font-size: 4rem;
+
+  transform-origin: bottom center;
+
+  animation: wheatSway 4s ease-in-out infinite;
+
+  filter: blur(0.3px);
+
+  opacity: 0.65;
+}
+
+
+@keyframes wheatSway {
+
+  0% {
+    transform: rotate(-4deg);
+  }
+
+  50% {
+    transform: rotate(5deg);
+  }
+
+  100% {
+    transform: rotate(-4deg);
+  }
+
+}
 * {
   margin: 0;
   padding: 0;
@@ -22,6 +105,6 @@ body {
     Arial,
     sans-serif;
 
-  background: #111827;
+  background: #10693e;
   color: white;
 }

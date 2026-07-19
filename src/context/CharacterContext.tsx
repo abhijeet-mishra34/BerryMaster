@@ -21,18 +21,14 @@ import { useActivities } from "./ActivityContext";
 type CharacterContextType = {
   characters: Character[];
 
-  addCharacter: (
-    name: string
-  ) => void;
+  addCharacter: (name: string) => void;
 
   updateCharacter: (
     id: string,
     name: string
   ) => void;
 
-  deleteCharacter: (
-    id: string
-  ) => void;
+  deleteCharacter: (id: string) => void;
 
   plantBerry: (
     characterId: string,
@@ -61,23 +57,16 @@ export function CharacterProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [
-    characters,
-    setCharacters,
-  ] = useState<Character[]>(() => {
-    const saved =
-      localStorage.getItem(
+  const [characters, setCharacters] =
+    useState<Character[]>(() => {
+      const saved = localStorage.getItem(
         STORAGE_KEYS.CHARACTERS
       );
 
-    return saved
-      ? JSON.parse(saved)
-      : [];
-  });
+      return saved ? JSON.parse(saved) : [];
+    });
 
-  const {
-    addActivity,
-  } = useActivities();
+  const { addActivity } = useActivities();
 
   useEffect(() => {
     localStorage.setItem(
@@ -104,17 +93,10 @@ export function CharacterProvider({
   /**
    * Adds a new character.
    */
-  function addCharacter(
-    name: string
-  ) {
-    const trimmedName =
-      name.trim();
+  function addCharacter(name: string) {
+    const trimmedName = name.trim();
 
-    if (
-      characterNameExists(
-        trimmedName
-      )
-    ) {
+    if (characterNameExists(trimmedName)) {
       alert(
         "A character with this name already exists."
       );
@@ -127,12 +109,10 @@ export function CharacterProvider({
       name: trimmedName,
     };
 
-    setCharacters(
-      (current) => [
-        ...current,
-        newCharacter,
-      ]
-    );
+    setCharacters((current) => [
+      ...current,
+      newCharacter,
+    ]);
   }
 
   /**
@@ -142,15 +122,9 @@ export function CharacterProvider({
     id: string,
     name: string
   ) {
-    const trimmedName =
-      name.trim();
+    const trimmedName = name.trim();
 
-    if (
-      characterNameExists(
-        trimmedName,
-        id
-      )
-    ) {
+    if (characterNameExists(trimmedName, id)) {
       alert(
         "A character with this name already exists."
       );
@@ -158,32 +132,26 @@ export function CharacterProvider({
       return;
     }
 
-    setCharacters(
-      (current) =>
-        current.map(
-          (character) =>
-            character.id === id
-              ? {
-                  ...character,
-                  name: trimmedName,
-                }
-              : character
-        )
+    setCharacters((current) =>
+      current.map((character) =>
+        character.id === id
+          ? {
+              ...character,
+              name: trimmedName,
+            }
+          : character
+      )
     );
   }
 
   /**
    * Deletes a character.
    */
-  function deleteCharacter(
-    id: string
-  ) {
-    setCharacters(
-      (current) =>
-        current.filter(
-          (character) =>
-            character.id !== id
-        )
+  function deleteCharacter(id: string) {
+    setCharacters((current) =>
+      current.filter(
+        (character) => character.id !== id
+      )
     );
   }
 
@@ -194,29 +162,24 @@ export function CharacterProvider({
     characterId: string,
     berry: Berry
   ) {
-    const character =
-      characters.find(
-        (character) =>
-          character.id ===
-          characterId
-      );
+    const character = characters.find(
+      (character) =>
+        character.id === characterId
+    );
 
     if (!character) {
       return;
     }
 
-    setCharacters(
-      (current) =>
-        current.map(
-          (character) =>
-            character.id ===
-            characterId
-              ? plantBerryOnCharacter(
-                  character,
-                  berry
-                )
-              : character
-        )
+    setCharacters((current) =>
+      current.map((character) =>
+        character.id === characterId
+          ? plantBerryOnCharacter(
+              character,
+              berry
+            )
+          : character
+      )
     );
 
     addActivity(
@@ -232,12 +195,10 @@ export function CharacterProvider({
   function removeBerry(
     characterId: string
   ) {
-    const character =
-      characters.find(
-        (character) =>
-          character.id ===
-          characterId
-      );
+    const character = characters.find(
+      (character) =>
+        character.id === characterId
+    );
 
     if (
       !character ||
@@ -246,38 +207,38 @@ export function CharacterProvider({
       return;
     }
 
-    const berry =
-      berryDatabase.find(
-        (b) =>
-          b.id ===
-          character.plantedBerryId
-      );
+    const berry = berryDatabase.find(
+      (b) =>
+        b.id === character.plantedBerryId
+    );
 
     if (!berry) {
       return;
     }
 
-    setCharacters(
-      (current) =>
-        current.map(
-          (character) =>
-            character.id ===
-            characterId
-              ? {
-                  ...character,
-                  plantedBerryId:
-                    undefined,
-                  plantedAt:
-                    undefined,
-                  nextWaterAt:
-                    undefined,
-                  harvestAt:
-                    undefined,
-                  wiltAt:
-                    undefined,
-                }
-              : character
-        )
+    setCharacters((current) =>
+      current.map((character) =>
+        character.id === characterId
+          ? {
+              ...character,
+
+              plantedBerryId:
+                undefined,
+
+              plantedAt:
+                undefined,
+
+              nextWaterAt:
+                undefined,
+
+              harvestAt:
+                undefined,
+
+              wiltAt:
+                undefined,
+            }
+          : character
+      )
     );
 
     addActivity(
@@ -292,12 +253,10 @@ export function CharacterProvider({
   function waterBerry(
     characterId: string
   ) {
-    const character =
-      characters.find(
-        (character) =>
-          character.id ===
-          characterId
-      );
+    const character = characters.find(
+      (character) =>
+        character.id === characterId
+    );
 
     if (
       !character ||
@@ -306,34 +265,28 @@ export function CharacterProvider({
       return;
     }
 
-    const berry =
-      berryDatabase.find(
-        (b) =>
-          b.id ===
-          character.plantedBerryId
-      );
+    const berry = berryDatabase.find(
+      (b) =>
+        b.id === character.plantedBerryId
+    );
 
     if (!berry) {
       return;
     }
 
-    setCharacters(
-      (current) =>
-        current.map(
-          (character) => {
-            if (
-              character.id !==
-              characterId
-            ) {
-              return character;
-            }
+    setCharacters((current) =>
+      current.map((character) => {
+        if (
+          character.id !== characterId
+        ) {
+          return character;
+        }
 
-            return waterBerryOnCharacter(
-              character,
-              berry
-            );
-          }
-        )
+        return waterBerryOnCharacter(
+          character,
+          berry
+        );
+      })
     );
 
     addActivity(
@@ -348,12 +301,10 @@ export function CharacterProvider({
   function harvestBerry(
     characterId: string
   ) {
-    const character =
-      characters.find(
-        (character) =>
-          character.id ===
-          characterId
-      );
+    const character = characters.find(
+      (character) =>
+        character.id === characterId
+    );
 
     if (
       !character ||
@@ -362,19 +313,16 @@ export function CharacterProvider({
       return;
     }
 
-    const berry =
-      berryDatabase.find(
-        (b) =>
-          b.id ===
-          character.plantedBerryId
-      );
+    const berry = berryDatabase.find(
+      (b) =>
+        b.id === character.plantedBerryId
+    );
 
     if (!berry) {
       return;
     }
 
-    const now =
-      Date.now();
+    const now = Date.now();
 
     const isWilted =
       character.wiltAt &&
@@ -383,17 +331,14 @@ export function CharacterProvider({
           character.wiltAt
         ).getTime();
 
-    setCharacters(
-      (current) =>
-        current.map(
-          (character) =>
-            character.id ===
-            characterId
-              ? harvestBerryOnCharacter(
-                  character
-                )
-              : character
-        )
+    setCharacters((current) =>
+      current.map((character) =>
+        character.id === characterId
+          ? harvestBerryOnCharacter(
+              character
+            )
+          : character
+      )
     );
 
     if (isWilted) {
@@ -428,10 +373,9 @@ export function CharacterProvider({
 }
 
 export function useCharacters() {
-  const context =
-    useContext(
-      CharacterContext
-    );
+  const context = useContext(
+    CharacterContext
+  );
 
   if (!context) {
     throw new Error(

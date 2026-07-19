@@ -1,10 +1,12 @@
 import type { Berry } from "../../types/Berry";
 import { BerryCategories } from "../../types/BerryCategories";
+import { berrySprites } from "../berrySprites";
 
 export const specialBerries: Berry[] = [
   {
     id: "enigma",
     name: "Enigma Berry",
+    image: berrySprites.enigma,
     description: "Restores HP after being hit by a super effective move.",
 
     categories: [BerryCategories.SPECIAL],
@@ -36,6 +38,7 @@ export const specialBerries: Berry[] = [
   {
     id: "lansat",
     name: "Lansat Berry",
+    image: berrySprites.lansat,
     description: "Raises critical-hit ratio when HP is low.",
 
     categories: [BerryCategories.SPECIAL],
@@ -67,6 +70,7 @@ export const specialBerries: Berry[] = [
   {
     id: "starf",
     name: "Starf Berry",
+    image: berrySprites.starf,
     description: "Raises a random stat when HP is low.",
 
     categories: [BerryCategories.SPECIAL],
@@ -98,6 +102,7 @@ export const specialBerries: Berry[] = [
   {
     id: "micle",
     name: "Micle Berry",
+    image: berrySprites.micle,
     description: "Raises accuracy when HP is low.",
 
     categories: [BerryCategories.SPECIAL],
@@ -129,6 +134,7 @@ export const specialBerries: Berry[] = [
   {
     id: "custap",
     name: "Custap Berry",
+    image: berrySprites.custap,
     description: "Allows moves to be used first when HP is low.",
 
     categories: [BerryCategories.SPECIAL],
@@ -160,6 +166,7 @@ export const specialBerries: Berry[] = [
   {
     id: "jaboca",
     name: "Jaboca Berry",
+    image: berrySprites.jaboca,
     description: "Damages opponents that use physical attacks.",
 
     categories: [BerryCategories.SPECIAL],
@@ -191,6 +198,7 @@ export const specialBerries: Berry[] = [
   {
     id: "rowap",
     name: "Rowap Berry",
+    image: berrySprites.rowap,
     description: "Damages opponents that use special attacks.",
 
     categories: [BerryCategories.SPECIAL],

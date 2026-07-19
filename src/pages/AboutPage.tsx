@@ -1,6 +1,6 @@
 export default function AboutPage() {
   return (
-    <div className="space-y-8">
+    <div className="flex flex-col gap-4">
 
       {/* =====================================
           Header
@@ -8,7 +8,7 @@ export default function AboutPage() {
 
       <div>
 
-        <h1 className="text-4xl font-bold text-white">
+        <h1 className="text-4xl font-bold text-sky-300">
           About BerryMaster
         </h1>
 
@@ -34,28 +34,55 @@ export default function AboutPage() {
       >
 
         <h2 className="text-xl font-semibold text-white">
-          🍓 Hey fellow farmers, Abhijeet this side (IGN-MastAbhi), and today I wanna introduce a new companion to you guys!
+         🍓 Hey fellow farmers, Abhijeet this side (IGN: MastAbhi), and today I want to introduce a new companion to you!
         </h2>
 
         <p className="mt-4 leading-7 text-slate-400">
           BerryMaster is a farming management tool built for PokeMMO
           players who want a clearer way to organize and monitor their
           berry farming activities.
-           
-           
-          A one stop solution for farming on multiple accounts at the same time.
-          Creating, adding and then using the same characters has never been easier,also
-          any feedbacks for encouragement, future updates, any bugs or technical issues 
-          would be much appreciated!
-        </p>
 
+          With BerryMaster you can:
+        </p>
+         <ul className="mt-5 space-y-3">
+  <li className="flex items-start gap-3 text-slate-400">
+    <span className="mt-1 text-emerald-400">•</span>
+    <span>Manage multiple characters and accounts in one place.</span>
+  </li>
+
+  <li className="flex items-start gap-3 text-slate-400">
+    <span className="mt-1 text-emerald-400">•</span>
+    <span>Track which berries are planted on each character.</span>
+  </li>
+
+  <li className="flex items-start gap-3 text-slate-400">
+    <span className="mt-1 text-emerald-400">•</span>
+    <span>Monitor watering schedules and farming progress.</span>
+  </li>
+
+  <li className="flex items-start gap-3 text-slate-400">
+    <span className="mt-1 text-emerald-400">•</span>
+    <span>Keep track of harvest and wilt timers.</span>
+  </li>
+
+  <li className="flex items-start gap-3 text-slate-400">
+    <span className="mt-1 text-emerald-400">•</span>
+    <span>Manage your berry collection.</span>
+  </li>
+
+  <li className="flex items-start gap-3 text-slate-400">
+    <span className="mt-1 text-emerald-400">•</span>
+    <span>Review recent farming activity.</span>
+  </li>
+
+  <li className="flex items-start gap-3 text-slate-400">
+    <span className="mt-1 text-emerald-400">•</span>
+    <span>Organize your entire farming operation more efficiently.</span>
+  </li>
+</ul>
         <p className="mt-4 leading-7 text-slate-400">
-          Track your characters, manage planted berries, monitor watering
-          schedules, keep an eye on harvest and wilt timers, manage your
-          berry collection, and review your recent farming activity — all
-          in one place.
+          Whether you're managing a few characters or farming across multiple accounts, BerryMaster is designed to make the process simpler, clearer, and easier to manage.
         </p>
-
       </section>
 
 
@@ -76,20 +103,77 @@ export default function AboutPage() {
         <h2 className="text-xl font-semibold text-amber-400">
           ⚠️ Important Notice
         </h2>
+        
+       
+  <p className="mt-4 leading-7 text-slate-300">
+    BerryMaster is an independent, fan-made project created for the
+    PokeMMO community. It is not affiliated with, endorsed by, sponsored
+    by, or officially connected to PokeMMO or its developers.
+  </p>
 
-        <p className="mt-4 leading-7 text-slate-300">
-          BerryMaster is a fan-made project and is not affiliated with,
-          endorsed by, or officially connected to PokeMMO or its developers.
-        </p>
+  <p className="mt-4 leading-7 text-slate-300">
+    BerryMaster operates entirely as an external farming management tool.
+    It does not:
+  </p>
 
-        <p className="mt-4 leading-7 text-slate-400">
-          The application operates independently from the game client.
-          It does not modify, inject into, interact with, or interfere with
-          PokeMMO in any way. BerryMaster is designed solely to help players
-          organize and manage their farming information externally.
-        </p>
+  <ul className="mt-4 space-y-3">
 
-      </section>
+    <li className="flex items-start gap-3 text-slate-300">
+
+      <span className="mt-1 text-amber-400">
+        →
+      </span>
+
+      <span>
+        Modify the PokeMMO game client.
+      </span>
+
+    </li>
+
+    <li className="flex items-start gap-3 text-slate-300">
+
+      <span className="mt-1 text-amber-400">
+        →
+      </span>
+
+      <span>
+        Inject code into or interact with the game client.
+      </span>
+
+    </li>
+
+    <li className="flex items-start gap-3 text-slate-300">
+
+      <span className="mt-1 text-amber-400">
+        →
+      </span>
+
+      <span>
+        Access or alter game files.
+      </span>
+
+    </li>
+
+    <li className="flex items-start gap-3 text-slate-300">
+
+      <span className="mt-1 text-amber-400">
+        →
+      </span>
+
+      <span>
+        Interfere with gameplay or game processes.
+      </span>
+
+    </li>
+
+  </ul>
+
+  <p className="mt-5 leading-7 text-slate-300">
+    The application is designed solely to help players organize and manage
+    their berry farming information externally.
+  </p>
+
+</section>
 
 
       {/* =====================================
@@ -109,29 +193,49 @@ export default function AboutPage() {
         <h2 className="text-xl font-semibold text-white">
           🛠️ Built With
         </h2>
+ <ul className="mt-5 space-y-3">
 
-        <div className="mt-5 flex flex-wrap gap-3">
+  <li className="flex items-start gap-3 text-slate-400">
 
-          <span className="rounded-xl bg-slate-800 px-4 py-2 text-sm text-slate-300">
-            ⚛️ React
-          </span>
+    <span className="mt-1 text-emerald-400">•</span>
 
-          <span className="rounded-xl bg-slate-800 px-4 py-2 text-sm text-slate-300">
-            📘 TypeScript
-          </span>
+    <span>⚛️ React</span>
 
-          <span className="rounded-xl bg-slate-800 px-4 py-2 text-sm text-slate-300">
-            ⚡ Vite
-          </span>
+  </li>
 
-          <span className="rounded-xl bg-slate-800 px-4 py-2 text-sm text-slate-300">
-            🎨 Tailwind CSS
-          </span>
 
-        </div>
 
-      </section>
+  <li className="flex items-start gap-3 text-slate-400">
 
+    <span className="mt-1 text-emerald-400">•</span>
+
+    <span> 📘 TypeScript</span>
+
+  </li>
+
+
+
+  <li className="flex items-start gap-3 text-slate-400">
+
+    <span className="mt-1 text-emerald-400">•</span>
+
+    <span>⚡ Vite</span>
+
+  </li>
+
+
+
+  <li className="flex items-start gap-3 text-slate-400">
+
+    <span className="mt-1 text-emerald-400">•</span>
+
+    <span> 🎨 Tailwind CSS</span>
+
+  </li>
+
+  </ul>
+
+  </section>
 
       {/* =====================================
           Version
@@ -151,7 +255,7 @@ export default function AboutPage() {
           📦 Version
         </h2>
 
-        <p className="mt-3 text-slate-400">
+        <p className="mt-3 text-emerald-300">
           BerryMaster v1.0.0
         </p>
 

@@ -43,7 +43,7 @@ export default function BerriesPage() {
 
           <div>
 
-            <h1 className="text-3xl font-bold tracking-tight text-white">
+            <h1 className="text-3xl font-bold tracking-tight text-sky-500">
               Berry Database
             </h1>
 

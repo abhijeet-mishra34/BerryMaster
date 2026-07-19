@@ -19,6 +19,9 @@ import {
   resetBerryMaster,
 } from "../utils/resetApp";
 
+import ConfirmDialog from "../components/ui/ConfirmDialog";
+
+
 export default function SettingsPage() {
   const fileInputRef =
     useRef<HTMLInputElement>(null);
@@ -110,7 +113,7 @@ export default function SettingsPage() {
 
 
   return (
-    <div className="space-y-12">
+    <div className="flex flex-col gap-3">
 
 
       {/* =====================================
@@ -157,8 +160,10 @@ export default function SettingsPage() {
               Settings
             </h1>
 
-            <p className="mt-2 max-w-2xl text-slate-400">
-              Manage your BerryMaster data and application preferences.
+            <p className="mt-3 max-w-3xl leading-relaxed text-slate-400">
+              Manage your BerryMaster data, create backups, restore previous
+              data, and control actions that affect your locally stored
+              application data.
             </p>
 
           </div>
@@ -193,7 +198,7 @@ export default function SettingsPage() {
             border-slate-800
             bg-slate-900/70
             px-8
-            py-6
+            py-7
           "
         >
 
@@ -220,8 +225,9 @@ export default function SettingsPage() {
                 Data Management
               </h2>
 
-              <p className="mt-1 text-sm text-slate-400">
-                Export, restore, and manage your BerryMaster data.
+              <p className="mt-1 text-sm leading-relaxed text-slate-400">
+                Back up, restore, and manage the data stored locally by
+                BerryMaster.
               </p>
 
             </div>
@@ -233,121 +239,220 @@ export default function SettingsPage() {
 
         {/* Actions */}
 
-        <div className="grid gap-4 p-8 md:grid-cols-3">
+        <div className="grid gap-5 p-8 md:grid-cols-3">
 
 
-          {/* Export */}
+          {/* =====================================
+              Export
+          ===================================== */}
 
           <button
+            type="button"
             onClick={
               exportBerryMasterData
             }
             className="
               group
+              flex
+              min-h-[220px]
+              flex-col
               rounded-2xl
               border
               border-emerald-500/20
-              bg-emerald-500/10
-              p-5
+              bg-emerald-500/[0.06]
+              p-6
               text-left
               transition-all
               duration-200
               hover:-translate-y-1
               hover:border-emerald-400/50
-              hover:bg-emerald-500/15
+              hover:bg-emerald-500/10
               hover:shadow-lg
               hover:shadow-emerald-500/10
             "
           >
 
-            <div className="text-3xl">
+            <div
+              className="
+                flex
+                h-12
+                w-12
+                items-center
+                justify-center
+                rounded-xl
+                bg-emerald-500/10
+                text-2xl
+                transition-transform
+                duration-200
+                group-hover:scale-110
+              "
+            >
               📤
             </div>
 
-            <h3 className="mt-4 font-bold text-white">
+            <h3 className="mt-5 font-bold text-white">
               Export Data
             </h3>
 
-            <p className="mt-2 text-sm leading-relaxed text-slate-400">
-              Download a backup of your BerryMaster data.
+            <p className="mt-2 leading-relaxed text-sm text-slate-400">
+              Create a backup of your BerryMaster data so it can be restored
+              later or transferred to another device.
             </p>
+
+            <span
+              className="
+                mt-auto
+                pt-6
+                text-sm
+                font-semibold
+                text-emerald-400
+              "
+            >
+              Download Backup →
+            </span>
 
           </button>
 
 
-          {/* Import */}
+          {/* =====================================
+              Import
+          ===================================== */}
 
           <button
+            type="button"
             onClick={
               handleImportClick
             }
             className="
               group
+              flex
+              min-h-[220px]
+              flex-col
               rounded-2xl
               border
               border-slate-700
-              bg-slate-800/50
-              p-5
+              bg-slate-800/40
+              p-6
               text-left
               transition-all
               duration-200
               hover:-translate-y-1
               hover:border-slate-500
-              hover:bg-slate-800
+              hover:bg-slate-800/70
               hover:shadow-lg
             "
           >
 
-            <div className="text-3xl">
+            <div
+              className="
+                flex
+                h-12
+                w-12
+                items-center
+                justify-center
+                rounded-xl
+                bg-slate-700/50
+                text-2xl
+                transition-transform
+                duration-200
+                group-hover:scale-110
+              "
+            >
               📥
             </div>
 
-            <h3 className="mt-4 font-bold text-white">
+            <h3 className="mt-5 font-bold text-white">
               Import Data
             </h3>
 
-            <p className="mt-2 text-sm leading-relaxed text-slate-400">
-              Restore BerryMaster data from a backup file.
+            <p className="mt-2 leading-relaxed text-sm text-slate-400">
+              Restore characters, favorites, activity history, and other
+              supported data from a BerryMaster backup file.
             </p>
+
+            <span
+              className="
+                mt-auto
+                pt-6
+                text-sm
+                font-semibold
+                text-slate-300
+              "
+            >
+              Restore Backup →
+            </span>
 
           </button>
 
 
-          {/* Clear Activities */}
+          {/* =====================================
+              Clear Activities
+          ===================================== */}
 
           <button
+            type="button"
             onClick={() =>
               setIsClearActivitiesOpen(true)
             }
             className="
               group
+              flex
+              min-h-[220px]
+              flex-col
               rounded-2xl
               border
               border-red-500/20
-              bg-red-500/5
-              p-5
+              bg-red-500/[0.04]
+              p-6
               text-left
               transition-all
               duration-200
               hover:-translate-y-1
               hover:border-red-400/50
-              hover:bg-red-500/10
+              hover:bg-red-500/[0.08]
               hover:shadow-lg
               hover:shadow-red-500/10
             "
           >
 
-            <div className="text-3xl">
-              🗑
+            <div
+              className="
+                flex
+                h-12
+                w-12
+                items-center
+                justify-center
+                rounded-xl
+                bg-red-500/10
+                text-2xl
+                transition-transform
+                duration-200
+                group-hover:scale-110
+              "
+            >
+              🗑️
             </div>
 
-            <h3 className="mt-4 font-bold text-red-400">
+            <h3 className="mt-5 font-bold text-red-400">
               Clear Activity History
             </h3>
 
-            <p className="mt-2 text-sm leading-relaxed text-slate-400">
-              Remove all recorded farming activity.
+            <p className="mt-2 leading-relaxed text-sm text-slate-400">
+              Remove your recorded farming activity while keeping your
+              characters, favorites, and other BerryMaster data intact.
             </p>
+
+            <span
+              className="
+                mt-auto
+                pt-6
+                text-sm
+                font-semibold
+                text-red-400
+              "
+            >
+              Clear Activity →
+            </span>
 
           </button>
 
@@ -427,7 +532,7 @@ export default function SettingsPage() {
             border-red-500/20
             bg-red-500/[0.06]
             px-8
-            py-6
+            py-7
           "
         >
 
@@ -454,8 +559,9 @@ export default function SettingsPage() {
                 Danger Zone
               </h2>
 
-              <p className="mt-1 text-sm text-slate-400">
-                These actions permanently affect your local BerryMaster data.
+              <p className="mt-1 text-sm leading-relaxed text-amber-300">
+                These actions permanently affect data stored locally by
+                BerryMaster.
               </p>
 
             </div>
@@ -467,22 +573,41 @@ export default function SettingsPage() {
 
         <div className="p-8">
 
-          <p className="max-w-2xl text-sm leading-relaxed text-slate-400">
-            Resetting BerryMaster permanently deletes all characters,
-            favorite berries, and activity history stored on this device.
+          <p className="max-w-3xl leading-relaxed text-amber-300">
+            Resetting BerryMaster permanently removes all locally stored
+            application data, including characters, favorites, activity
+            history, and other saved information.Before you do it, make sure:
+          </p>
+          <ul className="mt-5 space-y-3">
+  <li className="flex items-start gap-3 text-slate-400">
+    <span className="mt-1 text-emerald-400">➤</span>
+    <span>You have created a backup file!</span>
+  </li>
+   <li className="flex items-start gap-3 text-slate-400">
+    <span className="mt-1 text-emerald-400">➤</span>
+    <span>Stored the file in a safe place!</span>
+  </li>
+   <li className="flex items-start gap-3 text-slate-400">
+    <span className="mt-1 text-emerald-400">➤</span>
+    <span>Check the backup file for corrupt data!</span>
+  </li>
+  </ul>
+          <p className="mt-3 font-medium text-red-400 gap-3">
+            This action cannot be undone.
           </p>
 
           <button
+            type="button"
             onClick={() =>
               setIsResetOpen(true)
             }
             className="
-              mt-6
+              mt-7
               rounded-xl
               border
               border-red-500/40
               bg-red-500/10
-              px-5
+              px-6
               py-3
               font-semibold
               text-red-400
@@ -506,199 +631,56 @@ export default function SettingsPage() {
           Clear Activities Confirmation
       ===================================== */}
 
-      {isClearActivitiesOpen && (
+      <ConfirmDialog
+        isOpen={
+          isClearActivitiesOpen
+        }
+        title="Clear Activity History?"
+        message="
+          This will permanently remove all recorded farming activity.
+          Your characters, favorites, and other BerryMaster data will remain
+          intact. This action cannot be undone.
+        "
+        confirmLabel="Clear History"
+        cancelLabel="Cancel"
+        variant="danger"
+        onConfirm={() => {
 
-        <div
-          className="
-            fixed
-            inset-0
-            z-50
-            flex
-            items-center
-            justify-center
-            bg-black/70
-            p-6
-            backdrop-blur-sm
-          "
-        >
+          clearActivities();
 
-          <div
-            className="
-              w-full
-              max-w-md
-              rounded-3xl
-              border
-              border-slate-700
-              bg-slate-900
-              p-8
-              shadow-2xl
-            "
-          >
+          setIsClearActivitiesOpen(false);
 
-            <div className="text-4xl">
-              🗑
-            </div>
-
-            <h2 className="mt-5 text-2xl font-bold text-white">
-              Clear Activity History?
-            </h2>
-
-            <p className="mt-3 leading-relaxed text-slate-400">
-              This will permanently remove all recent farming activity.
-              This action cannot be undone.
-            </p>
-
-            <div className="mt-8 flex justify-end gap-3">
-
-              <button
-                onClick={() =>
-                  setIsClearActivitiesOpen(false)
-                }
-                className="
-                  rounded-xl
-                  border
-                  border-slate-700
-                  px-5
-                  py-2.5
-                  font-semibold
-                  text-slate-300
-                  transition
-                  hover:bg-slate-800
-                "
-              >
-                Cancel
-              </button>
-
-              <button
-                onClick={() => {
-
-                  clearActivities();
-
-                  setIsClearActivitiesOpen(false);
-
-                }}
-                className="
-                  rounded-xl
-                  bg-red-500
-                  px-5
-                  py-2.5
-                  font-semibold
-                  text-white
-                  transition
-                  hover:bg-red-400
-                "
-              >
-                Clear History
-              </button>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      )}
+        }}
+        onCancel={() =>
+          setIsClearActivitiesOpen(false)
+        }
+      />
 
 
       {/* =====================================
           Reset Confirmation
       ===================================== */}
 
-      {isResetOpen && (
-
-        <div
-          className="
-            fixed
-            inset-0
-            z-50
-            flex
-            items-center
-            justify-center
-            bg-black/80
-            p-6
-            backdrop-blur-sm
-          "
-        >
-
-          <div
-            className="
-              w-full
-              max-w-md
-              rounded-3xl
-              border
-              border-red-500/40
-              bg-slate-900
-              p-8
-              shadow-2xl
-              shadow-red-500/10
-            "
-          >
-
-            <div className="text-4xl">
-              ⚠️
-            </div>
-
-            <h2 className="mt-5 text-2xl font-bold text-white">
-              Reset BerryMaster?
-            </h2>
-
-            <p className="mt-3 leading-relaxed text-slate-400">
-              This will permanently delete all characters,
-              favorite berries, and activity history stored
-              on this device.
-            </p>
-
-            <p className="mt-4 font-semibold text-red-400">
-              This action cannot be undone.
-            </p>
-
-
-            <div className="mt-8 flex justify-end gap-3">
-
-              <button
-                onClick={() =>
-                  setIsResetOpen(false)
-                }
-                className="
-                  rounded-xl
-                  border
-                  border-slate-700
-                  px-5
-                  py-2.5
-                  font-semibold
-                  text-slate-300
-                  transition
-                  hover:bg-slate-800
-                "
-              >
-                Cancel
-              </button>
-
-              <button
-                onClick={
-                  handleResetApplication
-                }
-                className="
-                  rounded-xl
-                  bg-red-600
-                  px-5
-                  py-2.5
-                  font-semibold
-                  text-white
-                  transition
-                  hover:bg-red-500
-                "
-              >
-                Reset Everything
-              </button>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      )}
+      <ConfirmDialog
+        isOpen={
+          isResetOpen
+        }
+        title="Reset BerryMaster?"
+        message="
+          This will permanently delete all characters, favorite berries,
+          activity history, and other locally stored BerryMaster data.
+          This action cannot be undone.
+        "
+        confirmLabel="Reset Everything"
+        cancelLabel="Cancel"
+        variant="danger"
+        onConfirm={
+          handleResetApplication
+        }
+        onCancel={() =>
+          setIsResetOpen(false)
+        }
+      />
 
     </div>
   );

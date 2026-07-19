@@ -20,6 +20,9 @@ export default function App() {
         <Route path="/settings" element={<SettingsPage />}/>
         <Route path="/about" element={<AboutPage />}/>
         <Route path="/feedback"element={<FeedbackPage />}/>
+        <Route path="/inventory"element={<InventoryPage />}/>
+        <Route path="/analytics"element={<AnalyticsPage />}/>
+        <Route path="/calendar"element={<CalendarPage />}/>
       </Routes>
     </AppLayout>
   );

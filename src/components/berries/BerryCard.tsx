@@ -4,7 +4,6 @@ import { useFavorites } from "../../context/FavoritesContext";
 
 interface BerryCardProps {
   berry: Berry;
-
   actionLabel?: string;
   onAction?: (berry: Berry) => void;
 }
@@ -28,7 +27,7 @@ export default function BerryCard({
         flex
         h-full
         flex-col
-        gap-3
+        gap-4
         rounded-2xl
         border
         border-slate-800
@@ -51,49 +50,122 @@ export default function BerryCard({
           Header
       ===================================== */}
 
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between gap-3">
 
-        <div>
+        <div className="min-w-0">
 
-          <h2 className="text-xl font-bold text-white">
-            🍓 {berry.name}
-          </h2>
+          <div className="flex items-center gap-3">
 
-          <p className="text-sm text-emerald-400">
-            {berry.categories.join(" • ")}
-          </p>
+            {berry.image ? (
+              <div
+                className="
+                  flex
+                  h-11
+                  w-11
+                  shrink-0
+                  items-center
+                  justify-center
+                  rounded-xl
+                  bg-slate-800/70
+                  transition-all
+                  duration-300
+                  group-hover:bg-emerald-500/10
+                "
+              >
+                <img
+                  src={berry.image}
+                  alt={berry.name}
+                  className="
+                    h-9
+                    w-9
+                    object-contain
+                    transition-transform
+                    duration-300
+                    group-hover:scale-110
+                  "
+                />
+              </div>
+            ) : (
+              <div
+                className="
+                  flex
+                  h-11
+                  w-11
+                  shrink-0
+                  items-center
+                  justify-center
+                  rounded-xl
+                  bg-slate-800/70
+                  text-2xl
+                "
+              >
+                🍓
+              </div>
+            )}
+
+            <div className="min-w-0">
+
+              <h2 className="truncate text-xl font-bold text-white">
+                {berry.name}
+              </h2>
+
+              <p className="mt-1 text-xs font-medium uppercase tracking-wide text-emerald-400">
+                {berry.categories.join(" • ")}
+              </p>
+
+            </div>
+
+          </div>
 
         </div>
 
-        <div className="flex items-center gap-2">
+
+        {/* =====================================
+            Header Actions
+        ===================================== */}
+
+        <div className="flex shrink-0 items-center gap-2">
 
           {berry.featured && (
             <span
               className="
                 rounded-full
-                bg-yellow-500/20
+                bg-yellow-500/10
                 px-2
                 py-1
                 text-xs
                 font-semibold
                 text-yellow-300
+                ring-1
+                ring-yellow-500/20
               "
             >
-              ⭐ Featured
+              ⭐
             </span>
           )}
 
           <button
             type="button"
+            aria-label={
+              favorite
+                ? `Remove ${berry.name} from favorites`
+                : `Add ${berry.name} to favorites`
+            }
             onClick={() =>
               toggleFavorite(berry.id)
             }
             className="
+              rounded-full
+              p-1
               text-2xl
-              transition-transform
+              transition-all
               duration-200
               hover:scale-110
+              hover:bg-slate-800
               active:scale-95
+              focus:outline-none
+              focus:ring-2
+              focus:ring-emerald-500/60
             "
           >
             {favorite ? "❤️" : "🤍"}
@@ -109,7 +181,13 @@ export default function BerryCard({
       ===================================== */}
 
       {berry.description && (
-        <p className="text-sm leading-relaxed text-slate-300">
+        <p
+          className="
+            text-sm
+            leading-relaxed
+            text-slate-300
+          "
+        >
           {berry.description}
         </p>
       )}
@@ -121,15 +199,23 @@ export default function BerryCard({
 
       <div
         className="
-          border-t
-          border-slate-700
-          pt-3
-          space-y-2
+          space-y-5
+          pt-4
         "
       >
 
-        <div className="flex justify-between text-sm">
-
+        <div
+          className="
+            flex
+            items-center
+            justify-between
+            rounded-lg
+            bg-slate-900/60
+            px-3
+            py-2
+            text-sm
+          "
+        >
           <span className="text-slate-400">
             🌱 Growth
           </span>
@@ -137,11 +223,20 @@ export default function BerryCard({
           <span className="font-semibold text-white">
             {berry.growthTime} hrs
           </span>
-
         </div>
 
-        <div className="flex justify-between text-sm">
-
+        <div
+          className="
+            flex
+            items-center
+            justify-between
+            rounded-lg
+            bg-slate-900/60
+            px-3
+            py-2
+            text-sm
+          "
+        >
           <span className="text-slate-400">
             🍓 Yield
           </span>
@@ -149,11 +244,20 @@ export default function BerryCard({
           <span className="font-semibold text-white">
             {berry.minYield}–{berry.maxYield}
           </span>
-
         </div>
 
-        <div className="flex justify-between text-sm">
-
+        <div
+          className="
+            flex
+            items-center
+            justify-between
+            rounded-lg
+            bg-slate-900/60
+            px-3
+            py-2
+            text-sm
+          "
+        >
           <span className="text-slate-400">
             ⏰ Harvest Window
           </span>
@@ -161,7 +265,6 @@ export default function BerryCard({
           <span className="font-semibold text-white">
             {berry.harvestWindow} hrs
           </span>
-
         </div>
 
       </div>
@@ -171,19 +274,13 @@ export default function BerryCard({
           Watering
       ===================================== */}
 
-      <div
-        className="
-          border-t
-          border-slate-700
-          pt-3
-        "
-      >
+      <div className="rounded-xl bg-slate-900/50 p-3">
 
         <h3 className="mb-2 font-semibold text-white">
           💧 Watering
         </h3>
 
-        <p className="text-sm italic text-slate-400">
+        <p className="rounded-lg bg-slate-900/60 px-3 py-2 text-sm italic text-slate-400">
           Coming in the Planting Module...
         </p>
 
@@ -197,16 +294,16 @@ export default function BerryCard({
       <div
         className="
           border-t
-          border-slate-700
-          pt-3
+          border-slate-800
+          pt-4
         "
       >
 
-        <h3 className="mb-2 font-semibold text-white">
+        <h3 className="mb-3 font-semibold text-white">
           🌱 Recipe
         </h3>
 
-        <div className="space-y-1">
+        <div className="space-y-2">
 
           {berry.recipes[0].ingredients.map(
             (ingredient) => {
@@ -222,16 +319,45 @@ export default function BerryCard({
                   key={ingredient.seedType}
                   className="
                     flex
+                    items-center
                     justify-between
+                    rounded-lg
+                    bg-slate-900/60
+                    px-3
+                    py-2
                     text-sm
+                    transition-colors
+                    duration-200
+                    hover:bg-slate-800/80
                   "
                 >
 
-                  <span className="text-slate-200">
-                    {seed.icon} {seed.name}
+                  <span className="flex items-center gap-2 text-slate-200">
+
+                    <img
+                      src={seed.image}
+                      alt={seed.name}
+                      className="
+                        h-7
+                        w-7
+                        object-contain
+                      "
+                    />
+
+                    {seed.name}
+
                   </span>
 
-                  <span className="font-semibold text-white">
+                  <span
+                    className="
+                      rounded-md
+                      bg-slate-800
+                      px-2
+                      py-1
+                      font-semibold
+                      text-white
+                    "
+                  >
                     ×{ingredient.quantity}
                   </span>
 
@@ -253,13 +379,12 @@ export default function BerryCard({
 
       <div
         className="
-          border-t
-          border-slate-700
-          pt-3
+        space-y-5
+          pt-4
         "
       >
 
-        <h3 className="mb-2 font-semibold text-white">
+        <h3 className="mb-3 font-semibold text-white">
           🎁 Possible Seed Drops
         </h3>
 
@@ -278,15 +403,36 @@ export default function BerryCard({
                 <span
                   key={drop.seedType}
                   className="
+                    inline-flex
+                    items-center
+                    gap-2
                     rounded-full
-                    bg-slate-800
+                    border
+                    border-slate-700
+                    bg-slate-800/70
                     px-3
-                    py-1
+                    py-1.5
                     text-xs
                     text-slate-200
+                    transition-all
+                    duration-200
+                    hover:border-emerald-500/40
+                    hover:bg-emerald-500/10
                   "
                 >
-                  {seed.icon} {seed.name}
+
+                  <img
+                    src={seed.image}
+                    alt={seed.name}
+                    className="
+                      h-5
+                      w-5
+                      object-contain
+                    "
+                  />
+
+                  {seed.name}
+
                 </span>
 
               );
@@ -306,18 +452,23 @@ export default function BerryCard({
       {actionLabel && onAction && (
 
         <button
+          type="button"
           onClick={() =>
             onAction(berry)
           }
           className="
             mt-auto
-            rounded-lg
+            rounded-xl
             bg-emerald-600
             py-3
             font-semibold
             text-white
             transition-all
+            duration-200
             hover:bg-emerald-500
+            hover:shadow-lg
+            hover:shadow-emerald-500/20
+            active:scale-[0.98]
           "
         >
           {actionLabel}

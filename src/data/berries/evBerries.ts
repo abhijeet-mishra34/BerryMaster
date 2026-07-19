@@ -1,10 +1,12 @@
 import type { Berry } from "../../types/Berry";
 import { BerryCategories } from "../../types/BerryCategories";
+import { berrySprites } from "../berrySprites";
 
 export const evBerries: Berry[] = [
   {
     id: "pomeg",
     name: "Pomeg Berry",
+    image: berrySprites.pomeg,
     description: "Lowers HP EVs.",
 
     categories: [BerryCategories.EV],
@@ -36,6 +38,7 @@ export const evBerries: Berry[] = [
   {
     id: "kelpsy",
     name: "Kelpsy Berry",
+    image: berrySprites.kelpsy,
     description: "Lowers Attack EVs.",
 
     categories: [BerryCategories.EV],
@@ -67,6 +70,7 @@ export const evBerries: Berry[] = [
   {
     id: "qualot",
     name: "Qualot Berry",
+    image: berrySprites.qualot,
     description: "Lowers Defense EVs.",
 
     categories: [BerryCategories.EV],
@@ -98,6 +102,7 @@ export const evBerries: Berry[] = [
   {
     id: "hondew",
     name: "Hondew Berry",
+    image: berrySprites.hondew,
     description: "Lowers Sp. Attack EVs.",
 
     categories: [BerryCategories.EV],
@@ -129,6 +134,7 @@ export const evBerries: Berry[] = [
   {
     id: "grepa",
     name: "Grepa Berry",
+    image: berrySprites.grepa,
     description: "Lowers Sp. Defense EVs.",
 
     categories: [BerryCategories.EV],
@@ -160,6 +166,7 @@ export const evBerries: Berry[] = [
   {
     id: "tamato",
     name: "Tamato Berry",
+    image: berrySprites.tamato,
     description: "Lowers Speed EVs.",
 
     categories: [BerryCategories.EV],

@@ -83,7 +83,7 @@ export default function BerrySelector() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="flex flex-col gap-3">
 
       {/* =====================================
           Search & Filters
@@ -91,20 +91,73 @@ export default function BerrySelector() {
 
       <div
         className="
+          overflow-hidden
           rounded-2xl
-          border
-          border-white/[0.08]
-          bg-slate-900/50
-          p-6
-          shadow-lg
-          shadow-black/10
+          space-y-4
+          bg-gradient-to-br
+          from-slate-900/90
+          to-slate-950/90
+          shadow-xl
+          shadow-black/20
           backdrop-blur-xl
         "
       >
 
-        {/* Search */}
+        {/* =====================================
+            Search Header
+        ===================================== */}
 
-        <div>
+        <div
+          className="
+            space-y-5
+            bg-white/[0.02]
+            px-6
+            py-5
+          "
+        >
+
+          <div
+            className="
+              flex
+              flex-col
+              gap-2
+              sm:flex-row
+              sm:items-center
+              sm:justify-between
+            "
+          >
+
+  
+
+            {hasActiveFilters && (
+
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="
+                  w-fit
+                  text-sm
+                  font-medium
+                  text-emerald-400
+                  transition-colors
+                  hover:text-emerald-300
+                "
+              >
+                Clear all filters
+              </button>
+
+            )}
+
+          </div>
+
+        </div>
+
+
+        {/* =====================================
+            Search
+        ===================================== */}
+
+        <div className="p-6">
 
           <label
             htmlFor="berry-search"
@@ -119,7 +172,14 @@ export default function BerrySelector() {
             Search Berries
           </label>
 
-          <div className="flex items-center gap-3">
+          <div
+            className="
+              group
+              flex
+              items-center
+              gap-3
+            "
+          >
 
             {/* Search Icon */}
 
@@ -136,146 +196,208 @@ export default function BerrySelector() {
                 border-slate-700
                 bg-slate-950/70
                 text-lg
+                transition-all
+                duration-200
+                group-focus-within:border-emerald-500/60
+                group-focus-within:bg-emerald-500/10
               "
             >
               🔍
             </div>
 
+
             {/* Search Input */}
 
-            <input
-              id="berry-search"
-              type="text"
-              value={search}
-              onChange={(event) =>
-                setSearch(
-                  event.target.value
-                )
-              }
-              placeholder="Search by berry name, ID, description, or tag..."
-              className="
-                min-w-0
-                flex-1
-                rounded-xl
-                border
-                border-slate-700
-                bg-slate-950/70
-                px-4
-                py-3
-                text-white
-                outline-none
-                transition-all
-                placeholder:text-slate-500
-                focus:border-emerald-500
-                focus:bg-slate-950
-                focus:ring-2
-                focus:ring-emerald-500/20
-              "
-            />
+            <div className="relative min-w-0 flex-1">
+
+              <input
+                id="berry-search"
+                type="text"
+                value={search}
+                onChange={(event) =>
+                  setSearch(
+                    event.target.value
+                  )
+                }
+                placeholder="Search by berry name, ID, description, or tag..."
+                className="
+                  w-full
+                  rounded-xl
+                 space-y-5
+                  bg-slate-950/70
+                  px-4
+                  py-3
+                  text-white
+                  outline-none
+                  transition-all
+                  duration-200
+                  placeholder:text-slate-500
+                  hover:border-slate-600
+                  focus:border-emerald-500
+                  focus:bg-slate-950
+                  focus:ring-2
+                  focus:ring-emerald-500/20
+                "
+              />
+
+              {search && (
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setSearch("")
+                  }
+                  aria-label="Clear search"
+                  className="
+                    absolute
+                    right-3
+                    top-1/2
+                    flex
+                    h-7
+                    w-7
+                    -translate-y-1/2
+                    items-center
+                    justify-center
+                    rounded-full
+                    text-sm
+                    text-slate-500
+                    transition-all
+                    hover:bg-slate-800
+                    hover:text-white
+                  "
+                >
+                  ✕
+                </button>
+
+              )}
+
+            </div>
 
           </div>
 
-        </div>
+
+          {/* =====================================
+              Divider
+          ===================================== */}
+
+          <div
+            className="
+              my-6
+              h-px
+              bg-gradient-to-r
+              from-transparent
+              via-slate-700
+              to-transparent
+            "
+          />
 
 
-        {/* Divider */}
+          {/* =====================================
+              Categories
+          ===================================== */}
 
-        <div className="my-6 h-px bg-slate-800" />
+          <div>
 
-
-        {/* Categories */}
-
-        <div>
-
-          <div className="mb-3 flex items-center justify-between">
-
-            <p
+            <div
               className="
-                text-sm
-                font-semibold
-                text-slate-300
+                mb-3
+                flex
+                items-center
+                justify-between
               "
             >
-              Categories
-            </p>
 
-            {hasActiveFilters && (
-
-              <button
-                type="button"
-                onClick={clearFilters}
+              <p
                 className="
-                  text-xs
-                  font-medium
-                  text-emerald-400
-                  transition
-                  hover:text-emerald-300
+                  text-sm
+                  font-semibold
+                  text-slate-300
                 "
               >
-                Clear filters
-              </button>
+                Categories
+              </p>
 
-            )}
+              <span
+                className="
+                  text-xs
+                  text-slate-500
+                "
+              >
+                {selectedCategory === "All"
+                  ? "All categories"
+                  : selectedCategory}
+              </span>
 
-          </div>
+            </div>
 
-          <div className="flex flex-wrap gap-3">
 
-            {categories.map(
-              (category) => {
+            <div
+              className="
+                flex
+                flex-wrap
+                gap-2
+              "
+            >
 
-                const isSelected =
-                  selectedCategory ===
-                  category;
+              {categories.map(
+                (category) => {
 
-                return (
+                  const isSelected =
+                    selectedCategory ===
+                    category;
 
-                  <button
-                    key={category}
-                    type="button"
-                    onClick={() =>
-                      setSelectedCategory(
-                        category
-                      )
-                    }
-                    className={`
+                  return (
 
-                      rounded-xl
-                      border
-                      px-4
-                      py-2
-                      text-sm
-                      font-medium
-                      transition-all
-                      duration-200
-
-                      ${
-                        isSelected
-                          ? `
-                            border-emerald-400
-                            bg-emerald-500
-                            text-slate-950
-                            shadow-lg
-                            shadow-emerald-500/20
-                          `
-                          : `
-                            border-slate-700
-                            bg-slate-800/70
-                            text-slate-300
-                            hover:border-slate-500
-                            hover:bg-slate-700
-                          `
+                    <button
+                      key={category}
+                      type="button"
+                      onClick={() =>
+                        setSelectedCategory(
+                          category
+                        )
                       }
+                      className={`
+                        rounded-xl
+                        space-y-5
+                        px-4
+                        py-2
+                        text-sm
+                        font-medium
+                        transition-all
+                        duration-200
+                        active:scale-95
 
-                    `}
-                  >
-                    {category}
-                  </button>
+                        ${
+                          isSelected
+                            ? `
+                              border-emerald-400
+                              bg-emerald-500
+                              text-slate-950
+                              shadow-lg
+                              shadow-emerald-500/20
+                              hover:bg-emerald-400
+                            `
+                            : `
+                              border-slate-700
+                              bg-slate-800/70
+                              text-slate-300
+                              hover:-translate-y-0.5
+                              hover:border-emerald-500/40
+                              hover:bg-slate-800
+                              hover:text-white
+                            `
+                        }
+                      `}
+                    >
+                      {category}
+                    </button>
 
-                );
+                  );
 
-              }
-            )}
+                }
+              )}
+
+            </div>
 
           </div>
 
@@ -313,10 +435,19 @@ export default function BerrySelector() {
             py-2
             text-sm
             text-slate-400
+            shadow-lg
+            shadow-black/10
           "
         >
 
-          <span className="text-emerald-400">
+          <span
+            className="
+              text-emerald-400
+              transition-transform
+              duration-300
+              hover:scale-125
+            "
+          >
             🍓
           </span>
 
@@ -324,7 +455,12 @@ export default function BerrySelector() {
             Showing
           </span>
 
-          <span className="font-semibold text-white">
+          <span
+            className="
+              font-semibold
+              text-white
+            "
+          >
             {filteredBerries.length}
           </span>
 
@@ -332,7 +468,12 @@ export default function BerrySelector() {
             of
           </span>
 
-          <span className="font-semibold text-white">
+          <span
+            className="
+              font-semibold
+              text-white
+            "
+          >
             {berryDatabase.length}
           </span>
 
@@ -349,10 +490,11 @@ export default function BerrySelector() {
             type="button"
             onClick={clearFilters}
             className="
+              w-fit
               text-sm
               font-medium
               text-emerald-400
-              transition
+              transition-colors
               hover:text-emerald-300
             "
           >
@@ -406,7 +548,9 @@ export default function BerrySelector() {
             border
             border-dashed
             border-slate-700
-            bg-slate-900/50
+            bg-gradient-to-b
+            from-slate-900/70
+            to-slate-950/70
             px-6
             py-16
             text-center
@@ -422,8 +566,12 @@ export default function BerrySelector() {
               items-center
               justify-center
               rounded-2xl
+              border
+              border-emerald-500/20
               bg-emerald-500/10
               text-4xl
+              shadow-lg
+              shadow-emerald-500/10
             "
           >
             🍓
@@ -462,8 +610,13 @@ export default function BerrySelector() {
               text-sm
               font-semibold
               text-slate-950
-              transition
+              shadow-lg
+              shadow-emerald-500/20
+              transition-all
+              duration-200
+              hover:-translate-y-0.5
               hover:bg-emerald-400
+              active:translate-y-0
             "
           >
             Reset Filters

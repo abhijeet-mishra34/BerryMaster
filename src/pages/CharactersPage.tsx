@@ -28,6 +28,7 @@ export default function CharactersPage() {
     addCharacter,
     updateCharacter,
     deleteCharacter,
+    removeBerry,
     waterBerry,
     harvestBerry,
   } = useCharacters();
@@ -66,6 +67,16 @@ export default function CharactersPage() {
     isDeleteOpen,
     setIsDeleteOpen,
   ] = useState(false);
+
+  const [
+    isRemoveBerryOpen,
+    setIsRemoveBerryOpen,
+  ] = useState(false);
+
+  const [
+    removeBerryCharacter,
+    setRemoveBerryCharacter,
+  ] = useState<Character | null>(null);
 
 
   // =====================================
@@ -209,6 +220,25 @@ export default function CharactersPage() {
   }
 
 
+  function handleRemoveBerry() {
+    if (!removeBerryCharacter) {
+      return;
+    }
+
+    removeBerry(
+      removeBerryCharacter.id
+    );
+
+    setRemoveBerryCharacter(
+      null
+    );
+
+    setIsRemoveBerryOpen(
+      false
+    );
+  }
+
+
   function highlightCharacter(
     characterId: string
   ) {
@@ -305,7 +335,7 @@ export default function CharactersPage() {
                   text-3xl
                   font-bold
                   tracking-tight
-                  text-white
+                  text-amber-600
                 "
               >
                 Characters
@@ -617,6 +647,28 @@ export default function CharactersPage() {
           editingCharacter?.name ??
           ""
         }
+
+        hasPlantedBerry={
+          Boolean(
+            editingCharacter?.plantedBerryId
+          )
+        }
+
+        onRemoveBerry={() => {
+
+          if (!editingCharacter) {
+            return;
+          }
+
+          setRemoveBerryCharacter(
+            editingCharacter
+          );
+
+          setIsRemoveBerryOpen(
+            true
+          );
+
+        }}
       />
 
 
@@ -752,6 +804,46 @@ export default function CharactersPage() {
           );
 
           setIsChangeBerryOpen(
+            false
+          );
+
+        }}
+
+      />
+
+
+      {/* =====================================
+          Remove Berry Confirmation
+      ===================================== */}
+
+      <ConfirmDialog
+        isOpen={
+          isRemoveBerryOpen
+        }
+
+        title="Remove Planted Berry"
+
+        message="Are you sure you want to remove the currently planted berry? This will reset the current farming progress and cannot be undone."
+
+        itemName={
+          removeBerryCharacter?.name
+        }
+
+        confirmText="Remove Berry"
+
+        cancelText="Cancel"
+
+        onConfirm={
+          handleRemoveBerry
+        }
+
+        onCancel={() => {
+
+          setRemoveBerryCharacter(
+            null
+          );
+
+          setIsRemoveBerryOpen(
             false
           );
 

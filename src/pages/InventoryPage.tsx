@@ -1,7 +1,11 @@
+import ComingSoon from "../components/ui/ComingSoon";
+
 export default function InventoryPage() {
   return (
-    <h1 className="text-4xl font-bold">
-      Inventory
-    </h1>
+    <ComingSoon
+      icon="🎒"
+      title="Inventory"
+      description="A complete inventory system for tracking your berries, seeds, and farming resources is currently being planned and developed."
+    />
   );
 }

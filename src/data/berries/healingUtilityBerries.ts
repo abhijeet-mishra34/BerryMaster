@@ -1,10 +1,12 @@
 import type { Berry } from "../../types/Berry";
 import { BerryCategories } from "../../types/BerryCategories";
+import { berrySprites } from "../berrySprites";
 
 export const healingUtilityBerries: Berry[] = [
   {
     id: "oran",
     name: "Oran Berry",
+    image: berrySprites.oran,
     description: "Restores 10 HP when consumed.",
 
     categories: [BerryCategories.HEALING],
@@ -36,6 +38,7 @@ export const healingUtilityBerries: Berry[] = [
   {
     id: "sitrus",
     name: "Sitrus Berry",
+    image: berrySprites.sitrus,
     description: "Restores 25% of maximum HP.",
 
     categories: [BerryCategories.HEALING],
@@ -67,6 +70,7 @@ export const healingUtilityBerries: Berry[] = [
   {
     id: "leppa",
     name: "Leppa Berry",
+    image: berrySprites.leppa,
     description: "Restores 10 PP of a move.",
 
     categories: [
@@ -110,6 +114,7 @@ export const healingUtilityBerries: Berry[] = [
   {
     id: "figy",
     name: "Figy Berry",
+    image: berrySprites.figy,
     description:
       "Restores HP. May confuse Pokémon with low Spicy preference.",
 
@@ -140,6 +145,7 @@ export const healingUtilityBerries: Berry[] = [
   {
     id: "wiki",
     name: "Wiki Berry",
+    image: berrySprites.wiki,
     description:
       "Restores HP. May confuse Pokémon with low Dry preference.",
 
@@ -170,6 +176,7 @@ export const healingUtilityBerries: Berry[] = [
   {
     id: "mago",
     name: "Mago Berry",
+    image: berrySprites.mago,
     description:
       "Restores HP. May confuse Pokémon with low Sweet preference.",
 
@@ -200,6 +207,7 @@ export const healingUtilityBerries: Berry[] = [
   {
     id: "aguav",
     name: "Aguav Berry",
+    image: berrySprites.aguav,
     description:
       "Restores HP. May confuse Pokémon with low Bitter preference.",
 
@@ -230,6 +238,7 @@ export const healingUtilityBerries: Berry[] = [
   {
     id: "iapapa",
     name: "Iapapa Berry",
+    image: berrySprites.iapapa,
     description:
       "Restores HP. May confuse Pokémon with low Sour preference.",
 

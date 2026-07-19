@@ -1,10 +1,12 @@
 import type { Berry } from "../../types/Berry";
 import { BerryCategories } from "../../types/BerryCategories";
+import { berrySprites } from "../berrySprites";
 
 export const flavorBerries: Berry[] = [
   {
     id: "razz",
     name: "Razz Berry",
+    image: berrySprites.razz,
     description: "A spicy flavored berry.",
 
     categories: [BerryCategories.FLAVOR],
@@ -34,6 +36,7 @@ export const flavorBerries: Berry[] = [
   {
     id: "bluk",
     name: "Bluk Berry",
+    image: berrySprites.bluk,
     description: "A sweet flavored berry.",
 
     categories: [BerryCategories.FLAVOR],
@@ -63,6 +66,7 @@ export const flavorBerries: Berry[] = [
   {
     id: "nanab",
     name: "Nanab Berry",
+    image: berrySprites.nanab,
     description: "A sweet and bitter flavored berry.",
 
     categories: [BerryCategories.FLAVOR],
@@ -92,6 +96,7 @@ export const flavorBerries: Berry[] = [
   {
     id: "wepear",
     name: "Wepear Berry",
+    image: berrySprites.wepear,
     description: "A sour flavored berry.",
 
     categories: [BerryCategories.FLAVOR],
@@ -121,6 +126,7 @@ export const flavorBerries: Berry[] = [
   {
     id: "pinap",
     name: "Pinap Berry",
+    image: berrySprites.pinap,
     description: "A spicy and sour flavored berry.",
 
     categories: [BerryCategories.FLAVOR],
@@ -150,6 +156,7 @@ export const flavorBerries: Berry[] = [
   {
     id: "cornn",
     name: "Cornn Berry",
+    image: berrySprites.cornn,
     description: "A dry flavored berry.",
 
     categories: [BerryCategories.FLAVOR],
@@ -179,6 +186,7 @@ export const flavorBerries: Berry[] = [
   {
     id: "magost",
     name: "Magost Berry",
+    image: berrySprites.magost,
     description: "A sweet flavored berry.",
 
     categories: [BerryCategories.FLAVOR],
@@ -208,6 +216,7 @@ export const flavorBerries: Berry[] = [
   {
     id: "rabuta",
     name: "Rabuta Berry",
+    image: berrySprites.rabuta,
     description: "A bitter flavored berry.",
 
     categories: [BerryCategories.FLAVOR],
@@ -237,6 +246,7 @@ export const flavorBerries: Berry[] = [
   {
     id: "nomel",
     name: "Nomel Berry",
+    image: berrySprites.nomel,
     description: "A sour flavored berry.",
 
     categories: [BerryCategories.FLAVOR],

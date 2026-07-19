@@ -43,6 +43,11 @@ export interface Berry {
   name: string;
 
   /**
+   * Berry sprite used throughout the UI.
+   */
+  image?: string;
+
+  /**
    * Optional UI description
    */
   description?: string;
