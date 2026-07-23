@@ -7,4 +7,12 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+
+  server: {
+    watch: {
+      ignored: [
+        "**/src-tauri/**",
+      ],
+    },
+  },
 });

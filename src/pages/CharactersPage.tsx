@@ -200,7 +200,18 @@ export default function CharactersPage() {
     );
   }
 
+   function openDeleteDialog(
+  character: Character,
+  index: number
+) {
+  setSelectedCharacter({
+    id: character.id,
+    name: character.name,
+    index,
+  });
 
+  setIsDeleteOpen(true);
+}
   function handleDelete() {
     if (!selectedCharacter) {
       return;
@@ -588,19 +599,12 @@ export default function CharactersPage() {
                   )
                 }
 
-                onDelete={() => {
-
-                  setSelectedCharacter({
-                    id: character.id,
-                    name: character.name,
-                    index,
-                  });
-
-                  setIsDeleteOpen(
-                    true
-                  );
-
-                }}
+                onDelete={() =>
+  openDeleteDialog(
+    character,
+    index
+  )
+}
 
               />
 

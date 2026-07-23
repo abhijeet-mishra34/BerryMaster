@@ -9,7 +9,10 @@ import BerryCard from "./BerryCard";
 import BerryList from "./BerryList";
 import BerryFilters from "./BerryFilters";
 
-import { berryDatabase } from "../../data/berryDatabase";
+import {
+  berryDatabase,
+  publicBerryDatabase,
+} from "../../data/berryDatabase";
 import { useCharacters } from "../../context/CharacterContext";
 import { useFavorites } from "../../context/FavoritesContext";
 
@@ -17,7 +20,7 @@ import type { Berry } from "../../types/Berry";
 import type { BerryCategory } from "../../types/BerryCategories";
 
 import { BerryCategories } from "../../types/BerryCategories";
-
+import { useSettings } from "../../context/SettingsContext";
 interface PlantBerrySelectorProps {
 characterId: string;
 onClose: () => void;
@@ -42,7 +45,8 @@ onPlantSuccess,
 }: PlantBerrySelectorProps) {
 const { plantBerry } = useCharacters();
 const { isFavorite } = useFavorites();
-
+const { showDeveloperBerries } =
+  useSettings();
 const [search, setSearch] = useState("");
 
 const [
@@ -67,7 +71,11 @@ const filteredBerries = useMemo(() => {
 const query = search.trim().toLowerCase();
 
 
-return berryDatabase
+return (
+  showDeveloperBerries
+    ? berryDatabase
+    : publicBerryDatabase
+)
   .filter((berry) => {
     const matchesCategory =
       selectedCategory === "All" ||
@@ -112,19 +120,6 @@ return berryDatabase
         : 1;
     }
 
-    // Debug berry stays at the bottom
-    if (
-      a.id === "debugBerry"
-    ) {
-      return 1;
-    }
-
-    if (
-      b.id === "debugBerry"
-    ) {
-      return -1;
-    }
-
     // Alphabetical order
     return a.name.localeCompare(
       b.name
@@ -136,6 +131,7 @@ return berryDatabase
 search,
 selectedCategory,
 isFavorite,
+showDeveloperBerries,
 ]);
 
 // =====================================

@@ -2,6 +2,7 @@ import { useMemo } from "react";
 
 type Leaf = {
   id: number;
+  type: string;
   left: string;
   size: number;
   duration: number;
@@ -9,11 +10,12 @@ type Leaf = {
   rotation: number;
 };
 
-export default function FloatingLeaves() {
+export default function FallingLeaves() {
   const leaves = useMemo<Leaf[]>(
     () => [
       {
         id: 1,
+        type: "🍃",
         left: "8%",
         size: 22,
         duration: 18,
@@ -23,6 +25,7 @@ export default function FloatingLeaves() {
 
       {
         id: 2,
+        type: "🍂",
         left: "22%",
         size: 16,
         duration: 24,
@@ -32,15 +35,26 @@ export default function FloatingLeaves() {
 
       {
         id: 3,
+        type: "🍁",
         left: "38%",
         size: 20,
         duration: 20,
         delay: 9,
         rotation: 60,
       },
-
       {
         id: 4,
+        type: "🌿",
+        left: "8%",
+        size: 22,
+        duration: 18,
+        delay: 0,
+        rotation: 25,
+      },
+
+      {
+        id: 5,
+        type: "🍃",
         left: "55%",
         size: 14,
         duration: 26,
@@ -49,7 +63,8 @@ export default function FloatingLeaves() {
       },
 
       {
-        id: 5,
+        id: 6,
+        type: "🍂",
         left: "72%",
         size: 24,
         duration: 22,
@@ -58,7 +73,17 @@ export default function FloatingLeaves() {
       },
 
       {
-        id: 6,
+        id: 7,
+        type: "🍁",
+        left: "88%",
+        size: 18,
+        duration: 19,
+        delay: 12,
+        rotation: -50,
+      },
+      {
+        id: 8,
+        type: "🌿",
         left: "88%",
         size: 18,
         duration: 19,
@@ -75,7 +100,7 @@ export default function FloatingLeaves() {
         pointer-events-none
         fixed
         inset-0
-        z-0
+        z-20
         overflow-hidden
       "
     >
@@ -85,11 +110,11 @@ export default function FloatingLeaves() {
         <span
           key={leaf.id}
           className="
+            leaf
             absolute
             -top-10
             select-none
             text-emerald-500/30
-            animate-[leafFall_linear_infinite]
           "
           style={{
             left: leaf.left,
@@ -99,11 +124,8 @@ export default function FloatingLeaves() {
             transform: `rotate(${leaf.rotation}deg)`,
           }}
         >
-          🍃
-          
+          {leaf.type}
         </span>
-
-        
 
       ))}
 

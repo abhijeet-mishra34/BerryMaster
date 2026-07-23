@@ -16,11 +16,14 @@ import {
 } from "../context/ActivityContext";
 
 import {
+  useSettings,
+} from "../context/SettingsContext";
+
+import {
   resetBerryMaster,
 } from "../utils/resetApp";
 
 import ConfirmDialog from "../components/ui/ConfirmDialog";
-
 
 export default function SettingsPage() {
   const fileInputRef =
@@ -29,6 +32,11 @@ export default function SettingsPage() {
   const {
     clearActivities,
   } = useActivities();
+
+  const {
+    showDeveloperBerries,
+    setShowDeveloperBerries,
+  } = useSettings();
 
   const [
     importMessage,
@@ -58,7 +66,6 @@ export default function SettingsPage() {
   function handleImportClick() {
     fileInputRef.current?.click();
   }
-
 
   async function handleFileSelected(
     event: React.ChangeEvent<HTMLInputElement>
@@ -190,8 +197,6 @@ export default function SettingsPage() {
         "
       >
 
-        {/* Section Header */}
-
         <div
           className="
             border-b
@@ -237,14 +242,10 @@ export default function SettingsPage() {
         </div>
 
 
-        {/* Actions */}
-
         <div className="grid gap-5 p-8 md:grid-cols-3">
 
 
-          {/* =====================================
-              Export
-          ===================================== */}
+          {/* Export */}
 
           <button
             type="button"
@@ -294,7 +295,7 @@ export default function SettingsPage() {
               Export Data
             </h3>
 
-            <p className="mt-2 leading-relaxed text-sm text-slate-400">
+            <p className="mt-2 text-sm leading-relaxed text-slate-400">
               Create a backup of your BerryMaster data so it can be restored
               later or transferred to another device.
             </p>
@@ -314,9 +315,7 @@ export default function SettingsPage() {
           </button>
 
 
-          {/* =====================================
-              Import
-          ===================================== */}
+          {/* Import */}
 
           <button
             type="button"
@@ -365,7 +364,7 @@ export default function SettingsPage() {
               Import Data
             </h3>
 
-            <p className="mt-2 leading-relaxed text-sm text-slate-400">
+            <p className="mt-2 text-sm leading-relaxed text-slate-400">
               Restore characters, favorites, activity history, and other
               supported data from a BerryMaster backup file.
             </p>
@@ -385,9 +384,7 @@ export default function SettingsPage() {
           </button>
 
 
-          {/* =====================================
-              Clear Activities
-          ===================================== */}
+          {/* Clear Activities */}
 
           <button
             type="button"
@@ -437,7 +434,7 @@ export default function SettingsPage() {
               Clear Activity History
             </h3>
 
-            <p className="mt-2 leading-relaxed text-sm text-slate-400">
+            <p className="mt-2 text-sm leading-relaxed text-slate-400">
               Remove your recorded farming activity while keeping your
               characters, favorites, and other BerryMaster data intact.
             </p>
@@ -459,8 +456,6 @@ export default function SettingsPage() {
         </div>
 
 
-        {/* Hidden File Input */}
-
         <input
           ref={fileInputRef}
           type="file"
@@ -471,8 +466,6 @@ export default function SettingsPage() {
           className="hidden"
         />
 
-
-        {/* Import Message */}
 
         {importMessage && (
 
@@ -506,6 +499,138 @@ export default function SettingsPage() {
           </div>
 
         )}
+
+      </section>
+
+
+      {/* =====================================
+          Developer Mode
+      ===================================== */}
+
+      <section
+        className="
+          rounded-2xl
+          border
+          border-amber-500/20
+          bg-amber-500/[0.04]
+          p-6
+        "
+      >
+
+        <div
+          className="
+            flex
+            flex-col
+            gap-5
+            sm:flex-row
+            sm:items-center
+            sm:justify-between
+          "
+        >
+
+          <div>
+
+            <div
+              className="
+                flex
+                items-center
+                gap-3
+              "
+            >
+
+              <span className="text-2xl">
+                🛠️
+              </span>
+
+              <h2
+                className="
+                  text-lg
+                  font-semibold
+                  text-white
+                "
+              >
+                Developer Mode
+              </h2>
+
+            </div>
+
+            <p
+              className="
+                mt-2
+                max-w-xl
+                text-sm
+                leading-relaxed
+                text-slate-400
+              "
+            >
+              Enable developer-only features and testing tools.
+              This includes the Debug Berry.
+            </p>
+
+            {showDeveloperBerries && (
+
+              <p
+                className="
+                  mt-3
+                  text-xs
+                  font-semibold
+                  text-amber-400
+                "
+              >
+                ⚠ Developer features are currently enabled.
+              </p>
+
+            )}
+
+          </div>
+
+
+          <button
+            type="button"
+            onClick={() =>
+              setShowDeveloperBerries(
+                !showDeveloperBerries
+              )
+            }
+            className={`
+              relative
+              h-7
+              w-12
+              shrink-0
+              rounded-full
+              transition-colors
+              duration-200
+              ${
+                showDeveloperBerries
+                  ? "bg-emerald-500"
+                  : "bg-slate-700"
+              }
+            `}
+            aria-label="Toggle Developer Mode"
+          >
+
+            <span
+              className={`
+                absolute
+                top-1
+                h-5
+                w-5
+                rounded-full
+                bg-white
+                shadow
+                transition-all
+                duration-200
+                ${
+                  showDeveloperBerries
+                    ? "left-6"
+                    : "left-1"
+                }
+              `}
+            />
+
+          </button>
+
+        </div>
 
       </section>
 
@@ -576,23 +701,44 @@ export default function SettingsPage() {
           <p className="max-w-3xl leading-relaxed text-amber-300">
             Resetting BerryMaster permanently removes all locally stored
             application data, including characters, favorites, activity
-            history, and other saved information.Before you do it, make sure:
+            history, and other saved information. Before you do it, make sure:
           </p>
+
           <ul className="mt-5 space-y-3">
-  <li className="flex items-start gap-3 text-slate-400">
-    <span className="mt-1 text-emerald-400">➤</span>
-    <span>You have created a backup file!</span>
-  </li>
-   <li className="flex items-start gap-3 text-slate-400">
-    <span className="mt-1 text-emerald-400">➤</span>
-    <span>Stored the file in a safe place!</span>
-  </li>
-   <li className="flex items-start gap-3 text-slate-400">
-    <span className="mt-1 text-emerald-400">➤</span>
-    <span>Check the backup file for corrupt data!</span>
-  </li>
-  </ul>
-          <p className="mt-3 font-medium text-red-400 gap-3">
+
+            <li className="flex items-start gap-3 text-slate-400">
+              <span className="mt-1 text-emerald-400">
+                ➤
+              </span>
+
+              <span>
+                You have created a backup file!
+              </span>
+            </li>
+
+            <li className="flex items-start gap-3 text-slate-400">
+              <span className="mt-1 text-emerald-400">
+                ➤
+              </span>
+
+              <span>
+                Stored the file in a safe place!
+              </span>
+            </li>
+
+            <li className="flex items-start gap-3 text-slate-400">
+              <span className="mt-1 text-emerald-400">
+                ➤
+              </span>
+
+              <span>
+                Check the backup file for corrupt data!
+              </span>
+            </li>
+
+          </ul>
+
+          <p className="mt-3 font-medium text-red-400">
             This action cannot be undone.
           </p>
 
@@ -641,9 +787,8 @@ export default function SettingsPage() {
           Your characters, favorites, and other BerryMaster data will remain
           intact. This action cannot be undone.
         "
-        confirmLabel="Clear History"
-        cancelLabel="Cancel"
-        variant="danger"
+        confirmText="Clear History"
+        cancelText="Cancel"
         onConfirm={() => {
 
           clearActivities();
@@ -671,9 +816,8 @@ export default function SettingsPage() {
           activity history, and other locally stored BerryMaster data.
           This action cannot be undone.
         "
-        confirmLabel="Reset Everything"
-        cancelLabel="Cancel"
-        variant="danger"
+      confirmText="Reset Everything"
+      cancelText="Cancel"
         onConfirm={
           handleResetApplication
         }

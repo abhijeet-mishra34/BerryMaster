@@ -11,13 +11,17 @@ function createNotification(
   id: string,
   type: Notification["type"],
   title: string,
-  message: string
+  message: string,
+  characterId: string,
+  characterName: string
 ): Notification {
   return {
     id,
     type,
     title,
     message,
+    characterId,
+    characterName,
     createdAt: new Date().toISOString(),
   };
 }
@@ -48,12 +52,14 @@ export function generateNotifications(
     // 🍂 Wilt (highest priority)
     if (now >= wiltAt) {
       notifications.push(
-        createNotification(
-          `${cycleId}-wilt`,
-          "wilt",
-          "Berry Wilted",
-          `${character.name}'s berry has wilted.`
-        )
+       createNotification(
+  `${cycleId}-wilt`,
+  "wilt",
+  "Berry Wilted",
+  `${character.name}'s berry has wilted.`,
+  character.id,
+  character.name
+)
       );
 
       return;
@@ -67,11 +73,13 @@ export function generateNotifications(
     ) {
       notifications.push(
         createNotification(
-          `${cycleId}-water`,
-          "water",
-          "Water Needed",
-          `${character.name} needs watering.`
-        )
+  `${cycleId}-water`,
+  "water",
+  "Water Needed",
+  `${character.name} needs watering.`,
+  character.id,
+  character.name
+)
       );
 
       return;
@@ -80,12 +88,14 @@ export function generateNotifications(
     // 🌾 Harvest
     if (now >= harvestAt) {
       notifications.push(
-        createNotification(
-          `${cycleId}-harvest`,
-          "harvest",
-          "Harvest Ready",
-          `${character.name}'s berry is ready to harvest.`
-        )
+       createNotification(
+  `${cycleId}-harvest`,
+  "harvest",
+  "Harvest Ready",
+  `${character.name}'s berry is ready to harvest.`,
+  character.id,
+  character.name
+)
       );
     }
   });

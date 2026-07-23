@@ -7,7 +7,7 @@ export const debugBerry: Berry = {
   name: "🧪 Debug Berry",
 
   description:
-    "The 'GOD OF BERRIES ☢️',the official fuel of BerryMaster development. Grows faster than your code compiles 😄 . Beware ⚠️ : 🛠️ ONLY FOR DEVELOPERS USE,PLANT IT ON YOUR OWN RiSK ⚡",
+  "The 'GOD OF BERRIES ☢️', the official fuel of BerryMaster development. Grows faster than your code compiles. 😄 🛠️ Developer-only berry for testing. Plant at your own risk! ⚡",
 
   categories: [BerryCategories.SPECIAL],
 

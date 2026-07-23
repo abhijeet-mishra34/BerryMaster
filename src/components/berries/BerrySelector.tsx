@@ -1,3 +1,4 @@
+
 import {
   useMemo,
   useState,
@@ -5,7 +6,12 @@ import {
 
 import BerryCard from "./BerryCard";
 
-import { berryDatabase } from "../../data/berryDatabase";
+import {
+  berryDatabase,
+  publicBerryDatabase,
+} from "../../data/berryDatabase";
+
+import { useSettings } from "../../context/SettingsContext";
 
 import type { BerryCategory } from "../../types/BerryCategories";
 
@@ -24,7 +30,14 @@ const categories: (
 ];
 
 export default function BerrySelector() {
-  const [search, setSearch] = useState("");
+  const {
+    showDeveloperBerries,
+  } = useSettings();
+
+  const [
+    search,
+    setSearch,
+  ] = useState("");
 
   const [
     selectedCategory,
@@ -33,54 +46,81 @@ export default function BerrySelector() {
     "All" | BerryCategory
   >("All");
 
-  const filteredBerries = useMemo(() => {
-    const query = search
-      .trim()
-      .toLowerCase();
+  // =====================================
+  // Active Berry Database
+  // =====================================
 
-    return berryDatabase.filter(
-      (berry) => {
-        const matchesCategory =
-          selectedCategory === "All" ||
-          berry.categories.includes(
-            selectedCategory
-          );
+  const availableBerries =
+    showDeveloperBerries
+      ? berryDatabase
+      : publicBerryDatabase;
 
-        const matchesSearch =
-          berry.name
-            .toLowerCase()
-            .includes(query) ||
-          berry.id
-            .toLowerCase()
-            .includes(query) ||
-          berry.description
-            ?.toLowerCase()
-            .includes(query) ||
-          berry.tags?.some((tag) =>
-            tag
+
+  // =====================================
+  // Filter Berries
+  // =====================================
+
+  const filteredBerries =
+    useMemo(() => {
+      const query = search
+        .trim()
+        .toLowerCase();
+
+      return availableBerries.filter(
+        (berry) => {
+          const matchesCategory =
+            selectedCategory === "All" ||
+            berry.categories.includes(
+              selectedCategory
+            );
+
+          const matchesSearch =
+            berry.name
               .toLowerCase()
-              .includes(query)
-          );
+              .includes(query) ||
+            berry.id
+              .toLowerCase()
+              .includes(query) ||
+            berry.description
+              ?.toLowerCase()
+              .includes(query) ||
+            berry.tags?.some((tag) =>
+              tag
+                .toLowerCase()
+                .includes(query)
+            );
 
-        return (
-          matchesCategory &&
-          matchesSearch
-        );
-      }
-    );
-  }, [
-    search,
-    selectedCategory,
-  ]);
+          return (
+            matchesCategory &&
+            matchesSearch
+          );
+        }
+      );
+    }, [
+      availableBerries,
+      search,
+      selectedCategory,
+    ]);
+
+
+  // =====================================
+  // Active Filters
+  // =====================================
 
   const hasActiveFilters =
     search.trim() !== "" ||
     selectedCategory !== "All";
 
+
+  // =====================================
+  // Clear Filters
+  // =====================================
+
   function clearFilters() {
     setSearch("");
     setSelectedCategory("All");
   }
+
 
   return (
     <div className="flex flex-col gap-3">
@@ -92,8 +132,8 @@ export default function BerrySelector() {
       <div
         className="
           overflow-hidden
-          rounded-2xl
           space-y-4
+          rounded-2xl
           bg-gradient-to-br
           from-slate-900/90
           to-slate-950/90
@@ -126,8 +166,6 @@ export default function BerrySelector() {
               sm:justify-between
             "
           >
-
-  
 
             {hasActiveFilters && (
 
@@ -171,6 +209,7 @@ export default function BerrySelector() {
           >
             Search Berries
           </label>
+
 
           <div
             className="
@@ -223,7 +262,8 @@ export default function BerrySelector() {
                 className="
                   w-full
                   rounded-xl
-                 space-y-5
+                  border
+                  border-slate-700
                   bg-slate-950/70
                   px-4
                   py-3
@@ -239,6 +279,7 @@ export default function BerrySelector() {
                   focus:ring-emerald-500/20
                 "
               />
+
 
               {search && (
 
@@ -276,9 +317,7 @@ export default function BerrySelector() {
           </div>
 
 
-          {/* =====================================
-              Divider
-          ===================================== */}
+          {/* Divider */}
 
           <div
             className="
@@ -292,9 +331,7 @@ export default function BerrySelector() {
           />
 
 
-          {/* =====================================
-              Categories
-          ===================================== */}
+          {/* Categories */}
 
           <div>
 
@@ -358,7 +395,7 @@ export default function BerrySelector() {
                       }
                       className={`
                         rounded-xl
-                        space-y-5
+                        border
                         px-4
                         py-2
                         text-sm
@@ -474,7 +511,7 @@ export default function BerrySelector() {
               text-white
             "
           >
-            {berryDatabase.length}
+            {availableBerries.length}
           </span>
 
           <span>
@@ -577,6 +614,7 @@ export default function BerrySelector() {
             🍓
           </div>
 
+
           <h2
             className="
               mt-6
@@ -588,6 +626,7 @@ export default function BerrySelector() {
             No berries found
           </h2>
 
+
           <p
             className="
               mt-2
@@ -597,6 +636,7 @@ export default function BerrySelector() {
           >
             Try adjusting your search or selecting a different category.
           </p>
+
 
           <button
             type="button"
@@ -629,3 +669,4 @@ export default function BerrySelector() {
     </div>
   );
 }
+

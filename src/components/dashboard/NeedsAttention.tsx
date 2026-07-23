@@ -1,18 +1,11 @@
 import { useNavigate } from "react-router-dom";
 
-import type { FarmStats } from "../../utils/farmStats";
 
 import { useCharacters } from "../../context/CharacterContext";
 
 import { getCharacterStatus } from "../../utils/characterStatus";
 
-type NeedsAttentionProps = {
-  stats: FarmStats;
-};
-
-export default function NeedsAttention({
-  stats,
-}: NeedsAttentionProps) {
+export default function NeedsAttention()  {
   const navigate = useNavigate();
 
   const { characters } = useCharacters();

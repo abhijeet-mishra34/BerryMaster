@@ -1,4 +1,8 @@
 import {
+  createPortal,
+} from "react-dom";
+
+import {
   useEffect,
   useRef,
 } from "react";
@@ -16,80 +20,59 @@ export default function Modal({
   children,
   onClose,
 }: ModalProps) {
-
   const previousFocus =
     useRef<HTMLElement | null>(null);
 
-
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      return;
+    }
 
-
-    // Store currently focused element
     previousFocus.current =
       document.activeElement as HTMLElement;
 
-
-    // Lock background scrolling
     const originalOverflow =
       document.body.style.overflow;
 
     document.body.style.overflow =
       "hidden";
 
-
     function handleKeyDown(
       event: KeyboardEvent
     ) {
-
       if (event.key === "Escape") {
         event.preventDefault();
 
         onClose();
       }
-
     }
-
 
     window.addEventListener(
       "keydown",
       handleKeyDown
     );
 
-
     return () => {
-
       window.removeEventListener(
         "keydown",
         handleKeyDown
       );
 
-
-      // Restore scrolling
       document.body.style.overflow =
         originalOverflow;
 
-
-      // Restore focus
       previousFocus.current?.focus();
-
     };
-
   }, [
     isOpen,
     onClose,
   ]);
 
-
-
   if (!isOpen) {
     return null;
   }
 
-
-
-  return (
-
+  return createPortal(
     <div
       className="
         fixed
@@ -103,8 +86,6 @@ export default function Modal({
       "
       onClick={onClose}
     >
-
-
       <div
         role="dialog"
         aria-modal="true"
@@ -121,8 +102,6 @@ export default function Modal({
           event.stopPropagation()
         }
       >
-
-
         <div
           className="
             mb-6
@@ -131,7 +110,6 @@ export default function Modal({
             justify-between
           "
         >
-
           <h2
             id="modal-title"
             className="
@@ -142,8 +120,6 @@ export default function Modal({
           >
             {title}
           </h2>
-
-
 
           <button
             type="button"
@@ -160,19 +136,11 @@ export default function Modal({
           >
             ✕
           </button>
-
-
         </div>
 
-
-
         {children}
-
-
       </div>
-
-
-    </div>
-
+    </div>,
+    document.body
   );
 }

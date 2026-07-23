@@ -12,15 +12,15 @@ export default function NotificationDropdown({
   notifications,
 }: NotificationDropdownProps) {
   // Used only to trigger a re-render so relative timestamps stay updated.
-  const [, setNow] = useState(Date.now());
+const [, forceUpdate] = useState(0);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(Date.now());
-    }, 60000); // Refresh every minute
+useEffect(() => {
+  const interval = setInterval(() => {
+    forceUpdate((value) => value + 1);
+  }, 60000); // Refresh every minute
 
-    return () => clearInterval(interval);
-  }, []);
+  return () => clearInterval(interval);
+}, []);
 
   return (
     <div className="absolute right-0 mt-3 w-96 overflow-hidden rounded-xl border border-slate-700 bg-slate-900 shadow-2xl z-50">

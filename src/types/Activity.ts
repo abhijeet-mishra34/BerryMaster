@@ -2,7 +2,8 @@ export type ActivityType =
   | "planted"
   | "watered"
   | "harvested"
-  | "wilted";
+  | "wilted"
+  | "removed";
 
 export type Activity = {
   id: string;

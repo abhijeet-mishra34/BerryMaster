@@ -23,65 +23,11 @@
     opacity: 0;
   }
 }
-/* =====================================
-   Wheat Field
-===================================== */
 
-.wheat-field {
-  position: absolute;
-  bottom: -12px;
-  left: 0;
-  right: 0;
-
-  height: 180px;
-
-  display: flex;
-  align-items: flex-end;
-
-  overflow: hidden;
-
-  opacity: 0.22;
-
-  mask-image: linear-gradient(
-    to top,
-    black 0%,
-    black 55%,
-    transparent 100%
-  );
-}
-
-
-.wheat-stalk {
-  position: absolute;
-
-  bottom: -10px;
-
-  font-size: 4rem;
-
-  transform-origin: bottom center;
-
-  animation: wheatSway 4s ease-in-out infinite;
-
-  filter: blur(0.3px);
-
-  opacity: 0.65;
-}
-
-
-@keyframes wheatSway {
-
-  0% {
-    transform: rotate(-4deg);
-  }
-
-  50% {
-    transform: rotate(5deg);
-  }
-
-  100% {
-    transform: rotate(-4deg);
-  }
-
+.leaf {
+  animation-name: leafFall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 }
 * {
   margin: 0;
@@ -105,6 +51,6 @@ body {
     Arial,
     sans-serif;
 
-  background: #10693e;
+  background: #0f172b;
   color: white;
 }

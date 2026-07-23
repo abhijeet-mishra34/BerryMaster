@@ -18,8 +18,8 @@ export default function Dashboard() {
 
   const hour = new Date().getHours();
 
-  let greetingTitle = "";
-  let greetingSubtitle = "";
+  let greetingTitle: string;
+let greetingSubtitle: string;
 
   if (hour < 12) {
     greetingTitle = "🌞 Good Morning!";
@@ -50,7 +50,7 @@ export default function Dashboard() {
       title: "Planted",
       value: `${stats.planted}/${stats.totalCharacters}`,
       icon: "🌱",
-      color: "green" as const,
+      color: "emerald" as const,
     },
     {
       title: "Need Water",
@@ -145,7 +145,7 @@ export default function Dashboard() {
         title="Needs Attention"
         subtitle="Important actions that may require your attention."
       >
-        <NeedsAttention characters={characters} />
+        <NeedsAttention />
       </Section>
 
 

@@ -19,6 +19,10 @@ export default function BerryCard({
   } = useFavorites();
 
   const favorite = isFavorite(berry.id);
+  console.log(
+  berry.name,
+  berry.image
+);
 
   return (
     <div

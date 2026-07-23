@@ -1,8 +1,22 @@
 import BerrySelector from "../components/berries/BerrySelector";
 
-import { berryDatabase } from "../data/berryDatabase";
+import {
+  berryDatabase,
+  publicBerryDatabase,
+} from "../data/berryDatabase";
+
+import { useSettings } from "../context/SettingsContext";
 
 export default function BerriesPage() {
+  const {
+    showDeveloperBerries,
+  } = useSettings();
+
+  const availableBerries =
+    showDeveloperBerries
+      ? berryDatabase
+      : publicBerryDatabase;
+
   return (
     <div className="space-y-10">
 
@@ -43,11 +57,26 @@ export default function BerriesPage() {
 
           <div>
 
-            <h1 className="text-3xl font-bold tracking-tight text-sky-500">
+            <h1
+              className="
+                text-3xl
+                font-bold
+                tracking-tight
+                text-sky-500
+              "
+            >
               Berry Database
             </h1>
 
-            <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-400">
+            <p
+              className="
+                mt-1
+                max-w-2xl
+                text-sm
+                leading-relaxed
+                text-slate-400
+              "
+            >
               Browse every berry, discover recipes, growth times,
               harvest windows, and other farming information.
             </p>
@@ -82,7 +111,7 @@ export default function BerriesPage() {
               text-emerald-400
             "
           >
-            🍓 {berryDatabase.length}
+            🍓 {availableBerries.length}
           </span>
 
           <span className="text-sm text-slate-500">
@@ -103,3 +132,4 @@ export default function BerriesPage() {
     </div>
   );
 }
+
