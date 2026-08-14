@@ -42,15 +42,6 @@ export default function FallingLeaves() {
         delay: 9,
         rotation: 60,
       },
-      {
-        id: 4,
-        type: "🌿",
-        left: "8%",
-        size: 22,
-        duration: 18,
-        delay: 0,
-        rotation: 25,
-      },
 
       {
         id: 5,
@@ -81,15 +72,6 @@ export default function FallingLeaves() {
         delay: 12,
         rotation: -50,
       },
-      {
-        id: 8,
-        type: "🌿",
-        left: "88%",
-        size: 18,
-        duration: 19,
-        delay: 12,
-        rotation: -50,
-      },
     ],
     []
   );
@@ -100,7 +82,7 @@ export default function FallingLeaves() {
         pointer-events-none
         fixed
         inset-0
-        z-20
+        z-[1]
         overflow-hidden
       "
     >

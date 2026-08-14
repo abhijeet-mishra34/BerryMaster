@@ -17,11 +17,13 @@ import Modal from "../components/ui/Modal";
 import PlantBerrySelector from "../components/berries/PlantBerrySelector";
 
 import { useCharacters } from "../context/CharacterContext";
+import { useToast } from '../context/ToastContext';
 
 import type { Character } from "../types/Character";
 
 export default function CharactersPage() {
   const location = useLocation();
+  const { addToast } = useToast();
 
   const {
     characters,
@@ -103,6 +105,16 @@ export default function CharactersPage() {
   ] = useState<string | null>(null);
 
 
+  // =====================================
+  // Keyboard Navigation State
+  // =====================================
+
+  const [
+    focusedIndex,
+    setFocusedIndex,
+  ] = useState<number | null>(null);
+
+
   const characterRefs =
     useRef<
       Record<
@@ -158,6 +170,107 @@ export default function CharactersPage() {
 
 
   // =====================================
+  // Keyboard Shortcuts
+  // =====================================
+
+  const anyModalOpen =
+    isCharacterModalOpen ||
+    isDeleteOpen ||
+    isRemoveBerryOpen ||
+    isChangeBerryOpen ||
+    plantCharacter !== null;
+
+  const keyHandlerRef = useRef<((e: KeyboardEvent) => void) | null>(null);
+
+  keyHandlerRef.current = (e: KeyboardEvent) => {
+    const tag = (document.activeElement?.tagName ?? "").toLowerCase();
+    if (["input", "textarea", "select"].includes(tag)) return;
+    if (anyModalOpen) return;
+
+    switch (e.key) {
+      case "n":
+      case "N":
+        e.preventDefault();
+        openAddModal();
+        break;
+
+      case "ArrowDown":
+      case "ArrowRight":
+        e.preventDefault();
+        if (characters.length === 0) return;
+        setFocusedIndex((prev) =>
+          prev === null ? 0 : Math.min(prev + 1, characters.length - 1)
+        );
+        break;
+
+      case "ArrowUp":
+      case "ArrowLeft":
+        e.preventDefault();
+        if (characters.length === 0) return;
+        setFocusedIndex((prev) =>
+          prev === null ? characters.length - 1 : Math.max(prev - 1, 0)
+        );
+        break;
+
+      case "e":
+      case "E": {
+        if (focusedIndex === null || !characters[focusedIndex]) return;
+        e.preventDefault();
+        openEditModal(characters[focusedIndex]);
+        break;
+      }
+
+      case "Delete":
+      case "Backspace": {
+        if (focusedIndex === null || !characters[focusedIndex]) return;
+        e.preventDefault();
+        openDeleteDialog(characters[focusedIndex], focusedIndex);
+        break;
+      }
+
+      case "w":
+      case "W": {
+        if (focusedIndex === null || !characters[focusedIndex]) return;
+        e.preventDefault();
+        handleWater(characters[focusedIndex]);
+        break;
+      }
+
+      case "h":
+      case "H": {
+        if (focusedIndex === null || !characters[focusedIndex]) return;
+        e.preventDefault();
+        handleHarvest(characters[focusedIndex]);
+        break;
+      }
+
+      case "Escape":
+        setFocusedIndex(null);
+        break;
+    }
+  };
+
+  useEffect(() => {
+    function handle(e: KeyboardEvent) {
+      keyHandlerRef.current?.(e);
+    }
+    document.addEventListener("keydown", handle);
+    return () => document.removeEventListener("keydown", handle);
+  }, []);
+
+  // Scroll focused card into view when navigating
+  useEffect(() => {
+    if (focusedIndex === null) return;
+    const char = characters[focusedIndex];
+    if (!char) return;
+    characterRefs.current[char.id]?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+    });
+  }, [focusedIndex, characters]);
+
+
+  // =====================================
   // Character Actions
   // =====================================
 
@@ -191,8 +304,10 @@ export default function CharactersPage() {
         editingCharacter.id,
         name
       );
+      addToast(`✏️ ${name} updated!`, 'success');
     } else {
       addCharacter(name);
+      addToast(`🌱 ${name} added to your team!`, 'success');
     }
 
     setIsCharacterModalOpen(
@@ -220,6 +335,7 @@ export default function CharactersPage() {
     deleteCharacter(
       selectedCharacter.id
     );
+    addToast(`🗑️ ${selectedCharacter.name} removed.`, 'warning');
 
     setSelectedCharacter(
       null
@@ -239,6 +355,7 @@ export default function CharactersPage() {
     removeBerry(
       removeBerryCharacter.id
     );
+    addToast(`🍂 Berry removed from ${removeBerryCharacter.name}.`, 'warning');
 
     setRemoveBerryCharacter(
       null
@@ -249,6 +366,16 @@ export default function CharactersPage() {
     );
   }
 
+
+  function handleWater(character: Character) {
+    waterBerry(character.id);
+    addToast(`💧 Watered ${character.name}'s berry plot!`, 'info');
+  }
+
+  function handleHarvest(character: Character) {
+    harvestBerry(character.id);
+    addToast(`🌾 ${character.name}'s berries harvested!`, 'success');
+  }
 
   function highlightCharacter(
     characterId: string
@@ -440,6 +567,30 @@ export default function CharactersPage() {
 
         </div>
 
+        {/* Keyboard Shortcut Hints */}
+        {characters.length > 0 && (
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1 border-t border-white/[0.05] bg-white/[0.01] px-6 py-2.5 sm:px-8">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
+              ⌨️ Shortcuts
+            </span>
+            {[
+              { key: "N", label: "Add" },
+              { key: "↑ ↓", label: "Navigate" },
+              { key: "E", label: "Edit" },
+              { key: "Del", label: "Delete" },
+              { key: "W", label: "Water" },
+              { key: "H", label: "Harvest" },
+            ].map(({ key, label }) => (
+              <span key={key} className="flex items-center gap-1.5">
+                <kbd className="rounded border border-slate-700 bg-slate-800/70 px-1.5 py-0.5 font-mono text-[10px] font-bold text-slate-300">
+                  {key}
+                </kbd>
+                <span className="text-[10px] text-slate-500">{label}</span>
+              </span>
+            ))}
+          </div>
+        )}
+
       </div>
 
 
@@ -563,6 +714,8 @@ export default function CharactersPage() {
                     : null
                 }
 
+                focused={focusedIndex === index}
+
                 onPlant={() =>
                   setPlantCharacter(
                     character
@@ -570,15 +723,11 @@ export default function CharactersPage() {
                 }
 
                 onWater={() =>
-                  waterBerry(
-                    character.id
-                  )
+                  handleWater(character)
                 }
 
                 onHarvest={() =>
-                  harvestBerry(
-                    character.id
-                  )
+                  handleHarvest(character)
                 }
 
                 onChangeBerry={() => {

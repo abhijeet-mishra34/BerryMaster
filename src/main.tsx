@@ -9,22 +9,28 @@ import "./index.css";
 import { SettingsProvider } from "./context/SettingsContext";
 import { validateBerryDatabase } from "./utils/validation/validateBerryDatabase";
 import { NotificationProvider } from "./context/NotificationContext";
+import { ToastProvider } from "./context/ToastContext";
+import ErrorBoundary from "./components/ErrorBoundary";
 validateBerryDatabase();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <BrowserRouter>
-     <ActivityProvider>
-       <SettingsProvider>
-       <CharacterProvider>
-         <FavoritesProvider>
-            <NotificationProvider>
-              <App />
-            </NotificationProvider>
-          </FavoritesProvider>
-        </CharacterProvider>
-        </SettingsProvider>
-      </ActivityProvider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <ToastProvider>
+          <ActivityProvider>
+            <SettingsProvider>
+            <CharacterProvider>
+              <FavoritesProvider>
+                  <NotificationProvider>
+                    <App />
+                  </NotificationProvider>
+                </FavoritesProvider>
+              </CharacterProvider>
+              </SettingsProvider>
+            </ActivityProvider>
+          </ToastProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   </React.StrictMode>
 );

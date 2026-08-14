@@ -81,8 +81,9 @@ export default function Modal({
         flex
         items-center
         justify-center
-        bg-black/70
+        bg-black/60
         p-4
+        backdrop-blur-sm
       "
       onClick={onClose}
     >
@@ -93,10 +94,13 @@ export default function Modal({
         className="
           w-full
           max-w-6xl
-          rounded-xl
-          bg-slate-900
+          rounded-2xl
+          border
+          border-white/[0.08]
+          bg-slate-900/95
           p-6
           shadow-2xl
+          backdrop-blur-xl
         "
         onClick={(event) =>
           event.stopPropagation()

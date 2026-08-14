@@ -7,30 +7,29 @@ import {
   clearNotification,
 } from "./notificationHistory";
 
+import {
+  isPermissionGranted,
+  requestPermission,
+  sendNotification,
+} from "@tauri-apps/plugin-notification";
+
 export async function requestNotificationPermission() {
-  if (!("Notification" in window)) {
-    console.warn(
-      "This browser does not support notifications."
-    );
+  const permissionGranted =
+    await isPermissionGranted();
+
+  if (permissionGranted) {
     return;
   }
 
-  if (Notification.permission === "default") {
-    await Notification.requestPermission();
-  }
+  await requestPermission();
 }
 
-function showBrowserNotification(
+function showNativeNotification(
   notification: Notification
 ) {
-  if (Notification.permission !== "granted") {
-    return;
-  }
-
-  new Notification(notification.title, {
+  sendNotification({
+    title: notification.title,
     body: notification.message,
-    icon: "/vite.svg",
-    tag: notification.id,
   });
 }
 
@@ -55,7 +54,7 @@ export function syncBrowserNotifications(
       return;
     }
 
-    showBrowserNotification(notification);
+    showNativeNotification(notification);
 
     markNotificationShown(notification.id);
   });

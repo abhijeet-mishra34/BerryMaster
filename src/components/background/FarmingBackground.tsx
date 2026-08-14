@@ -1,125 +1,49 @@
 export default function FarmingBackground() {
   return (
     <div
-      className="
-        pointer-events-none
-        absolute
-        inset-0
-        z-0
-        overflow-hidden
-      "
+      className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+      aria-hidden="true"
     >
+      {/* Primary pulsing glow — centre-bottom */}
+      <div className="glow-pulse glow-primary" />
 
-      {/* =====================================
-          Distant Grassland Atmosphere
-      ===================================== */}
+      {/* Secondary glow — offset top-left for depth */}
+      <div className="glow-pulse glow-secondary" />
 
-      <div
-        className="
-          absolute
-          inset-0
-          bg-gradient-to-b
-          from-emerald-950
-          via-green-950
-          to-slate-950
-        "
-      />
-
-
-      {/* =====================================
-          Distant Horizon
-      ===================================== */}
-
-      <div
-        className="
-          absolute
-          bottom-[28%]
-          left-0
-          h-[25%]
-          w-full
-          bg-gradient-to-t
-          from-emerald-950/80
-          via-green-900/30
-          to-transparent
-        "
-      />
-
-
-      {/* =====================================
-          Foreground Grassland
-      ===================================== */}
-
-      <div
-        className="
-          absolute
-          bottom-0
-          left-0
-          h-[32%]
-          w-full
-          bg-gradient-to-t
-          from-emerald-950
-          via-green-950/80
-          to-transparent
-        "
-      />
-
-
-      {/* =====================================
-          Small Wheat Field
-      ===================================== */}
-
-      <div
-        className="
-          absolute
-          bottom-0
-          right-[8%]
-          h-48
-          w-72
-          overflow-hidden
-        "
-      >
-
-        {Array.from({ length: 18 }).map(
-          (_, index) => (
-            <span
-              key={index}
-              className="
-                absolute
-                bottom-0
-                text-4xl
-                opacity-60
-              "
-              style={{
-                left: `${(index % 6) * 18}%`,
-                bottom: `${Math.floor(index / 6) * 8}px`,
-              }}
-            >
-              🌾
-            </span>
-          )
-        )}
-
-      </div>
-
-
-      {/* =====================================
-          Soft Environmental Glow
-      ===================================== */}
-
-      <div
-        className="
-          absolute
-          bottom-0
-          left-1/2
-          h-64
-          w-[70%]
-          -translate-x-1/2
-          rounded-full
-          bg-emerald-500/5
-          blur-3xl
-        "
-      />
-
+      {/* Sparkle dots */}
+      {SPARKLES.map((s) => (
+        <div
+          key={s.id}
+          className="sparkle"
+          style={{
+            left: s.left,
+            top: s.top,
+            animationDelay: s.delay,
+            animationDuration: s.duration,
+            width: s.size,
+            height: s.size,
+          }}
+        />
+      ))}
     </div>
   );
 }
+
+/* ── Stable sparkle data (no random on every render) ── */
+const SPARKLES = [
+  { id: 0,  left: "12%",  top: "18%", delay: "0s",    duration: "3.2s", size: "5px" },
+  { id: 1,  left: "27%",  top: "62%", delay: "0.7s",  duration: "4.1s", size: "4px" },
+  { id: 2,  left: "45%",  top: "30%", delay: "1.4s",  duration: "3.6s", size: "6px" },
+  { id: 3,  left: "61%",  top: "75%", delay: "0.3s",  duration: "5.0s", size: "4px" },
+  { id: 4,  left: "78%",  top: "22%", delay: "2.1s",  duration: "3.8s", size: "5px" },
+  { id: 5,  left: "88%",  top: "55%", delay: "0.9s",  duration: "4.5s", size: "4px" },
+  { id: 6,  left: "35%",  top: "85%", delay: "1.8s",  duration: "3.3s", size: "5px" },
+  { id: 7,  left: "55%",  top: "10%", delay: "0.5s",  duration: "4.8s", size: "6px" },
+  { id: 8,  left: "70%",  top: "40%", delay: "2.6s",  duration: "3.1s", size: "4px" },
+  { id: 9,  left: "20%",  top: "48%", delay: "1.2s",  duration: "4.2s", size: "5px" },
+  { id: 10, left: "92%",  top: "80%", delay: "3.0s",  duration: "3.7s", size: "4px" },
+  { id: 11, left: "5%",   top: "70%", delay: "0.2s",  duration: "5.2s", size: "6px" },
+  { id: 12, left: "50%",  top: "50%", delay: "1.6s",  duration: "3.9s", size: "4px" },
+  { id: 13, left: "83%",  top: "12%", delay: "2.4s",  duration: "4.4s", size: "5px" },
+  { id: 14, left: "40%",  top: "95%", delay: "0.8s",  duration: "3.5s", size: "4px" },
+];

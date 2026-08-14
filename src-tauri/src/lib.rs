@@ -3,6 +3,10 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_notification::init())
         .setup(|app| {
+            #[cfg(desktop)]
+            app.handle()
+                .plugin(tauri_plugin_window_state::Builder::default().build())?;
+
             if cfg!(debug_assertions) {
                 app.handle().plugin(
                     tauri_plugin_log::Builder::default()
@@ -10,6 +14,7 @@ pub fn run() {
                         .build(),
                 )?;
             }
+
             Ok(())
         })
         .run(tauri::generate_context!())

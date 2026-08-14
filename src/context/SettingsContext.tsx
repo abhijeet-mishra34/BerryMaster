@@ -5,11 +5,13 @@ import {
   useState,
 } from "react";
 
+export type AppTheme = "dark" | "light";
+
 type SettingsContextValue = {
   showDeveloperBerries: boolean;
-  setShowDeveloperBerries: (
-    value: boolean
-  ) => void;
+  setShowDeveloperBerries: (value: boolean) => void;
+  theme: AppTheme;
+  setTheme: (theme: AppTheme) => void;
 };
 
 const SettingsContext =
@@ -27,29 +29,25 @@ type SettingsProviderProps = {
 export function SettingsProvider({
   children,
 }: SettingsProviderProps) {
-  const [
-    showDeveloperBerries,
-    setShowDeveloperBerries,
-  ] = useState<boolean>(() => {
-    const storedSettings =
-      localStorage.getItem(
-        STORAGE_KEY
-      );
-
-    if (!storedSettings) {
-      return false;
-    }
-
+  const [showDeveloperBerries, setShowDeveloperBerries] = useState<boolean>(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return false;
     try {
-      const settings = JSON.parse(
-        storedSettings
-      );
-
-      return Boolean(
-        settings.showDeveloperBerries
-      );
+      const parsed = JSON.parse(stored);
+      return Boolean(parsed.showDeveloperBerries);
     } catch {
       return false;
+    }
+  });
+
+  const [theme, setTheme] = useState<AppTheme>(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return "dark";
+    try {
+      const parsed = JSON.parse(stored);
+      return parsed.theme === "light" ? "light" : "dark";
+    } catch {
+      return "dark";
     }
   });
 
@@ -58,17 +56,27 @@ export function SettingsProvider({
       STORAGE_KEY,
       JSON.stringify({
         showDeveloperBerries,
+        theme,
       })
     );
-  }, [
-    showDeveloperBerries,
-  ]);
+
+    const root = document.documentElement;
+    if (theme === "light") {
+      root.classList.add("light");
+      root.classList.remove("dark");
+    } else {
+      root.classList.add("dark");
+      root.classList.remove("light");
+    }
+  }, [showDeveloperBerries, theme]);
 
   return (
     <SettingsContext.Provider
       value={{
         showDeveloperBerries,
         setShowDeveloperBerries,
+        theme,
+        setTheme,
       }}
     >
       {children}
@@ -77,14 +85,11 @@ export function SettingsProvider({
 }
 
 export function useSettings() {
-  const context =
-    useContext(SettingsContext);
-
+  const context = useContext(SettingsContext);
   if (!context) {
     throw new Error(
       "useSettings must be used within a SettingsProvider"
     );
   }
-
   return context;
 }

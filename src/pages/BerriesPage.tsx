@@ -62,7 +62,7 @@ export default function BerriesPage() {
                 text-3xl
                 font-bold
                 tracking-tight
-                text-sky-500
+                text-white
               "
             >
               Berry Database

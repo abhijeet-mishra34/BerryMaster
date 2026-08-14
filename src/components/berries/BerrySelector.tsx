@@ -263,18 +263,20 @@ export default function BerrySelector() {
                   w-full
                   rounded-xl
                   border
-                  border-slate-700
-                  bg-slate-950/70
-                  px-4
-                  py-3
+                  border-white/[0.08]
+                  bg-white/[0.04]
+                  px-6
+                  py-5
+                  text-base
                   text-white
                   outline-none
+                  backdrop-blur-sm
                   transition-all
                   duration-200
                   placeholder:text-slate-500
-                  hover:border-slate-600
-                  focus:border-emerald-500
-                  focus:bg-slate-950
+                  hover:border-white/[0.12]
+                  focus:border-emerald-500/60
+                  focus:bg-white/[0.06]
                   focus:ring-2
                   focus:ring-emerald-500/20
                 "

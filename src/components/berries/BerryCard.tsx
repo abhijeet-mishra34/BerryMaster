@@ -27,27 +27,30 @@ export default function BerryCard({
   return (
     <div
       className="
+        card-shine
         group
+        relative
         flex
         h-full
         flex-col
         gap-4
+        overflow-hidden
         rounded-2xl
         border
-        border-slate-800
-        bg-gradient-to-b
-        from-slate-900
-        to-slate-950
+        border-white/[0.08]
         p-6
-        shadow-lg
-        shadow-black/10
+        backdrop-blur-2xl
         transition-all
         duration-300
         hover:-translate-y-1
-        hover:border-emerald-500/60
-        hover:shadow-xl
+        hover:border-emerald-400/40
+        hover:shadow-2xl
         hover:shadow-emerald-500/10
       "
+      style={{
+        background: `linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 40%, rgba(2,8,24,0.80) 100%)`,
+        boxShadow: `inset 0 1px 0 rgba(255,255,255,0.10), inset 0 -1px 0 rgba(255,255,255,0.03), 0 4px 24px -4px rgba(0,0,0,0.5)`,
+      }}
     >
 
       {/* =====================================
