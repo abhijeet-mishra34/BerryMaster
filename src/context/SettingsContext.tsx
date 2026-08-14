@@ -84,12 +84,17 @@ export function SettingsProvider({
   );
 }
 
-export function useSettings() {
+const DEFAULT_SETTINGS: SettingsContextValue = {
+  showDeveloperBerries: false,
+  setShowDeveloperBerries: () => {},
+  theme: "dark",
+  setTheme: () => {},
+};
+
+export function useSettings(): SettingsContextValue {
   const context = useContext(SettingsContext);
   if (!context) {
-    throw new Error(
-      "useSettings must be used within a SettingsProvider"
-    );
+    return DEFAULT_SETTINGS;
   }
   return context;
 }

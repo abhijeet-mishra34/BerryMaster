@@ -1,21 +1,13 @@
 import {
   useRef,
   useState,
-  useEffect,
 } from "react";
 import {
   Download,
-  Upload,
-  Trash2,
   Moon,
   Sun,
   RefreshCw,
   ExternalLink,
-  CheckCircle2,
-  Sparkles,
-  AlertTriangle,
-  FileText,
-  Sliders,
 } from "lucide-react";
 
 import {

@@ -5,6 +5,7 @@ declare module 'lucide-react' {
     size?: string | number;
     color?: string;
     strokeWidth?: string | number;
+    className?: string;
   }
 
   export type LucideIcon = React.ForwardRefExoticComponent<LucideProps & React.RefAttributes<SVGSVGElement>>;
@@ -55,4 +56,10 @@ declare module 'lucide-react' {
   export const RefreshCw: LucideIcon;
   export const ArrowRight: LucideIcon;
   export const Activity: LucideIcon;
+  export const X: LucideIcon;
+  export const Loader2: LucideIcon;
+  export const Download: LucideIcon;
+  export const Upload: LucideIcon;
+  export const FileText: LucideIcon;
+  export const Sliders: LucideIcon;
 }

@@ -20,13 +20,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
   return (
     <div
-      className="relative flex h-screen overflow-hidden text-white"
+      className="app-root relative flex h-screen overflow-hidden text-white"
       style={{
         background:
           "radial-gradient(ellipse 80% 60% at 10% 0%, rgba(16,185,129,0.07) 0%, transparent 50%), radial-gradient(ellipse 60% 50% at 90% 100%, rgba(14,165,233,0.05) 0%, transparent 50%), #080e1a",
       }}
     >
-      {/* Farm background — grassy hills + wheat */}
+      {/* Farm background — sparkles and gentle ambient glow */}
       <FarmingBackground />
 
       {/* Ambient leaves */}
@@ -42,7 +42,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           <main className="flex-1 overflow-y-auto">
             <div
               key={location.pathname}
-              className="min-h-full p-6 sm:p-8 page-enter"
+              className="app-main min-h-full p-6 sm:p-8 page-enter"
               style={{
                 background: "rgba(8,14,26,0.4)",
               }}

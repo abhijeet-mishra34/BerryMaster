@@ -179,9 +179,158 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   LIGHT THEME GLOBAL ENGINE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 html.light body {
   background-color: #f1f5f9;
   color: #0f172a;
+}
+
+html.light .app-root {
+  background: radial-gradient(ellipse 80% 60% at 10% 0%, rgba(16,185,129,0.08) 0%, transparent 50%), radial-gradient(ellipse 60% 50% at 90% 100%, rgba(14,165,233,0.06) 0%, transparent 50%), #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+html.light .app-main {
+  background: rgba(248, 250, 252, 0.75) !important;
+  color: #0f172a !important;
+}
+
+html.light aside {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light aside h1 {
+  color: #0f172a !important;
+}
+
+html.light aside .text-slate-400 {
+  color: #64748b !important;
+}
+
+html.light aside .border-slate-800,
+html.light aside .border-slate-800\/80 {
+  border-color: #e2e8f0 !important;
+}
+
+html.light header {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light header h2 {
+  color: #0f172a !important;
+}
+
+html.light header .text-slate-300,
+html.light header .text-slate-400 {
+  color: #64748b !important;
+}
+
+html.light header .border-slate-800 {
+  border-color: #e2e8f0 !important;
+}
+
+html.light header .bg-slate-900\/60,
+html.light header .bg-slate-900\/95 {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  color: #0f172a !important;
+}
+
+html.light header .bg-slate-800\/50 {
+  background-color: #f1f5f9 !important;
+}
+
+html.light .card-shine {
+  background: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.95) 100%) !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Light mode heading and text adaptations */
+html.light h1:not([class*="text-emerald"]):not([class*="text-amber"]):not([class*="text-purple"]):not([class*="text-sky"]):not([class*="text-red"]),
+html.light h2:not([class*="text-emerald"]):not([class*="text-amber"]):not([class*="text-purple"]):not([class*="text-sky"]):not([class*="text-red"]),
+html.light h3:not([class*="text-emerald"]):not([class*="text-amber"]):not([class*="text-purple"]):not([class*="text-sky"]):not([class*="text-red"]) {
+  color: #0f172a;
+}
+
+html.light .bg-slate-900\/50,
+html.light .bg-slate-900\/60,
+html.light .bg-slate-900\/70,
+html.light .bg-slate-900\/80,
+html.light .bg-slate-900\/90,
+html.light .bg-slate-900 {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: #e2e8f0;
+}
+
+html.light .bg-slate-950\/40,
+html.light .bg-slate-950\/60,
+html.light .bg-slate-950\/80,
+html.light .bg-slate-950\/90,
+html.light .bg-slate-950 {
+  background-color: rgba(248, 250, 252, 0.95);
+  border-color: #e2e8f0;
+}
+
+html.light .bg-white\/\[0\.01\],
+html.light .bg-white\/\[0\.02\],
+html.light .bg-white\/\[0\.03\],
+html.light .bg-white\/\[0\.04\],
+html.light .bg-white\/\[0\.05\],
+html.light .bg-slate-800\/40,
+html.light .bg-slate-800\/50,
+html.light .bg-slate-800\/60,
+html.light .bg-slate-800\/70,
+html.light .bg-slate-800 {
+  background-color: rgba(241, 245, 249, 0.9);
+  border-color: #e2e8f0;
+}
+
+html.light .border-white\/\[0\.08\],
+html.light .border-white\/\[0\.07\],
+html.light .border-white\/\[0\.06\],
+html.light .border-white\/\[0\.05\],
+html.light .border-slate-800,
+html.light .border-slate-800\/80,
+html.light .border-slate-700 {
+  border-color: #e2e8f0;
+}
+
+html.light .text-white:not([class*="bg-emerald"]):not([class*="bg-red"]):not([class*="bg-sky"]):not([class*="bg-amber"]):not(button) {
+  color: #0f172a;
+}
+
+html.light .text-slate-300,
+html.light .text-slate-400 {
+  color: #64748b;
+}
+
+html.light .text-slate-500 {
+  color: #94a3b8;
+}
+
+html.light .from-slate-900 {
+  --tw-gradient-from: #ffffff var(--tw-gradient-from-position);
+}
+html.light .via-slate-900,
+html.light .via-slate-900\/90 {
+  --tw-gradient-via: #f8fafc var(--tw-gradient-via-position);
+}
+html.light .to-slate-950 {
+  --tw-gradient-to: #f1f5f9 var(--tw-gradient-to-position);
+}
+
+/* Modal dialog in light mode */
+html.light .fixed .bg-slate-900\/95,
+html.light .fixed .bg-slate-900 {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15) !important;
 }
 
 /* Sleek custom scrollbar */
