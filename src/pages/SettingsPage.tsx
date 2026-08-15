@@ -1069,7 +1069,7 @@ export default function SettingsPage() {
           </div>
 
           <span className="rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 font-mono text-xs font-bold text-sky-400">
-            v{CURRENT_APP_VERSION}
+            {CURRENT_APP_VERSION}
           </span>
         </div>
 
@@ -1124,6 +1124,9 @@ export default function SettingsPage() {
               rounded-2xl
               border
               p-5
+              flex
+              flex-col
+              gap-4
               ${
                 updateResult.hasUpdate
                   ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
@@ -1171,6 +1174,7 @@ export default function SettingsPage() {
                     transition-all
                     shadow-sm
                     active:scale-95
+                    shrink-0
                   "
                 >
                   <ExternalLink className="h-3.5 w-3.5" />
@@ -1178,6 +1182,46 @@ export default function SettingsPage() {
                 </a>
               )}
             </div>
+
+            {/* Direct 1-Click Asset Downloads if available */}
+            {updateResult.release?.assets && updateResult.release.assets.length > 0 && (
+              <div className="pt-3 border-t border-emerald-500/20 flex flex-wrap items-center gap-2.5">
+                <span className="text-xs font-semibold text-emerald-400">Direct Downloads:</span>
+                {updateResult.release.assets.map((asset) => (
+                  <a
+                    key={asset.downloadUrl}
+                    href={asset.downloadUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="
+                      inline-flex
+                      items-center
+                      gap-1.5
+                      rounded-lg
+                      border
+                      border-emerald-500/30
+                      bg-slate-950/60
+                      px-3
+                      py-1.5
+                      text-xs
+                      font-mono
+                      text-emerald-300
+                      hover:bg-emerald-500/20
+                      hover:border-emerald-400
+                      transition-all
+                    "
+                  >
+                    <Download className="h-3 w-3" />
+                    <span>{asset.name}</span>
+                    {asset.size > 0 && (
+                      <span className="text-[10px] opacity-70">
+                        ({(asset.size / (1024 * 1024)).toFixed(1)} MB)
+                      </span>
+                    )}
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </section>
