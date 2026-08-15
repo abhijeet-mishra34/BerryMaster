@@ -1,5 +1,6 @@
 import { Sparkles, ShieldAlert, Wrench, UserCheck, PackageCheck, CheckCircle2 } from "lucide-react";
 import berryMasterIcon from "../assets/brand/berrymaster-icon.png";
+import { CURRENT_APP_VERSION } from "../services/updateService";
 
 export default function AboutPage() {
   return (
@@ -147,7 +148,7 @@ export default function AboutPage() {
           </div>
         </div>
         <span className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3.5 py-1 text-xs font-extrabold text-emerald-400">
-          v1.0.0
+          {CURRENT_APP_VERSION}
         </span>
       </section>
     </div>

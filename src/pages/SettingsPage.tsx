@@ -48,6 +48,8 @@ import {
   type UpdateCheckResult,
 } from "../services/updateService";
 
+import { openExternalUrl } from "../utils/urlHelper";
+
 import {
   sendTestNotification,
   requestNotificationPermission,
@@ -1152,10 +1154,9 @@ export default function SettingsPage() {
               </div>
 
               {updateResult.release?.htmlUrl && (
-                <a
-                  href={updateResult.release.htmlUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  type="button"
+                  onClick={() => openExternalUrl(updateResult.release?.htmlUrl || "")}
                   className="
                     inline-flex
                     items-center
@@ -1175,11 +1176,12 @@ export default function SettingsPage() {
                     shadow-sm
                     active:scale-95
                     shrink-0
+                    cursor-pointer
                   "
                 >
                   <ExternalLink className="h-3.5 w-3.5" />
                   View Release Notes
-                </a>
+                </button>
               )}
             </div>
 
@@ -1188,11 +1190,10 @@ export default function SettingsPage() {
               <div className="pt-3 border-t border-emerald-500/20 flex flex-wrap items-center gap-2.5">
                 <span className="text-xs font-semibold text-emerald-400">Direct Downloads:</span>
                 {updateResult.release.assets.map((asset) => (
-                  <a
+                  <button
                     key={asset.downloadUrl}
-                    href={asset.downloadUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    type="button"
+                    onClick={() => openExternalUrl(asset.downloadUrl)}
                     className="
                       inline-flex
                       items-center
@@ -1209,6 +1210,7 @@ export default function SettingsPage() {
                       hover:bg-emerald-500/20
                       hover:border-emerald-400
                       transition-all
+                      cursor-pointer
                     "
                   >
                     <Download className="h-3 w-3" />
@@ -1218,7 +1220,7 @@ export default function SettingsPage() {
                         ({(asset.size / (1024 * 1024)).toFixed(1)} MB)
                       </span>
                     )}
-                  </a>
+                  </button>
                 ))}
               </div>
             )}

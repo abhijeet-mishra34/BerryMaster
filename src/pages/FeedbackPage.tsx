@@ -22,6 +22,7 @@ import {
   type FeedbackItem,
 } from "../services/feedbackService";
 import { sendFeedbackToDiscord } from "../services/discordService";
+import { openExternalUrl } from "../utils/urlHelper";
 
 export default function FeedbackPage() {
   const [category, setCategory] = useState<FeedbackCategory>("general");
@@ -76,11 +77,7 @@ export default function FeedbackPage() {
   }
 
   function handleOpenTally() {
-    try {
-      window.open("https://tally.so/r/NpQjLN", "_blank", "noopener,noreferrer");
-    } catch {
-      // Fallback
-    }
+    openExternalUrl("https://tally.so/r/NpQjLN");
   }
 
   function handleCopyTallyLink() {
