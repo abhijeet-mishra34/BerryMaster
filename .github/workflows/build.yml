@@ -156,7 +156,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.event.inputs.release_tag || github.ref_name }}
-          files: dist-apk/*.apk
+          files: dist-apk/BerryMaster-universal.apk
           draft: false
           prerelease: false
         env:
@@ -194,18 +194,16 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path dist-windows
-          Get-ChildItem -Recurse "src-tauri\target\release\bundle" -Include *.exe, *.msi | Copy-Item -Destination dist-windows
+          Get-ChildItem -Recurse "src-tauri\target\release\bundle" -Include *.exe | Copy-Item -Destination dist-windows
           $exe = Get-ChildItem "dist-windows\*.exe" | Select-Object -First 1
           if ($exe) { Copy-Item $exe.FullName "dist-windows\BerryMaster-Windows-Setup.exe" -Force }
-          $msi = Get-ChildItem "dist-windows\*.msi" | Select-Object -First 1
-          if ($msi) { Copy-Item $msi.FullName "dist-windows\BerryMaster-Windows.msi" -Force }
           Get-ChildItem dist-windows
 
       - name: Upload Windows Installer Artifact
         uses: actions/upload-artifact@v4
         with:
           name: BerryMaster-Windows-Installer
-          path: dist-windows/*
+          path: dist-windows/*.exe
           retention-days: 14
 
       - name: Publish Windows Installer to GitHub Release
@@ -213,7 +211,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.event.inputs.release_tag || github.ref_name }}
-          files: dist-windows/*
+          files: dist-windows/BerryMaster-Windows-Setup.exe
           draft: false
           prerelease: false
         env:
