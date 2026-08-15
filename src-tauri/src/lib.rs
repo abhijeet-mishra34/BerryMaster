@@ -1,20 +1,27 @@
 #[cfg(desktop)]
+use tauri::Manager;
+
+#[cfg(all(desktop, feature = "tray-icon"))]
 use tauri::{
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
-    Manager, WindowEvent,
 };
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
-        .plugin(tauri_plugin_notification::init())
-        .setup(|app| {
-            #[cfg(desktop)]
-            {
-                app.handle()
-                    .plugin(tauri_plugin_window_state::Builder::default().build())?;
+    #[allow(unused_mut)]
+    let mut builder = tauri::Builder::default()
+        .plugin(tauri_plugin_notification::init());
 
+    #[cfg(desktop)]
+    {
+        builder = builder.plugin(tauri_plugin_window_state::Builder::default().build());
+    }
+
+    builder
+        .setup(|app| {
+            #[cfg(all(desktop, feature = "tray-icon"))]
+            {
                 // Build System Tray Menu
                 let show_i = MenuItem::with_id(app, "show", "Open BerryMaster", true, None::<&str>)?;
                 let quit_i = MenuItem::with_id(app, "quit", "Quit BerryMaster", true, None::<&str>)?;
@@ -67,12 +74,12 @@ pub fn run() {
 
             Ok(())
         })
-        .on_window_event(|window, event| {
+        .on_window_event(|_window, _event| {
             #[cfg(desktop)]
             {
-                if let WindowEvent::CloseRequested { api, .. } = event {
+                if let tauri::WindowEvent::CloseRequested { api, .. } = _event {
                     api.prevent_close();
-                    let _ = window.hide();
+                    let _ = _window.hide();
                 }
             }
         })
