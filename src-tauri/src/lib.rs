@@ -1,10 +1,8 @@
 #[cfg(desktop)]
-use tauri::Manager;
-
-#[cfg(all(desktop, feature = "tray-icon"))]
 use tauri::{
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
+    Manager,
 };
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -20,7 +18,7 @@ pub fn run() {
 
     builder
         .setup(|app| {
-            #[cfg(all(desktop, feature = "tray-icon"))]
+            #[cfg(desktop)]
             {
                 // Build System Tray Menu
                 let show_i = MenuItem::with_id(app, "show", "Open BerryMaster", true, None::<&str>)?;
