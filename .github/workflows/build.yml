@@ -72,11 +72,63 @@ jobs:
       - name: Build Android APK (Release)
         run: npx tauri android build --apk
 
-      - name: Stage APK files
+      - name: Sign & Align Android APKs
         run: |
+          # 1. Create a release signing keystore
+          keytool -genkey -v -keystore release.keystore \
+            -alias berrymaster \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass berrymaster123 \
+            -keypass berrymaster123 \
+            -dname "CN=BerryMaster, OU=App, O=BerryMaster, C=US"
+
           mkdir -p dist-apk
-          find src-tauri/gen/android/app/build/outputs/apk/ -type f -name "*.apk" -exec cp {} dist-apk/ \;
-          ls -la dist-apk/
+          BUILD_TOOLS="$ANDROID_HOME/build-tools/34.0.0"
+
+          # 2. Find and sign all APKs
+          find src-tauri/gen/android/app/build/outputs/apk/ -type f -name "*.apk" | while read -r apk_path; do
+            echo "Processing $apk_path..."
+            filename=$(basename "$apk_path")
+            
+            # Determine clean output name
+            if [[ "$filename" == *"universal"* ]]; then
+              out_name="BerryMaster-v0.1.0-universal.apk"
+            elif [[ "$filename" == *"arm64_v8a"* ]] || [[ "$filename" == *"arm64-v8a"* ]]; then
+              out_name="BerryMaster-v0.1.0-arm64-v8a.apk"
+            elif [[ "$filename" == *"armeabi_v7a"* ]] || [[ "$filename" == *"armeabi-v7a"* ]]; then
+              out_name="BerryMaster-v0.1.0-armeabi-v7a.apk"
+            elif [[ "$filename" == *"x86_64"* ]]; then
+              out_name="BerryMaster-v0.1.0-x86_64.apk"
+            else
+              out_name="BerryMaster-v0.1.0-${filename}"
+            fi
+
+            aligned_apk="dist-apk/aligned_${filename}"
+            signed_apk="dist-apk/${out_name}"
+
+            # Zipalign
+            "$BUILD_TOOLS/zipalign" -p -f -v 4 "$apk_path" "$aligned_apk" || cp "$apk_path" "$aligned_apk"
+
+            # Sign with apksigner (v1, v2, and v3 schemes)
+            "$BUILD_TOOLS/apksigner" sign \
+              --ks release.keystore \
+              --ks-pass pass:berrymaster123 \
+              --ks-key-alias berrymaster \
+              --key-pass pass:berrymaster123 \
+              --out "$signed_apk" \
+              "$aligned_apk"
+
+            # Verify signature
+            "$BUILD_TOOLS/apksigner" verify --verbose "$signed_apk"
+
+            # Clean up temporary aligned file
+            rm -f "$aligned_apk"
+          done
+
+          echo "--- Signed APKs ready in dist-apk/ ---"
+          ls -lh dist-apk/
 
       - name: Upload Android APK Artifact
         uses: actions/upload-artifact@v4
