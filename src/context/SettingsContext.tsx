@@ -12,6 +12,14 @@ type SettingsContextValue = {
   setShowDeveloperBerries: (value: boolean) => void;
   theme: AppTheme;
   setTheme: (theme: AppTheme) => void;
+  desktopMinimizeToTray: boolean;
+  setDesktopMinimizeToTray: (value: boolean) => void;
+  notifyOnWater: boolean;
+  setNotifyOnWater: (value: boolean) => void;
+  notifyOnHarvest: boolean;
+  setNotifyOnHarvest: (value: boolean) => void;
+  notifyOnWilt: boolean;
+  setNotifyOnWilt: (value: boolean) => void;
 };
 
 const SettingsContext =
@@ -51,12 +59,60 @@ export function SettingsProvider({
     }
   });
 
+  const [desktopMinimizeToTray, setDesktopMinimizeToTray] = useState<boolean>(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return true;
+    try {
+      const parsed = JSON.parse(stored);
+      return parsed.desktopMinimizeToTray ?? true;
+    } catch {
+      return true;
+    }
+  });
+
+  const [notifyOnWater, setNotifyOnWater] = useState<boolean>(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return true;
+    try {
+      const parsed = JSON.parse(stored);
+      return parsed.notifyOnWater ?? true;
+    } catch {
+      return true;
+    }
+  });
+
+  const [notifyOnHarvest, setNotifyOnHarvest] = useState<boolean>(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return true;
+    try {
+      const parsed = JSON.parse(stored);
+      return parsed.notifyOnHarvest ?? true;
+    } catch {
+      return true;
+    }
+  });
+
+  const [notifyOnWilt, setNotifyOnWilt] = useState<boolean>(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return true;
+    try {
+      const parsed = JSON.parse(stored);
+      return parsed.notifyOnWilt ?? true;
+    } catch {
+      return true;
+    }
+  });
+
   useEffect(() => {
     localStorage.setItem(
       STORAGE_KEY,
       JSON.stringify({
         showDeveloperBerries,
         theme,
+        desktopMinimizeToTray,
+        notifyOnWater,
+        notifyOnHarvest,
+        notifyOnWilt,
       })
     );
 
@@ -68,7 +124,14 @@ export function SettingsProvider({
       root.classList.add("dark");
       root.classList.remove("light");
     }
-  }, [showDeveloperBerries, theme]);
+  }, [
+    showDeveloperBerries,
+    theme,
+    desktopMinimizeToTray,
+    notifyOnWater,
+    notifyOnHarvest,
+    notifyOnWilt,
+  ]);
 
   return (
     <SettingsContext.Provider
@@ -77,6 +140,14 @@ export function SettingsProvider({
         setShowDeveloperBerries,
         theme,
         setTheme,
+        desktopMinimizeToTray,
+        setDesktopMinimizeToTray,
+        notifyOnWater,
+        setNotifyOnWater,
+        notifyOnHarvest,
+        setNotifyOnHarvest,
+        notifyOnWilt,
+        setNotifyOnWilt,
       }}
     >
       {children}
@@ -89,6 +160,14 @@ const DEFAULT_SETTINGS: SettingsContextValue = {
   setShowDeveloperBerries: () => {},
   theme: "dark",
   setTheme: () => {},
+  desktopMinimizeToTray: true,
+  setDesktopMinimizeToTray: () => {},
+  notifyOnWater: true,
+  setNotifyOnWater: () => {},
+  notifyOnHarvest: true,
+  setNotifyOnHarvest: () => {},
+  notifyOnWilt: true,
+  setNotifyOnWilt: () => {},
 };
 
 export function useSettings(): SettingsContextValue {

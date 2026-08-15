@@ -12,7 +12,7 @@ export default function AboutPage() {
           <img
             src={berryMasterIcon}
             alt="BerryMaster logo"
-            className="h-16 w-16 rounded-2xl object-cover shadow-lg ring-2 ring-emerald-500/30 shrink-0"
+            className="h-16 w-16 object-contain drop-shadow-[0_4px_20px_rgba(225,29,72,0.5)] shrink-0 transition-transform duration-300 hover:scale-105"
           />
 
           <div>

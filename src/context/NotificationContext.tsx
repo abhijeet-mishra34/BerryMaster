@@ -3,17 +3,17 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
 import type { Notification } from "../types/Notification";
-
 import { generateNotifications } from "../services/notificationService";
 import {
   requestNotificationPermission,
   syncBrowserNotifications,
 } from "../services/browserNotificationService";
-
+import { scheduleFutureCharacterAlerts } from "../services/nativeNotificationService";
 import { useCharacters } from "./CharacterContext";
 
 type NotificationContextType = {
@@ -32,35 +32,39 @@ export function NotificationProvider({
 }) {
   const { characters } = useCharacters();
 
-  const [notifications, setNotifications] =
-    useState<Notification[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const prevIdsRef = useRef<string>("");
 
-  // Ask for browser notification permission once.
+  // Ask for browser / OS notification permission once on mount
   useEffect(() => {
     requestNotificationPermission();
   }, []);
 
-  // Refresh notifications continuously.
+  // Pre-schedule future OS alerts whenever characters are updated
+  useEffect(() => {
+    scheduleFutureCharacterAlerts(characters);
+  }, [characters]);
+
+  // Refresh notifications efficiently without redundant React re-renders
   useEffect(() => {
     const updateNotifications = () => {
-      const latestNotifications =
-        generateNotifications(characters);
+      const latestNotifications = generateNotifications(characters);
+      const newIds = latestNotifications.map((n) => n.id).join(",");
 
-      setNotifications(latestNotifications);
+      // Only update state when notifications actually change
+      if (newIds !== prevIdsRef.current) {
+        prevIdsRef.current = newIds;
+        setNotifications(latestNotifications);
+      }
 
-      syncBrowserNotifications(
-        latestNotifications
-      );
+      syncBrowserNotifications(latestNotifications);
     };
 
-    // Run immediately.
+    // Run immediately
     updateNotifications();
 
-    // Refresh every second.
-    const interval = setInterval(
-      updateNotifications,
-      1000
-    );
+    // Refresh every second
+    const interval = setInterval(updateNotifications, 1000);
 
     return () => clearInterval(interval);
   }, [characters]);
@@ -83,9 +87,7 @@ export function NotificationProvider({
 }
 
 export function useNotifications() {
-  const context = useContext(
-    NotificationContext
-  );
+  const context = useContext(NotificationContext);
 
   if (!context) {
     throw new Error(

@@ -104,11 +104,11 @@ export default function Sidebar({
       >
         {isOpen ? (
           <div className="flex items-center gap-3">
-            <div className="relative">
+            <div className="relative flex items-center justify-center">
               <img
                 src={berryMasterIcon}
                 alt="BerryMaster logo"
-                className="h-9 w-9 rounded-xl object-cover shadow-md shadow-emerald-950/50 ring-1 ring-emerald-500/30 transition-transform duration-200 hover:scale-105"
+                className="h-9 w-9 object-contain drop-shadow-[0_2px_10px_rgba(225,29,72,0.45)] transition-transform duration-200 hover:scale-110"
               />
               <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-slate-950" />
             </div>
@@ -123,11 +123,11 @@ export default function Sidebar({
             </div>
           </div>
         ) : (
-          <div className="relative">
+          <div className="relative flex items-center justify-center">
             <img
               src={berryMasterIcon}
               alt="BerryMaster logo"
-              className="h-9 w-9 rounded-xl object-cover shadow-md ring-1 ring-emerald-500/30 transition-transform duration-200 hover:scale-105"
+              className="h-9 w-9 object-contain drop-shadow-[0_2px_10px_rgba(225,29,72,0.45)] transition-transform duration-200 hover:scale-110"
             />
             <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-slate-950" />
           </div>

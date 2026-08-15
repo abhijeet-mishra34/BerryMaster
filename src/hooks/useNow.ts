@@ -1,15 +1,38 @@
 import { useEffect, useState } from "react";
 
-export function useNow(interval = 1000) {
-  const [now, setNow] = useState(() => new Date());
+// Global singleton ticker to avoid multiple setIntervals across multiple cards
+type Listener = (now: Date) => void;
+const listeners = new Set<Listener>();
+let globalTimer: ReturnType<typeof setInterval> | null = null;
+let lastTickDate = new Date();
+
+function startGlobalTicker() {
+  if (globalTimer !== null) return;
+  globalTimer = setInterval(() => {
+    lastTickDate = new Date();
+    listeners.forEach((listener) => listener(lastTickDate));
+  }, 1000);
+}
+
+function stopGlobalTicker() {
+  if (listeners.size === 0 && globalTimer !== null) {
+    clearInterval(globalTimer);
+    globalTimer = null;
+  }
+}
+
+export function useNow(_interval = 1000): Date {
+  const [now, setNow] = useState<Date>(() => lastTickDate);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setNow(new Date());
-    }, interval);
+    listeners.add(setNow);
+    startGlobalTicker();
 
-    return () => clearInterval(timer);
-  }, [interval]);
+    return () => {
+      listeners.delete(setNow);
+      stopGlobalTicker();
+    };
+  }, []);
 
   return now;
 }
