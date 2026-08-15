@@ -87,22 +87,31 @@ jobs:
           mkdir -p dist-apk
           BUILD_TOOLS="$ANDROID_HOME/build-tools/34.0.0"
 
-          # 2. Find and sign all APKs
+          # 2. Extract tag name
+          TAG="${{ github.event.inputs.release_tag || github.ref_name || 'latest' }}"
+          TAG="${TAG#refs/tags/}"
+
+          # 3. Find and sign all APKs
           find src-tauri/gen/android/app/build/outputs/apk/ -type f -name "*.apk" | while read -r apk_path; do
             echo "Processing $apk_path..."
             filename=$(basename "$apk_path")
             
             # Determine clean output name
             if [[ "$filename" == *"universal"* ]]; then
-              out_name="BerryMaster-v0.1.0-universal.apk"
+              out_name="BerryMaster-${TAG}-universal.apk"
+              alias_name="BerryMaster-universal.apk"
             elif [[ "$filename" == *"arm64_v8a"* ]] || [[ "$filename" == *"arm64-v8a"* ]]; then
-              out_name="BerryMaster-v0.1.0-arm64-v8a.apk"
+              out_name="BerryMaster-${TAG}-arm64-v8a.apk"
+              alias_name="BerryMaster-arm64-v8a.apk"
             elif [[ "$filename" == *"armeabi_v7a"* ]] || [[ "$filename" == *"armeabi-v7a"* ]]; then
-              out_name="BerryMaster-v0.1.0-armeabi-v7a.apk"
+              out_name="BerryMaster-${TAG}-armeabi-v7a.apk"
+              alias_name="BerryMaster-armeabi-v7a.apk"
             elif [[ "$filename" == *"x86_64"* ]]; then
-              out_name="BerryMaster-v0.1.0-x86_64.apk"
+              out_name="BerryMaster-${TAG}-x86_64.apk"
+              alias_name="BerryMaster-x86_64.apk"
             else
-              out_name="BerryMaster-v0.1.0-${filename}"
+              out_name="BerryMaster-${TAG}-${filename}"
+              alias_name="BerryMaster-${filename}"
             fi
 
             aligned_apk="dist-apk/aligned_${filename}"
@@ -122,6 +131,11 @@ jobs:
 
             # Verify signature
             "$BUILD_TOOLS/apksigner" verify --verbose "$signed_apk"
+
+            # Also create the permanent static alias copy for 1-click downloads
+            if [ -n "$alias_name" ]; then
+              cp "$signed_apk" "dist-apk/${alias_name}"
+            fi
 
             # Clean up temporary aligned file
             rm -f "$aligned_apk"
@@ -181,6 +195,10 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force -Path dist-windows
           Get-ChildItem -Recurse "src-tauri\target\release\bundle" -Include *.exe, *.msi | Copy-Item -Destination dist-windows
+          $exe = Get-ChildItem "dist-windows\*.exe" | Select-Object -First 1
+          if ($exe) { Copy-Item $exe.FullName "dist-windows\BerryMaster-Windows-Setup.exe" -Force }
+          $msi = Get-ChildItem "dist-windows\*.msi" | Select-Object -First 1
+          if ($msi) { Copy-Item $msi.FullName "dist-windows\BerryMaster-Windows.msi" -Force }
           Get-ChildItem dist-windows
 
       - name: Upload Windows Installer Artifact

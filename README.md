@@ -16,8 +16,8 @@
 
 | Platform | Download Link | Type |
 | :--- | :--- | :--- |
-| 📱 **Android** | [**Download Android APK (`.apk`)**](https://github.com/abhijeet-mishra34/BerryMaster/releases/latest/download/BerryMaster-v0.1.0-universal.apk) | Universal Signed APK (All Android Phones) |
-| 💻 **Windows PC** | [**Download Windows Installer (`.msi` / `.exe`)**](https://github.com/abhijeet-mishra34/BerryMaster/releases/latest) | Native Windows Desktop App with Tray Mode |
+| 📱 **Android** | [**Download Android APK (`.apk`)**](https://github.com/abhijeet-mishra34/BerryMaster/releases/latest/download/BerryMaster-universal.apk) | Universal Signed APK (All Android Devices) |
+| 💻 **Windows PC** | [**Download Windows Setup (`.exe`)**](https://github.com/abhijeet-mishra34/BerryMaster/releases/latest/download/BerryMaster-Windows-Setup.exe) | Native Windows Desktop App with Tray Mode |
 
 ---
 
