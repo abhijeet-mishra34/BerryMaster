@@ -53,10 +53,18 @@ jobs:
       - name: Install Node dependencies
         run: npm install
 
-      - name: Install Rust toolchain & Android targets
+      - name: Setup Gradle Cache
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Setup Rust toolchain & Android targets
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> src-tauri/target
 
       - name: Initialize Tauri Android project
         run: npx tauri android init
@@ -107,6 +115,11 @@ jobs:
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> src-tauri/target
 
       - name: Build Windows Desktop Bundle
         run: npx tauri build
