@@ -4,24 +4,22 @@ import {
   useEffect,
 } from "react";
 import {
-  Sliders,
+  SlidersHorizontal,
   Sun,
   Moon,
   Bell,
-  Monitor,
+  Settings,
   Droplets,
   Sparkles,
-  AlertTriangle,
   Download,
   Upload,
   Trash2,
   RefreshCw,
   ExternalLink,
-  CheckCircle2,
-  Code2,
+  Wrench,
   ShieldAlert,
   Check,
-  Zap,
+  Activity,
 } from "lucide-react";
 
 import {
@@ -210,7 +208,7 @@ export default function SettingsPage() {
                 shadow-inner
               "
             >
-              <Sliders className="h-6 w-6" />
+              <SlidersHorizontal className="h-6 w-6" />
             </div>
 
             <div>
@@ -460,12 +458,12 @@ export default function SettingsPage() {
             >
               {permissionState === "granted" ? (
                 <>
-                  <CheckCircle2 className="h-3.5 w-3.5" />
+                  <Check className="h-3.5 w-3.5" />
                   <span>Alerts Enabled</span>
                 </>
               ) : (
                 <>
-                  <AlertTriangle className="h-3.5 w-3.5" />
+                  <ShieldAlert className="h-3.5 w-3.5" />
                   <span>Permission Needed</span>
                 </>
               )}
@@ -501,7 +499,7 @@ export default function SettingsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-2xl border border-slate-800 light:border-slate-200 bg-slate-950/40 light:bg-slate-50/80 p-5">
           <div className="flex items-start gap-3.5">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-800/80 light:bg-slate-200 text-emerald-400 border border-slate-700/50">
-              <Monitor className="h-5 w-5" />
+              <Settings className="h-5 w-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -661,7 +659,7 @@ export default function SettingsPage() {
           <div className="flex items-center justify-between rounded-2xl border border-slate-800/90 light:border-slate-200 bg-slate-950/30 light:bg-slate-50/60 p-4 transition-all hover:border-slate-700">
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20">
-                <AlertTriangle className="h-4.5 w-4.5" />
+                <ShieldAlert className="h-4.5 w-4.5" />
               </div>
               <div>
                 <h4 className="text-xs font-bold text-white light:text-slate-900">
@@ -712,7 +710,7 @@ export default function SettingsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.04] p-5">
           <div>
             <h3 className="text-sm font-bold text-white light:text-slate-900 flex items-center gap-2">
-              <Zap className="h-4 w-4 text-emerald-400" />
+              <Activity className="h-4 w-4 text-emerald-400" />
               Test Device Notification
             </h3>
             <p className="mt-1 text-xs text-slate-400 light:text-slate-500 max-w-lg leading-relaxed">
@@ -1203,7 +1201,7 @@ export default function SettingsPage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-start gap-3.5">
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                <Code2 className="h-4.5 w-4.5" />
+                <Wrench className="h-4.5 w-4.5" />
               </div>
               <div>
                 <h2 className="text-base font-bold text-white light:text-slate-900">
@@ -1322,7 +1320,7 @@ export default function SettingsPage() {
                 shrink-0
               "
             >
-              <AlertTriangle className="h-3.5 w-3.5" />
+              <ShieldAlert className="h-3.5 w-3.5" />
               Reset Everything
             </button>
           </div>
