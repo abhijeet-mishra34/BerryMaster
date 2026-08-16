@@ -7,6 +7,9 @@
   ],
   "permissions": [
     "core:default",
-    "notification:default"
+    "notification:default",
+    "opener:default",
+    "opener:allow-open-url",
+    "opener:allow-default-urls"
   ]
 }

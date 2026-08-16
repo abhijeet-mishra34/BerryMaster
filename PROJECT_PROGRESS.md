@@ -1524,9 +1524,25 @@ The remaining work primarily consists of:
 
 • Launch Preparation
 
-The foundation of BerryMaster is now solid, scalable, and fully connected.
+---
 
-The project has successfully moved from a collection of independent systems into a cohesive farming companion capable of monitoring the player's farm, identifying problems, tracking activity, and guiding the player directly to the characters requiring attention.
+# 🔗 Sprint 13 — Native External Link & Release Redirection Fix 🚀
+
+**Problem Diagnosed:**
+In installed Tauri desktop environments (WebView2 on Windows) and Android APK builds, standard browser link handling (`window.open(url, "_blank")`, `<a target="_blank">`, and `.click()`) was blocked or ignored by the sandboxed webview. Furthermore, plugin permissions in Tauri v2 required explicit capability allowances.
+
+**Completed Fixes:**
+✔ Created native `open_external_url` Tauri Rust command in `src-tauri/src/lib.rs` with Windows shell execute (`cmd /c start ""` and `rundll32 url.dll,FileProtocolHandler`) ensuring 100% reliable system browser launch.
+✔ Bound `open_external_url` command to application `invoke_handler` in `lib.rs`.
+✔ Configured capabilities in `src-tauri/capabilities/default.json` with `opener:default`, `opener:allow-open-url`, and `opener:allow-default-urls`.
+✔ Implemented 4-tier resilient link resolver in `src/utils/urlHelper.ts` (Native Tauri Command → Tauri Opener Plugin → Direct IPC → Web Fallback).
+✔ Added direct "Releases Page" button in Settings and About page for instant access to updates and release notes.
+✔ Bumped application version to `v0.1.5` across all project manifests (`package.json`, `tauri.conf.json`, `Cargo.toml`, `updateService.ts`).
+
+Status:
+✅ Complete
+
+---
 
 "Great software isn't built in one giant leap. It's built one well-designed sprint at a time."
 

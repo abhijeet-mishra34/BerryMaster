@@ -7,12 +7,13 @@ import {
   Star,
   CheckCircle2,
   ExternalLink,
-  History,
+  History as HistoryIcon,
   Copy,
   Check,
   Send,
   Trash2,
   Loader2,
+  type LucideIcon,
 } from "lucide-react";
 import {
   submitFeedback,
@@ -91,7 +92,7 @@ export default function FeedbackPage() {
     setHistory([]);
   }
 
-  const categoryOptions: { id: FeedbackCategory; label: string; icon: typeof Bug; description: string }[] = [
+  const categoryOptions: { id: FeedbackCategory; label: string; icon: LucideIcon; description: string }[] = [
     { id: "general", label: "General Feedback", icon: MessageSquare, description: "Overall impressions & thoughts" },
     { id: "bug", label: "Bug Report", icon: Bug, description: "Something broke or isn't working right" },
     { id: "feature", label: "Feature Idea", icon: Lightbulb, description: "New features you'd like to see" },
@@ -136,7 +137,7 @@ export default function FeedbackPage() {
                 ${activeTab === "history" ? "bg-emerald-500 text-slate-950 shadow" : "text-slate-400 hover:text-slate-200"}
               `}
             >
-              <History className="h-3.5 w-3.5" />
+              <HistoryIcon className="h-3.5 w-3.5" />
               History ({history.length})
             </button>
           </div>
@@ -382,7 +383,7 @@ export default function FeedbackPage() {
 
           {history.length === 0 ? (
             <div className="py-12 text-center text-slate-500">
-              <History className="h-10 w-10 mx-auto mb-3 opacity-40" />
+              <HistoryIcon className="h-10 w-10 mx-auto mb-3 opacity-40" />
               <p className="text-sm font-semibold">No feedback submissions found yet.</p>
               <p className="text-xs text-slate-600 mt-1">Submit a feedback form to record your entries here.</p>
             </div>

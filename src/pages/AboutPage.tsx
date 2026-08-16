@@ -1,6 +1,7 @@
-import { Sparkles, ShieldAlert, Wrench, UserCheck, PackageCheck, CheckCircle2 } from "lucide-react";
+import { Sparkles, ShieldAlert, Wrench, UserCheck, PackageCheck, CheckCircle2, ExternalLink } from "lucide-react";
 import berryMasterIcon from "../assets/brand/berrymaster-icon.png";
 import { CURRENT_APP_VERSION } from "../services/updateService";
+import { openExternalUrl } from "../utils/urlHelper";
 
 export default function AboutPage() {
   return (
@@ -139,17 +140,46 @@ export default function AboutPage() {
       </section>
 
       {/* App Version Card */}
-      <section className="rounded-3xl border border-emerald-500/30 bg-emerald-950/20 p-6 backdrop-blur-md shadow-xl flex items-center justify-between">
+      <section className="rounded-3xl border border-emerald-500/30 bg-emerald-950/20 p-6 backdrop-blur-md shadow-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
-          <PackageCheck className="h-6 w-6 text-emerald-400" />
+          <PackageCheck className="h-6 w-6 text-emerald-400 shrink-0" />
           <div>
             <h3 className="text-sm font-bold text-white">BerryMaster Release Candidate</h3>
             <p className="text-xs text-slate-400">Desktop & Mobile Web Build</p>
           </div>
         </div>
-        <span className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3.5 py-1 text-xs font-extrabold text-emerald-400">
-          {CURRENT_APP_VERSION}
-        </span>
+
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => openExternalUrl("https://github.com/abhijeet-mishra34/BerryMaster/releases")}
+            className="
+              inline-flex
+              items-center
+              gap-1.5
+              rounded-xl
+              border
+              border-emerald-500/30
+              bg-emerald-500/10
+              px-3.5
+              py-1.5
+              text-xs
+              font-bold
+              text-emerald-400
+              hover:bg-emerald-500
+              hover:text-slate-950
+              transition-all
+              cursor-pointer
+            "
+          >
+            <ExternalLink className="h-3.5 w-3.5" />
+            Release Notes
+          </button>
+
+          <span className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3.5 py-1 text-xs font-extrabold text-emerald-400">
+            {CURRENT_APP_VERSION}
+          </span>
+        </div>
       </section>
     </div>
   );

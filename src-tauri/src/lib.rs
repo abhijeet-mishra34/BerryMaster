@@ -5,11 +5,65 @@ use tauri::{
     Manager,
 };
 
+#[tauri::command]
+fn open_external_url(#[allow(unused_variables)] app: tauri::AppHandle, url: String) -> Result<(), String> {
+    if url.trim().is_empty() {
+        return Ok(());
+    }
+
+    #[cfg(target_os = "windows")]
+    {
+        // 1. Windows cmd /c start "" "<url>"
+        if let Ok(_) = std::process::Command::new("cmd")
+            .args(["/c", "start", "", &url])
+            .spawn()
+        {
+            return Ok(());
+        }
+
+        // 2. Windows rundll32 fallback
+        if let Ok(_) = std::process::Command::new("rundll32")
+            .args(["url.dll,FileProtocolHandler", &url])
+            .spawn()
+        {
+            return Ok(());
+        }
+    }
+
+    #[cfg(target_os = "macos")]
+    {
+        if let Ok(_) = std::process::Command::new("open").arg(&url).spawn() {
+            return Ok(());
+        }
+    }
+
+    #[cfg(target_os = "linux")]
+    {
+        if let Ok(_) = std::process::Command::new("xdg-open").arg(&url).spawn() {
+            return Ok(());
+        }
+    }
+
+    #[cfg(mobile)]
+    {
+        use tauri_plugin_opener::OpenerExt;
+        if let Err(e) = app.opener().open_url(&url, None::<&str>) {
+            return Err(e.to_string());
+        }
+        return Ok(());
+    }
+
+    #[allow(unreachable_code)]
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     #[allow(unused_mut)]
     let mut builder = tauri::Builder::default()
-        .plugin(tauri_plugin_notification::init());
+        .plugin(tauri_plugin_notification::init())
+        .plugin(tauri_plugin_opener::init())
+        .invoke_handler(tauri::generate_handler![open_external_url]);
 
     #[cfg(desktop)]
     {

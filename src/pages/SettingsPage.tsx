@@ -1081,43 +1081,73 @@ export default function SettingsPage() {
               Official GitHub Releases
             </h3>
             <p className="mt-1 text-xs text-slate-400 light:text-slate-500 max-w-md leading-relaxed">
-              Verify if an updated desktop installer (MSI/EXE) or mobile package is available.
+              Verify if an updated desktop installer (Windows Setup EXE) or Android APK is available.
             </p>
           </div>
 
-          <button
-            type="button"
-            disabled={isCheckingUpdate}
-            onClick={handleCheckUpdate}
-            className="
-              inline-flex
-              items-center
-              justify-center
-              gap-2
-              rounded-xl
-              border
-              border-sky-500/40
-              bg-sky-500/20
-              px-5
-              py-2.5
-              text-xs
-              font-bold
-              text-sky-300
-              light:text-sky-700
-              transition-all
-              hover:bg-sky-500
-              hover:text-slate-950
-              hover:shadow-md
-              hover:shadow-sky-500/20
-              active:scale-95
-              disabled:opacity-60
-              disabled:cursor-not-allowed
-              shrink-0
-            "
-          >
-            <RefreshCw className={`h-3.5 w-3.5 ${isCheckingUpdate ? "animate-spin" : ""}`} />
-            {isCheckingUpdate ? "Checking Releases..." : "Check for Updates"}
-          </button>
+          <div className="flex items-center gap-2.5 flex-wrap shrink-0">
+            <button
+              type="button"
+              onClick={() => openExternalUrl("https://github.com/abhijeet-mishra34/BerryMaster/releases")}
+              className="
+                inline-flex
+                items-center
+                justify-center
+                gap-1.5
+                rounded-xl
+                border
+                border-slate-700
+                bg-slate-800/80
+                px-4
+                py-2.5
+                text-xs
+                font-bold
+                text-slate-200
+                hover:bg-slate-700
+                hover:text-white
+                transition-all
+                cursor-pointer
+                active:scale-95
+              "
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+              Releases Page
+            </button>
+
+            <button
+              type="button"
+              disabled={isCheckingUpdate}
+              onClick={handleCheckUpdate}
+              className="
+                inline-flex
+                items-center
+                justify-center
+                gap-2
+                rounded-xl
+                border
+                border-sky-500/40
+                bg-sky-500/20
+                px-5
+                py-2.5
+                text-xs
+                font-bold
+                text-sky-300
+                light:text-sky-700
+                transition-all
+                hover:bg-sky-500
+                hover:text-slate-950
+                hover:shadow-md
+                hover:shadow-sky-500/20
+                active:scale-95
+                disabled:opacity-60
+                disabled:cursor-not-allowed
+                cursor-pointer
+              "
+            >
+              <RefreshCw className={`h-3.5 w-3.5 ${isCheckingUpdate ? "animate-spin" : ""}`} />
+              {isCheckingUpdate ? "Checking Releases..." : "Check for Updates"}
+            </button>
+          </div>
         </div>
 
         {updateResult && (
