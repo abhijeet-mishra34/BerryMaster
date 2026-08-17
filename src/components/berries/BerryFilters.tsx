@@ -18,35 +18,35 @@ category: "All" | BerryCategory
 };
 
 export default function BerryFilters({
-search,
-onSearchChange,
-categories,
-selectedCategory,
-onCategoryChange,
+  search,
+  onSearchChange,
+  categories,
+  selectedCategory,
+  onCategoryChange,
 }: BerryFiltersProps) {
-return ( <div
-   className="
-     space-y-8
-     rounded-2xl
-     border
-     border-slate-700
-     bg-slate-900/70
-     p-5
-     shadow-lg
-     backdrop-blur-sm
-   "
- > <BerrySearch
-     search={search}
-     onSearchChange={onSearchChange}
-   />
+  return (
+    <div
+      className="
+        theme-card
+        space-y-6
+        rounded-xl
+        p-6
+        sm:p-7
+        shadow-sm
+        backdrop-blur-md
+      "
+    >
+      <BerrySearch
+        search={search}
+        onSearchChange={onSearchChange}
+      />
 
-
-  <BerryCategoryFilter
-    categories={categories}
-    selectedCategory={selectedCategory}
-    onCategoryChange={onCategoryChange}
-  />
-</div>
+      <BerryCategoryFilter
+        categories={categories}
+        selectedCategory={selectedCategory}
+        onCategoryChange={onCategoryChange}
+      />
+    </div>
 
 
 );

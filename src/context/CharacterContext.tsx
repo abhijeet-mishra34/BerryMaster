@@ -17,6 +17,7 @@ import { waterBerryOnCharacter } from "../services/wateringService";
 import { harvestBerryOnCharacter } from "../services/harvestService";
 
 import { useActivities } from "./ActivityContext";
+import { useToast } from "./ToastContext";
 
 type CharacterContextType = {
   characters: Character[];
@@ -67,6 +68,7 @@ export function CharacterProvider({
     });
 
   const { addActivity } = useActivities();
+  const { addToast } = useToast();
 
   useEffect(() => {
     localStorage.setItem(
@@ -97,8 +99,9 @@ export function CharacterProvider({
     const trimmedName = name.trim();
 
     if (characterNameExists(trimmedName)) {
-      alert(
-        "A character with this name already exists."
+      addToast(
+        "A character with this name already exists.",
+        "error"
       );
 
       return;
@@ -113,6 +116,8 @@ export function CharacterProvider({
       ...current,
       newCharacter,
     ]);
+
+    addToast(`Character "${trimmedName}" created!`, "success");
   }
 
   /**
@@ -125,8 +130,9 @@ export function CharacterProvider({
     const trimmedName = name.trim();
 
     if (characterNameExists(trimmedName, id)) {
-      alert(
-        "A character with this name already exists."
+      addToast(
+        "A character with this name already exists.",
+        "error"
       );
 
       return;
@@ -142,6 +148,8 @@ export function CharacterProvider({
           : character
       )
     );
+
+    addToast(`Character renamed to "${trimmedName}"`, "success");
   }
 
   /**

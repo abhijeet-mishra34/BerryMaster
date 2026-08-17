@@ -35,35 +35,35 @@ type CharacterCardProps = {
 
 const timerStyles = {
   watering: {
-    wrapper: "border-white/[0.06] bg-sky-500/[0.04]",
-    accent: "bg-sky-400",
-    label: "text-sky-400",
-    value: "text-sky-300",
+    wrapper: "border-sky-500/20 light:border-sky-200 bg-sky-500/[0.06] light:bg-sky-50/70",
+    accent: "bg-sky-500",
+    label: "text-sky-400 light:text-sky-600",
+    value: "text-sky-300 light:text-sky-900",
     icon: Droplets,
   },
   harvest: {
-    wrapper: "border-white/[0.06] bg-amber-500/[0.04]",
-    accent: "bg-amber-400",
-    label: "text-amber-400",
-    value: "text-amber-300",
+    wrapper: "border-amber-500/20 light:border-amber-200 bg-amber-500/[0.06] light:bg-amber-50/70",
+    accent: "bg-amber-500",
+    label: "text-amber-400 light:text-amber-600",
+    value: "text-amber-300 light:text-amber-900",
     icon: Wheat,
   },
   wilt: {
-    wrapper: "border-white/[0.06] bg-red-500/[0.04]",
-    accent: "bg-red-400",
-    label: "text-red-400",
-    value: "text-red-300",
+    wrapper: "border-red-500/20 light:border-red-200 bg-red-500/[0.06] light:bg-red-50/70",
+    accent: "bg-red-500",
+    label: "text-red-400 light:text-red-600",
+    value: "text-red-300 light:text-red-900",
     icon: AlertTriangle,
   },
 };
 
-const labelClass = "text-[11px] font-bold uppercase tracking-wider text-slate-400";
-const timestampLabelClass = "text-[10px] font-semibold uppercase tracking-wider text-slate-400";
-const timestampValueClass = "mt-0.5 text-xs font-medium text-slate-300";
+const labelClass = "text-[11px] font-bold uppercase tracking-wider text-slate-400 light:text-slate-500";
+const timestampLabelClass = "text-[10px] font-semibold uppercase tracking-wider text-slate-400 light:text-slate-500";
+const timestampValueClass = "mt-0.5 text-xs font-bold text-slate-200 light:text-slate-800";
 
 const TimerTimestamp = ({ label, value }: { label: string; value: string }) => {
   return (
-    <div className="min-w-[130px] rounded-xl border border-white/[0.07] bg-white/[0.04] px-4 py-2.5 text-right">
+    <div className="min-w-[130px] rounded-xl border border-slate-800 light:border-slate-200 bg-slate-900/60 light:bg-white px-4 py-2.5 text-right shadow-xs">
       <p className={timestampLabelClass}>{label}</p>
       <p className={timestampValueClass}>{value}</p>
     </div>
@@ -95,13 +95,12 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
     <div
       ref={ref}
       className={`
+        theme-card
         card-shine
         relative
         overflow-hidden
-        rounded-3xl
-        border
+        rounded-xl
         backdrop-blur-2xl
-        shadow-xl
         transition-all
         duration-300
         ${
@@ -109,12 +108,10 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
             ? "scale-[1.01] border-emerald-400/80 shadow-2xl shadow-emerald-500/20 ring-2 ring-emerald-500/20"
             : focused
             ? "border-slate-400/40 ring-2 ring-white/10 shadow-2xl shadow-white/5"
-            : "border-white/[0.08] hover:border-emerald-400/40"
+            : "hover:border-emerald-400/40"
         }
       `}
       style={{
-        background: `linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 40%, rgba(2,8,24,0.82) 100%)`,
-        boxShadow: `inset 0 1px 0 rgba(255,255,255,0.10), inset 0 -1px 0 rgba(255,255,255,0.03), 0 8px 32px -8px rgba(0,0,0,0.55)`,
         padding: "2.25rem",
       }}
     >
@@ -125,25 +122,25 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
       <div className="pb-6">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="flex h-13 w-13 items-center justify-center rounded-2xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 font-bold">
+            <div className="flex h-13 w-13 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-500 font-bold shadow-sm">
               <User className="h-6 w-6" />
             </div>
 
             <div>
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 light:text-slate-500">
                 Farmer Slot #{characterNumber}
               </span>
-              <h2 className="text-2xl font-bold tracking-tight text-white">
+              <h2 className="text-2xl font-bold tracking-tight text-white light:text-slate-900">
                 {character.name}
               </h2>
             </div>
           </div>
 
-          <div className="rounded-xl border border-white/[0.07] bg-white/[0.03] px-4 py-2 text-right">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+          <div className="rounded-xl border border-slate-800 light:border-slate-200 bg-slate-900/60 light:bg-slate-50 px-4 py-2 text-right shadow-xs">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 light:text-slate-500">
               Account ID
             </span>
-            <p className="font-mono text-xs font-bold text-emerald-400">
+            <p className="font-mono text-xs font-bold text-emerald-500">
               #{characterNumber}
             </p>
           </div>
@@ -151,21 +148,21 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
       </div>
 
       {/* Section Divider */}
-      <div className="mb-6 h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      <div className="mb-6 h-px w-full bg-gradient-to-r from-transparent via-slate-700/50 light:via-slate-200 to-transparent" />
 
       {/* Farming Overview */}
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-5">
+        <div className="rounded-xl border border-slate-800 light:border-slate-200 bg-slate-900/40 light:bg-slate-50 p-5 shadow-xs">
           <p className={labelClass}>Planted Berry</p>
           <div className="mt-2 flex items-center gap-2">
-            <Sprout className="h-4 w-4 text-emerald-400" />
-            <p className="text-sm font-bold text-white">
+            <Sprout className="h-4 w-4 text-emerald-500" />
+            <p className="text-sm font-bold text-white light:text-slate-900">
               {berry?.name ?? "No berry planted"}
             </p>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-5">
+        <div className="rounded-xl border border-slate-800 light:border-slate-200 bg-slate-900/40 light:bg-slate-50 p-5 shadow-xs">
           <p className={labelClass}>Current Status</p>
           <div className="mt-2">
             <span
@@ -202,7 +199,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
 
         <div className="flex flex-col gap-3">
           {/* Water Timer */}
-          <div className={`relative overflow-hidden rounded-2xl border p-6 transition-all ${timerStyles.watering.wrapper}`}>
+          <div className={`relative overflow-hidden rounded-xl border p-6 transition-all ${timerStyles.watering.wrapper}`}>
             {/* Left accent bar */}
             <div className={`absolute left-0 top-4 bottom-4 w-[3px] rounded-full ${timerStyles.watering.accent} opacity-70`} />
             <div className="flex flex-col gap-4 pl-4 sm:flex-row sm:items-center sm:justify-between">
@@ -230,7 +227,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
           </div>
 
           {/* Harvest Timer */}
-          <div className={`relative overflow-hidden rounded-2xl border p-6 transition-all ${timerStyles.harvest.wrapper}`}>
+          <div className={`relative overflow-hidden rounded-xl border p-6 transition-all ${timerStyles.harvest.wrapper}`}>
             {/* Left accent bar */}
             <div className={`absolute left-0 top-4 bottom-4 w-[3px] rounded-full ${timerStyles.harvest.accent} opacity-70`} />
             <div className="flex flex-col gap-4 pl-4 sm:flex-row sm:items-center sm:justify-between">
@@ -255,7 +252,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
           </div>
 
           {/* Wilt Timer */}
-          <div className={`relative overflow-hidden rounded-2xl border p-6 transition-all ${timerStyles.wilt.wrapper}`}>
+          <div className={`relative overflow-hidden rounded-xl border p-6 transition-all ${timerStyles.wilt.wrapper}`}>
             {/* Left accent bar */}
             <div className={`absolute left-0 top-4 bottom-4 w-[3px] rounded-full ${timerStyles.wilt.accent} opacity-70`} />
             <div className="flex flex-col gap-4 pl-4 sm:flex-row sm:items-center sm:justify-between">
@@ -286,44 +283,44 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
         {/* Section Divider */}
         <div className="mb-6 h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       </div>
-      <div className="flex flex-wrap items-center justify-end gap-2.5">
+      <div className="relative z-10 flex flex-wrap items-center justify-end gap-3">
         {!character.plantedBerryId ? (
-          <Button onClick={onPlant}>
-            <Sprout className="mr-1.5 h-4 w-4" />
+          <Button size="lg" onClick={onPlant}>
+            <Sprout className="mr-2 h-4.5 w-4.5" />
             Plant Berry
           </Button>
         ) : status.status === "wilted" ? (
-          <Button variant="danger" onClick={onHarvest}>
-            <Trash2 className="mr-1.5 h-4 w-4" />
+          <Button size="lg" variant="danger" onClick={onHarvest}>
+            <Trash2 className="mr-2 h-4.5 w-4.5" />
             Clear Wilted
           </Button>
         ) : status.status === "harvestReady" ? (
-          <Button onClick={onHarvest}>
-            <Wheat className="mr-1.5 h-4 w-4" />
+          <Button size="lg" onClick={onHarvest}>
+            <Wheat className="mr-2 h-4.5 w-4.5" />
             Harvest
           </Button>
         ) : (
-          <Button variant="info" onClick={onWater}>
-            <Droplets className="mr-1.5 h-4 w-4" />
+          <Button size="lg" variant="info" onClick={onWater}>
+            <Droplets className="mr-2 h-4.5 w-4.5" />
             Water
           </Button>
         )}
 
         {character.plantedBerryId &&
           (status.status === "growing" || status.status === "needWater") && (
-            <Button variant="secondary" onClick={onChangeBerry}>
-              <RefreshCw className="mr-1.5 h-4 w-4" />
+            <Button size="lg" variant="secondary" onClick={onChangeBerry}>
+              <RefreshCw className="mr-2 h-4.5 w-4.5" />
               Change Berry
             </Button>
           )}
 
-        <Button variant="info" onClick={onEdit}>
-          <Pencil className="mr-1.5 h-4 w-4" />
+        <Button size="lg" variant="info" onClick={onEdit}>
+          <Pencil className="mr-2 h-4.5 w-4.5" />
           Edit
         </Button>
 
-        <Button variant="danger" onClick={() => onDelete(character.id)}>
-          <Trash2 className="mr-1.5 h-4 w-4" />
+        <Button size="lg" variant="danger" onClick={() => onDelete(character.id)}>
+          <Trash2 className="mr-2 h-4.5 w-4.5" />
           Delete
         </Button>
       </div>

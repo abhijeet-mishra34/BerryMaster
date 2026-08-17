@@ -1,14 +1,10 @@
-import {
-  useRef,
-  useState,
-  useEffect,
-} from "react";
+import { useRef, useState, useEffect } from "react";
 import {
   SlidersHorizontal,
   Sun,
   Moon,
   Bell,
-  Settings,
+  Monitor,
   Droplets,
   Sparkles,
   Download,
@@ -20,36 +16,20 @@ import {
   ShieldAlert,
   Check,
   Activity,
+  Database,
 } from "lucide-react";
 
-import {
-  exportBerryMasterData,
-} from "../utils/dataExport";
-
-import {
-  importBerryMasterData,
-} from "../utils/dataImport";
-
-import {
-  useActivities,
-} from "../context/ActivityContext";
-
-import {
-  useSettings,
-} from "../context/SettingsContext";
-
-import {
-  resetBerryMaster,
-} from "../utils/resetApp";
-
+import { exportBerryMasterData } from "../utils/dataExport";
+import { importBerryMasterData } from "../utils/dataImport";
+import { useActivities } from "../context/ActivityContext";
+import { useSettings } from "../context/SettingsContext";
+import { resetBerryMaster } from "../utils/resetApp";
 import {
   checkForAppUpdates,
   CURRENT_APP_VERSION,
   type UpdateCheckResult,
 } from "../services/updateService";
-
 import { openExternalUrl } from "../utils/urlHelper";
-
 import {
   sendTestNotification,
   requestNotificationPermission,
@@ -85,8 +65,11 @@ export default function SettingsPage() {
   const [isResetOpen, setIsResetOpen] = useState(false);
 
   // Notification state
-  const [permissionState, setPermissionState] = useState<PermissionState>("default");
-  const [testNotificationStatus, setTestNotificationStatus] = useState<string | null>(null);
+  const [permissionState, setPermissionState] =
+    useState<PermissionState>("default");
+  const [testNotificationStatus, setTestNotificationStatus] = useState<
+    string | null
+  >(null);
   const [isSendingTest, setIsSendingTest] = useState(false);
 
   useEffect(() => {
@@ -99,10 +82,14 @@ export default function SettingsPage() {
     try {
       const success = await sendTestNotification();
       if (success) {
-        setTestNotificationStatus("Test alert dispatched! Check your Windows taskbar / notification center.");
+        setTestNotificationStatus(
+          "Test alert dispatched! Check your Windows taskbar or notification center."
+        );
         setPermissionState("granted");
       } else {
-        setTestNotificationStatus("Permission denied or not granted by the operating system.");
+        setTestNotificationStatus(
+          "Permission denied or not granted by the operating system."
+        );
         setPermissionState("denied");
       }
     } catch {
@@ -116,13 +103,17 @@ export default function SettingsPage() {
     const granted = await requestNotificationPermission();
     setPermissionState(granted ? "granted" : "denied");
     if (granted) {
-      setTestNotificationStatus("Notification permission granted successfully!");
+      setTestNotificationStatus(
+        "Notification permission granted successfully!"
+      );
     }
   }
 
   // Update check state
   const [isCheckingUpdate, setIsCheckingUpdate] = useState(false);
-  const [updateResult, setUpdateResult] = useState<UpdateCheckResult | null>(null);
+  const [updateResult, setUpdateResult] = useState<UpdateCheckResult | null>(
+    null
+  );
 
   async function handleCheckUpdate() {
     setIsCheckingUpdate(true);
@@ -136,7 +127,9 @@ export default function SettingsPage() {
     fileInputRef.current?.click();
   }
 
-  async function handleFileSelected(event: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFileSelected(
+    event: React.ChangeEvent<HTMLInputElement>
+  ) {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -165,35 +158,24 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto flex flex-col gap-8 pb-16">
+    <div className="max-w-4xl mx-auto flex flex-col gap-8 pb-20">
       {/* =====================================
-          Header Banner
+          Header Hero Banner
       ===================================== */}
       <div
         className="
+          theme-hero
           relative
           overflow-hidden
-          rounded-3xl
-          border
-          border-slate-800/80
-          light:border-slate-200
-          bg-gradient-to-r
-          from-slate-900
-          via-slate-900/95
-          to-slate-950
-          light:from-white
-          light:via-slate-50
-          light:to-slate-100
-          p-6
-          sm:p-8
+          rounded-xl
+          p-8
+          sm:p-10
           shadow-xl
           backdrop-blur-xl
         "
       >
-        <div className="absolute top-0 right-0 h-48 w-48 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none" />
-
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+          <div className="flex items-center gap-4.5">
             <div
               className="
                 flex
@@ -202,12 +184,13 @@ export default function SettingsPage() {
                 shrink-0
                 items-center
                 justify-center
-                rounded-2xl
+                rounded-xl
                 border
-                border-emerald-500/25
+                border-emerald-500/30
                 bg-emerald-500/10
                 text-emerald-400
-                shadow-inner
+                shadow-lg
+                shadow-emerald-500/10
               "
             >
               <SlidersHorizontal className="h-6 w-6" />
@@ -218,13 +201,13 @@ export default function SettingsPage() {
                 Settings & Preferences
               </h1>
               <p className="mt-1 text-xs sm:text-sm text-slate-400 light:text-slate-600">
-                Personalize your BerryMaster theme, alerts, backups, and app updates.
+                Personalize your BerryMaster theme, alerts, data backups, and updates.
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 self-start sm:self-auto">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-800 light:border-slate-200 bg-slate-950/60 light:bg-white px-3.5 py-1.5 text-xs font-mono font-medium text-slate-300 light:text-slate-700 shadow-sm">
+            <span className="inline-flex items-center gap-2 rounded-xl border border-white/[0.10] light:border-slate-300 bg-slate-950/70 light:bg-white px-4 py-2 text-xs font-mono font-bold text-slate-300 light:text-slate-700 shadow-xs">
               <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
               v{CURRENT_APP_VERSION}
             </span>
@@ -237,58 +220,54 @@ export default function SettingsPage() {
       ===================================== */}
       <section
         className="
-          rounded-3xl
-          border
-          border-slate-800/80
-          light:border-slate-200
-          bg-slate-900/60
-          light:bg-white
-          p-6
-          sm:p-8
+          theme-card
+          rounded-xl
+          p-8
+          sm:p-10
           shadow-xl
-          backdrop-blur-md
+          backdrop-blur-xl
           flex
           flex-col
-          gap-6
+          gap-7
         "
       >
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
-            <Sun className="h-4.5 w-4.5" />
+        <div className="flex items-center gap-3.5">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400">
+            <Moon className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-white light:text-slate-900">
+            <h2 className="text-lg font-bold text-white light:text-slate-900">
               Appearance & Theme
             </h2>
             <p className="text-xs text-slate-400 light:text-slate-500">
-              Select the interface style tailored for your setup and lighting.
+              Select the interface style tailored for your setup.
             </p>
           </div>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          {/* Dark Mode Card */}
+          {/* Dark Mode */}
           <button
             type="button"
             onClick={() => setTheme("dark")}
             className={`
               group
-              relative
               flex
               items-start
               gap-4
-              rounded-2xl
+              rounded-xl
               border
-              p-5
+              p-6
               text-left
               transition-all
               duration-200
               hover:scale-[1.01]
               active:scale-[0.99]
+              cursor-pointer
               ${
                 theme === "dark"
-                  ? "border-emerald-500/60 bg-emerald-500/10 ring-2 ring-emerald-500/30 text-white shadow-lg shadow-emerald-950/20"
-                  : "border-slate-800 light:border-slate-200 bg-slate-950/40 light:bg-slate-50 text-slate-400 light:text-slate-600 hover:border-slate-700 light:hover:border-slate-300"
+                  ? "border-emerald-500/60 bg-emerald-500/10 text-white ring-2 ring-emerald-500/30 shadow-lg shadow-emerald-950/30"
+                  : "border-white/[0.08] light:border-slate-200 bg-slate-950/40 light:bg-slate-50 text-slate-400 light:text-slate-600 hover:border-white/[0.15] light:hover:border-slate-300"
               }
             `}
           >
@@ -328,33 +307,33 @@ export default function SettingsPage() {
                 )}
               </div>
               <p className="mt-1.5 text-xs text-slate-400 light:text-slate-500 leading-relaxed">
-                Obsidian slate palette with luminous emerald jewel accents. Ideal for low-light environments.
+                Obsidian slate palette with luminous emerald accents.
               </p>
             </div>
           </button>
 
-          {/* Light Mode Card */}
+          {/* Light Mode */}
           <button
             type="button"
             onClick={() => setTheme("light")}
             className={`
               group
-              relative
               flex
               items-start
               gap-4
-              rounded-2xl
+              rounded-xl
               border
-              p-5
+              p-6
               text-left
               transition-all
               duration-200
               hover:scale-[1.01]
               active:scale-[0.99]
+              cursor-pointer
               ${
                 theme === "light"
-                  ? "border-emerald-500/60 bg-emerald-500/10 ring-2 ring-emerald-500/30 text-white light:text-slate-900 shadow-lg shadow-emerald-950/20"
-                  : "border-slate-800 light:border-slate-200 bg-slate-950/40 light:bg-slate-50 text-slate-400 light:text-slate-600 hover:border-slate-700 light:hover:border-slate-300"
+                  ? "border-emerald-500/60 bg-emerald-500/10 text-white light:text-slate-900 ring-2 ring-emerald-500/30 shadow-lg shadow-emerald-950/30"
+                  : "border-white/[0.08] light:border-slate-200 bg-slate-950/40 light:bg-slate-50 text-slate-400 light:text-slate-600 hover:border-white/[0.15] light:hover:border-slate-300"
               }
             `}
           >
@@ -406,29 +385,25 @@ export default function SettingsPage() {
       ===================================== */}
       <section
         className="
-          rounded-3xl
-          border
-          border-slate-800/80
-          light:border-slate-200
-          bg-slate-900/60
-          light:bg-white
-          p-6
-          sm:p-8
+          theme-card
+          rounded-xl
+          p-8
+          sm:p-10
           shadow-xl
-          backdrop-blur-md
+          backdrop-blur-xl
           flex
           flex-col
-          gap-6
+          gap-7
         "
       >
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              <Bell className="h-4.5 w-4.5" />
+          <div className="flex items-center gap-3.5">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400">
+              <Bell className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white light:text-slate-900">
-                Notifications & Background Alarms
+              <h2 className="text-lg font-bold text-white light:text-slate-900">
+                Notifications & Alerts
               </h2>
               <p className="text-xs text-slate-400 light:text-slate-500">
                 Configure farming alerts and background execution.
@@ -436,18 +411,17 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          {/* OS Permission Badge */}
-          <div className="flex items-center gap-2">
-            <div
+          <div className="flex items-center gap-2.5">
+            <span
               className={`
                 inline-flex
                 items-center
                 gap-1.5
-                rounded-full
-                px-3
-                py-1
+                rounded-xl
+                px-3.5
+                py-1.5
                 text-xs
-                font-semibold
+                font-bold
                 border
                 ${
                   permissionState === "granted"
@@ -469,27 +443,13 @@ export default function SettingsPage() {
                   <span>Permission Needed</span>
                 </>
               )}
-            </div>
+            </span>
 
             {permissionState !== "granted" && (
               <button
                 type="button"
                 onClick={handleRequestPermission}
-                className="
-                  rounded-xl
-                  border
-                  border-emerald-500/40
-                  bg-emerald-500
-                  px-3.5
-                  py-1
-                  text-xs
-                  font-bold
-                  text-slate-950
-                  hover:bg-emerald-400
-                  transition-all
-                  shadow-sm
-                  active:scale-95
-                "
+                className="rounded-xl border border-emerald-400/40 bg-emerald-500 px-4 py-1.5 text-xs font-bold text-slate-950 hover:bg-emerald-400 transition-all shadow-sm active:scale-95 cursor-pointer"
               >
                 Grant
               </button>
@@ -497,14 +457,14 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* Desktop Tray Mode Toggle */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-2xl border border-slate-800 light:border-slate-200 bg-slate-950/40 light:bg-slate-50/80 p-5">
-          <div className="flex items-start gap-3.5">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-800/80 light:bg-slate-200 text-emerald-400 border border-slate-700/50">
-              <Settings className="h-5 w-5" />
+        {/* PC System Tray Mode Row */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-white/[0.08] bg-slate-950/40 light:bg-slate-50/80 p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-800 light:bg-slate-200 text-emerald-400 border border-slate-700/50">
+              <Monitor className="h-5 w-5" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <h3 className="text-sm font-bold text-white light:text-slate-900">
                   PC System Tray Mode
                 </h3>
@@ -555,12 +515,12 @@ export default function SettingsPage() {
           </button>
         </div>
 
-        {/* 3 Event Filter Rows */}
-        <div className="grid gap-3.5 sm:grid-cols-3">
+        {/* 3 Event Filter Cards */}
+        <div className="grid gap-4 sm:grid-cols-3">
           {/* Water Needed */}
-          <div className="flex items-center justify-between rounded-2xl border border-slate-800/90 light:border-slate-200 bg-slate-950/30 light:bg-slate-50/60 p-4 transition-all hover:border-slate-700">
+          <div className="flex items-center justify-between rounded-xl border border-white/[0.08] bg-slate-950/30 light:bg-slate-50/60 p-5 transition-all hover:border-white/[0.15]">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sky-500/10 text-sky-400 border border-sky-500/20">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20">
                 <Droplets className="h-4.5 w-4.5" />
               </div>
               <div>
@@ -608,9 +568,9 @@ export default function SettingsPage() {
           </div>
 
           {/* Harvest Ready */}
-          <div className="flex items-center justify-between rounded-2xl border border-slate-800/90 light:border-slate-200 bg-slate-950/30 light:bg-slate-50/60 p-4 transition-all hover:border-slate-700">
+          <div className="flex items-center justify-between rounded-xl border border-white/[0.08] bg-slate-950/30 light:bg-slate-50/60 p-5 transition-all hover:border-white/[0.15]">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
                 <Sparkles className="h-4.5 w-4.5" />
               </div>
               <div>
@@ -658,9 +618,9 @@ export default function SettingsPage() {
           </div>
 
           {/* Wilt Warnings */}
-          <div className="flex items-center justify-between rounded-2xl border border-slate-800/90 light:border-slate-200 bg-slate-950/30 light:bg-slate-50/60 p-4 transition-all hover:border-slate-700">
+          <div className="flex items-center justify-between rounded-xl border border-white/[0.08] bg-slate-950/30 light:bg-slate-50/60 p-5 transition-all hover:border-white/[0.15]">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/20">
                 <ShieldAlert className="h-4.5 w-4.5" />
               </div>
               <div>
@@ -708,16 +668,20 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* Test Notification Action Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.04] p-5">
-          <div>
-            <h3 className="text-sm font-bold text-white light:text-slate-900 flex items-center gap-2">
-              <Activity className="h-4 w-4 text-emerald-400" />
-              Test Device Notification
-            </h3>
-            <p className="mt-1 text-xs text-slate-400 light:text-slate-500 max-w-lg leading-relaxed">
-              Dispatch an instant test notification to check your Windows desktop banner or Android notification drawer.
-            </p>
+        {/* Test Notification Row */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04] p-6">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <Activity className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-white light:text-slate-900">
+                Test Notification Alert
+              </h3>
+              <p className="mt-0.5 text-xs text-slate-400 light:text-slate-500 leading-relaxed max-w-lg">
+                Dispatch an instant test notification to check your taskbar alerts and background alarms.
+              </p>
+            </div>
           </div>
 
           <button
@@ -733,8 +697,8 @@ export default function SettingsPage() {
               border
               border-emerald-400/40
               bg-emerald-500
-              px-5
-              py-2.5
+              px-6
+              py-3
               text-xs
               font-bold
               text-slate-950
@@ -746,32 +710,16 @@ export default function SettingsPage() {
               disabled:opacity-60
               disabled:cursor-not-allowed
               shrink-0
+              cursor-pointer
             "
           >
-            <Bell className={`h-3.5 w-3.5 ${isSendingTest ? "animate-pulse" : ""}`} />
-            {isSendingTest ? "Sending Test..." : "Send Test Notification"}
+            <Bell className={`h-4 w-4 ${isSendingTest ? "animate-pulse" : ""}`} />
+            <span>{isSendingTest ? "Sending Test..." : "Send Test Notification"}</span>
           </button>
         </div>
 
         {testNotificationStatus && (
-          <div
-            className={`
-              rounded-xl
-              border
-              px-4
-              py-3
-              text-xs
-              font-medium
-              flex
-              items-center
-              gap-2.5
-              ${
-                testNotificationStatus.includes("dispatched") || testNotificationStatus.includes("granted")
-                  ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
-                  : "border-amber-500/30 bg-amber-500/10 text-amber-300"
-              }
-            `}
-          >
+          <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-3.5 text-xs font-medium text-emerald-300 flex items-center gap-2.5">
             <span className="text-sm">ℹ️</span>
             <span>{testNotificationStatus}</span>
           </div>
@@ -783,55 +731,36 @@ export default function SettingsPage() {
       ===================================== */}
       <section
         className="
-          rounded-3xl
-          border
-          border-slate-800/80
-          light:border-slate-200
-          bg-slate-900/60
-          light:bg-white
-          p-6
-          sm:p-8
+          theme-card
+          rounded-xl
+          p-8
+          sm:p-10
           shadow-xl
-          backdrop-blur-md
+          backdrop-blur-xl
           flex
           flex-col
-          gap-6
+          gap-7
         "
       >
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            <Download className="h-4.5 w-4.5" />
+        <div className="flex items-center gap-3.5">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400">
+            <Database className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-white light:text-slate-900">
+            <h2 className="text-lg font-bold text-white light:text-slate-900">
               Data Management & Backups
             </h2>
             <p className="text-xs text-slate-400 light:text-slate-500">
-              Export, import, and manage your local characters, favorites, and farming logs.
+              Export, import, and backup your local characters, favorites, and farming logs.
             </p>
           </div>
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
           {/* Export Card */}
-          <div
-            className="
-              flex
-              flex-col
-              justify-between
-              rounded-2xl
-              border
-              border-emerald-500/20
-              bg-emerald-500/[0.04]
-              p-5
-              transition-all
-              duration-200
-              hover:border-emerald-500/40
-              hover:bg-emerald-500/[0.07]
-            "
-          >
+          <div className="flex flex-col justify-between rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04] p-6 transition-all hover:border-emerald-500/40">
             <div>
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                 <Download className="h-5 w-5" />
               </div>
 
@@ -847,56 +776,17 @@ export default function SettingsPage() {
             <button
               type="button"
               onClick={exportBerryMasterData}
-              className="
-                mt-5
-                flex
-                w-full
-                items-center
-                justify-center
-                gap-2
-                rounded-xl
-                border
-                border-emerald-400/30
-                bg-emerald-500/20
-                px-4
-                py-2.5
-                text-xs
-                font-bold
-                text-emerald-300
-                transition-all
-                hover:bg-emerald-500
-                hover:text-slate-950
-                hover:shadow-md
-                hover:shadow-emerald-500/20
-                active:scale-[0.98]
-              "
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-500/20 px-4 py-3 text-xs font-bold text-emerald-300 transition-all hover:bg-emerald-500 hover:text-slate-950 hover:shadow-md hover:shadow-emerald-500/20 active:scale-[0.98] cursor-pointer"
             >
-              <Download className="h-3.5 w-3.5" />
+              <Download className="h-4 w-4" />
               Download Backup
             </button>
           </div>
 
           {/* Import Card */}
-          <div
-            className="
-              flex
-              flex-col
-              justify-between
-              rounded-2xl
-              border
-              border-slate-800
-              light:border-slate-200
-              bg-slate-950/40
-              light:bg-slate-50
-              p-5
-              transition-all
-              duration-200
-              hover:border-slate-700
-              light:hover:border-slate-300
-            "
-          >
+          <div className="flex flex-col justify-between rounded-xl border border-white/[0.08] bg-slate-950/40 light:bg-slate-50 p-6 transition-all hover:border-white/[0.15]">
             <div>
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-800 light:bg-slate-200 text-slate-300 light:text-slate-700 border border-slate-700/50">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-800 light:bg-slate-200 text-slate-300 light:text-slate-700 border border-slate-700/50">
                 <Upload className="h-5 w-5" />
               </div>
 
@@ -912,60 +802,22 @@ export default function SettingsPage() {
             <button
               type="button"
               onClick={handleImportClick}
-              className="
-                mt-5
-                flex
-                w-full
-                items-center
-                justify-center
-                gap-2
-                rounded-xl
-                border
-                border-slate-700
-                light:border-slate-300
-                bg-slate-800/80
-                light:bg-slate-200/80
-                px-4
-                py-2.5
-                text-xs
-                font-bold
-                text-slate-200
-                light:text-slate-800
-                transition-all
-                hover:bg-slate-700
-                light:hover:bg-slate-300
-                active:scale-[0.98]
-              "
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-800/80 px-4 py-3 text-xs font-bold text-slate-200 hover:bg-slate-700 hover:text-white transition-all active:scale-[0.98] cursor-pointer"
             >
-              <Upload className="h-3.5 w-3.5" />
+              <Upload className="h-4 w-4" />
               Restore Backup
             </button>
           </div>
 
           {/* Clear Activity Card */}
-          <div
-            className="
-              flex
-              flex-col
-              justify-between
-              rounded-2xl
-              border
-              border-rose-500/20
-              bg-rose-500/[0.03]
-              p-5
-              transition-all
-              duration-200
-              hover:border-rose-500/40
-              hover:bg-rose-500/[0.06]
-            "
-          >
+          <div className="flex flex-col justify-between rounded-xl border border-rose-500/20 bg-rose-500/[0.03] p-6 transition-all hover:border-rose-500/40">
             <div>
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20">
                 <Trash2 className="h-5 w-5" />
               </div>
 
               <h3 className="mt-4 text-sm font-bold text-rose-400">
-                Clear Activity History
+                Clear Activity
               </h3>
 
               <p className="mt-1 text-xs text-slate-400 light:text-slate-500 leading-relaxed">
@@ -976,32 +828,10 @@ export default function SettingsPage() {
             <button
               type="button"
               onClick={() => setIsClearActivitiesOpen(true)}
-              className="
-                mt-5
-                flex
-                w-full
-                items-center
-                justify-center
-                gap-2
-                rounded-xl
-                border
-                border-rose-500/30
-                bg-rose-500/10
-                px-4
-                py-2.5
-                text-xs
-                font-bold
-                text-rose-300
-                transition-all
-                hover:bg-rose-500
-                hover:text-white
-                hover:shadow-md
-                hover:shadow-rose-500/20
-                active:scale-[0.98]
-              "
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-xs font-bold text-rose-300 transition-all hover:bg-rose-500 hover:text-white hover:shadow-md hover:shadow-rose-500/20 active:scale-[0.98] cursor-pointer"
             >
-              <Trash2 className="h-3.5 w-3.5" />
-              Clear History
+              <Trash2 className="h-4 w-4" />
+              Clear Logs
             </button>
           </div>
         </div>
@@ -1016,19 +846,11 @@ export default function SettingsPage() {
 
         {importMessage && (
           <div
-            className={`
-              rounded-xl
-              border
-              px-4
-              py-3
-              text-xs
-              font-medium
-              ${
-                importError
-                  ? "border-rose-500/30 bg-rose-500/10 text-rose-400"
-                  : "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
-              }
-            `}
+            className={`rounded-xl border px-5 py-3.5 text-xs font-medium ${
+              importError
+                ? "border-rose-500/30 bg-rose-500/10 text-rose-400"
+                : "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+            }`}
           >
             {importMessage}
           </div>
@@ -1036,32 +858,28 @@ export default function SettingsPage() {
       </section>
 
       {/* =====================================
-          4. App Updates & Release Notes
+          4. App Updates & Releases
       ===================================== */}
       <section
         className="
-          rounded-3xl
-          border
-          border-slate-800/80
-          light:border-slate-200
-          bg-slate-900/60
-          light:bg-white
-          p-6
-          sm:p-8
+          theme-card
+          rounded-xl
+          p-8
+          sm:p-10
           shadow-xl
-          backdrop-blur-md
+          backdrop-blur-xl
           flex
           flex-col
-          gap-6
+          gap-7
         "
       >
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-500/10 text-sky-400 border border-sky-500/20">
-              <RefreshCw className="h-4.5 w-4.5" />
+          <div className="flex items-center gap-3.5">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-sky-500/25 bg-sky-500/10 text-sky-400">
+              <RefreshCw className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white light:text-slate-900">
+              <h2 className="text-lg font-bold text-white light:text-slate-900">
                 App Updates & Releases
               </h2>
               <p className="text-xs text-slate-400 light:text-slate-500">
@@ -1070,12 +888,12 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <span className="rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 font-mono text-xs font-bold text-sky-400">
-            {CURRENT_APP_VERSION}
+          <span className="rounded-full border border-sky-500/30 bg-sky-500/10 px-3.5 py-1 font-mono text-xs font-bold text-sky-400">
+            v{CURRENT_APP_VERSION}
           </span>
         </div>
 
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between rounded-2xl border border-slate-800 light:border-slate-200 bg-slate-950/40 light:bg-slate-50/80 p-5">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-white/[0.08] light:border-slate-200 bg-slate-950/40 light:bg-slate-50/80 p-6">
           <div>
             <h3 className="text-sm font-bold text-white light:text-slate-900">
               Official GitHub Releases
@@ -1085,175 +903,71 @@ export default function SettingsPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5 flex-wrap shrink-0">
+          <div className="flex items-center gap-3 flex-wrap shrink-0">
             <button
               type="button"
-              onClick={() => openExternalUrl("https://github.com/abhijeet-mishra34/BerryMaster/releases")}
-              className="
-                inline-flex
-                items-center
-                justify-center
-                gap-1.5
-                rounded-xl
-                border
-                border-slate-700
-                bg-slate-800/80
-                px-4
-                py-2.5
-                text-xs
-                font-bold
-                text-slate-200
-                hover:bg-slate-700
-                hover:text-white
-                transition-all
-                cursor-pointer
-                active:scale-95
-              "
+              onClick={() =>
+                openExternalUrl(
+                  "https://github.com/abhijeet-mishra34/BerryMaster/releases"
+                )
+              }
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-700 light:border-slate-300 bg-slate-800/80 light:bg-white px-5 py-3 text-xs font-bold text-slate-200 light:text-slate-800 hover:bg-slate-700 light:hover:bg-slate-100 hover:text-white light:hover:text-slate-900 transition-all cursor-pointer active:scale-95 shadow-xs"
             >
-              <ExternalLink className="h-3.5 w-3.5" />
+              <ExternalLink className="h-4 w-4" />
               Releases Page
             </button>
-
             <button
               type="button"
               disabled={isCheckingUpdate}
               onClick={handleCheckUpdate}
-              className="
-                inline-flex
-                items-center
-                justify-center
-                gap-2
-                rounded-xl
-                border
-                border-sky-500/40
-                bg-sky-500/20
-                px-5
-                py-2.5
-                text-xs
-                font-bold
-                text-sky-300
-                light:text-sky-700
-                transition-all
-                hover:bg-sky-500
-                hover:text-slate-950
-                hover:shadow-md
-                hover:shadow-sky-500/20
-                active:scale-95
-                disabled:opacity-60
-                disabled:cursor-not-allowed
-                cursor-pointer
-              "
+              className="inline-flex items-center gap-2 rounded-xl border border-sky-400/30 light:border-sky-300 bg-sky-500/20 light:bg-sky-100 px-5 py-2.5 text-xs font-bold text-sky-300 light:text-sky-800 hover:bg-sky-500 hover:text-slate-950 light:hover:text-slate-950 transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
             >
-              <RefreshCw className={`h-3.5 w-3.5 ${isCheckingUpdate ? "animate-spin" : ""}`} />
-              {isCheckingUpdate ? "Checking Releases..." : "Check for Updates"}
+              <RefreshCw className={`h-4 w-4 ${isCheckingUpdate ? "animate-spin" : ""}`} />
+              <span>{isCheckingUpdate ? "Checking..." : "Check for Updates"}</span>
             </button>
           </div>
         </div>
 
         {updateResult && (
           <div
-            className={`
-              rounded-2xl
-              border
-              p-5
-              flex
-              flex-col
-              gap-4
-              ${
-                updateResult.hasUpdate
-                  ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
-                  : "border-slate-800 light:border-slate-200 bg-slate-950/60 light:bg-slate-100 text-slate-300 light:text-slate-700"
-              }
-            `}
+            className={`rounded-xl border p-6 ${
+              updateResult.hasUpdate
+                ? "border-emerald-500/30 bg-emerald-500/10"
+                : updateResult.error
+                ? "border-rose-500/30 bg-rose-500/10"
+                : "border-sky-500/30 bg-sky-500/10"
+            }`}
           >
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">
-                  {updateResult.hasUpdate ? "🎉" : "✅"}
-                </span>
-                <div>
-                  <h4 className="text-sm font-bold text-white light:text-slate-900">
-                    {updateResult.message}
-                  </h4>
-                  {updateResult.release && (
-                    <p className="text-xs text-slate-400 light:text-slate-500 mt-0.5">
-                      Latest Release: <span className="font-mono font-semibold text-emerald-400">{updateResult.latestVersion}</span>
-                    </p>
-                  )}
-                </div>
+              <div>
+                <p className="text-sm font-bold text-white light:text-slate-900">
+                  {updateResult.error
+                    ? "Update Check Failed"
+                    : updateResult.hasUpdate
+                    ? `New Version Available: v${updateResult.latestVersion}`
+                    : "You are on the latest version"}
+                </p>
+                <p className="mt-1 text-xs text-slate-400 light:text-slate-600">
+                  {updateResult.error ||
+                    (updateResult.hasUpdate
+                      ? "A new release is available on GitHub."
+                      : `BerryMaster v${CURRENT_APP_VERSION} is up to date.`)}
+                </p>
               </div>
 
               {updateResult.release?.htmlUrl && (
                 <button
                   type="button"
-                  onClick={() => openExternalUrl(updateResult.release?.htmlUrl || "")}
-                  className="
-                    inline-flex
-                    items-center
-                    justify-center
-                    gap-1.5
-                    rounded-xl
-                    border
-                    border-emerald-400/40
-                    bg-emerald-500
-                    px-4
-                    py-2
-                    text-xs
-                    font-bold
-                    text-slate-950
-                    hover:bg-emerald-400
-                    transition-all
-                    shadow-sm
-                    active:scale-95
-                    shrink-0
-                    cursor-pointer
-                  "
+                  onClick={() =>
+                    openExternalUrl(updateResult.release?.htmlUrl || "")
+                  }
+                  className="inline-flex items-center gap-2 rounded-xl border border-emerald-400/40 bg-emerald-500 px-5 py-2.5 text-xs font-bold text-slate-950 hover:bg-emerald-400 transition-all shadow-sm active:scale-95 cursor-pointer"
                 >
-                  <ExternalLink className="h-3.5 w-3.5" />
+                  <ExternalLink className="h-4 w-4" />
                   View Release Notes
                 </button>
               )}
             </div>
-
-            {/* Direct 1-Click Asset Downloads if available */}
-            {updateResult.release?.assets && updateResult.release.assets.length > 0 && (
-              <div className="pt-3 border-t border-emerald-500/20 flex flex-wrap items-center gap-2.5">
-                <span className="text-xs font-semibold text-emerald-400">Direct Downloads:</span>
-                {updateResult.release.assets.map((asset) => (
-                  <button
-                    key={asset.downloadUrl}
-                    type="button"
-                    onClick={() => openExternalUrl(asset.downloadUrl)}
-                    className="
-                      inline-flex
-                      items-center
-                      gap-1.5
-                      rounded-lg
-                      border
-                      border-emerald-500/30
-                      bg-slate-950/60
-                      px-3
-                      py-1.5
-                      text-xs
-                      font-mono
-                      text-emerald-300
-                      hover:bg-emerald-500/20
-                      hover:border-emerald-400
-                      transition-all
-                      cursor-pointer
-                    "
-                  >
-                    <Download className="h-3 w-3" />
-                    <span>{asset.name}</span>
-                    {asset.size > 0 && (
-                      <span className="text-[10px] opacity-70">
-                        ({(asset.size / (1024 * 1024)).toFixed(1)} MB)
-                      </span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
         )}
       </section>
@@ -1263,21 +977,11 @@ export default function SettingsPage() {
       ===================================== */}
       <div className="flex flex-col gap-6">
         {/* Developer Mode Card */}
-        <section
-          className="
-            rounded-3xl
-            border
-            border-amber-500/20
-            bg-amber-500/[0.03]
-            p-6
-            sm:p-7
-            backdrop-blur-md
-          "
-        >
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="flex items-start gap-3.5">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                <Wrench className="h-4.5 w-4.5" />
+        <section className="theme-card rounded-xl border border-amber-500/20 light:border-amber-200 bg-amber-500/[0.03] light:bg-amber-50/40 p-8 sm:p-9 backdrop-blur-xl">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+            <div className="flex items-start gap-4">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                <Wrench className="h-5 w-5" />
               </div>
               <div>
                 <h2 className="text-base font-bold text-white light:text-slate-900">
@@ -1331,27 +1035,13 @@ export default function SettingsPage() {
         </section>
 
         {/* Danger Zone Card */}
-        <section
-          className="
-            rounded-3xl
-            border
-            border-rose-500/30
-            bg-rose-500/[0.03]
-            p-6
-            sm:p-8
-            shadow-xl
-            backdrop-blur-md
-            flex
-            flex-col
-            gap-5
-          "
-        >
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20">
-              <ShieldAlert className="h-4.5 w-4.5" />
+        <section className="theme-card rounded-xl border border-rose-500/30 light:border-rose-200 bg-rose-500/[0.03] light:bg-rose-50/40 p-8 sm:p-10 shadow-xl backdrop-blur-xl flex flex-col gap-6">
+          <div className="flex items-center gap-3.5">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20">
+              <ShieldAlert className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-rose-400">
+              <h2 className="text-lg font-bold text-rose-400">
                 Danger Zone
               </h2>
               <p className="text-xs text-slate-400 light:text-slate-500">
@@ -1360,7 +1050,7 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-2xl border border-rose-500/20 bg-rose-500/[0.04] p-5">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-rose-500/20 bg-rose-500/[0.04] p-6">
             <div>
               <h3 className="text-sm font-bold text-white light:text-slate-900">
                 Reset BerryMaster Application
@@ -1373,30 +1063,9 @@ export default function SettingsPage() {
             <button
               type="button"
               onClick={() => setIsResetOpen(true)}
-              className="
-                inline-flex
-                items-center
-                justify-center
-                gap-2
-                rounded-xl
-                border
-                border-rose-500/40
-                bg-rose-500/20
-                px-5
-                py-2.5
-                text-xs
-                font-bold
-                text-rose-300
-                transition-all
-                hover:bg-rose-500
-                hover:text-white
-                hover:shadow-lg
-                hover:shadow-rose-500/20
-                active:scale-95
-                shrink-0
-              "
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-rose-500/40 bg-rose-500/20 px-6 py-3 text-xs font-bold text-rose-300 hover:bg-rose-500 hover:text-white transition-all shadow-lg hover:shadow-rose-500/25 active:scale-95 shrink-0 cursor-pointer"
             >
-              <ShieldAlert className="h-3.5 w-3.5" />
+              <ShieldAlert className="h-4 w-4" />
               Reset Everything
             </button>
           </div>

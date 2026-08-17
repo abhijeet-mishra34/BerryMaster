@@ -8,10 +8,11 @@ import {
   useLocation,
 } from "react-router-dom";
 
+import { UserPlus } from "lucide-react";
+
 import CharacterCard from "../components/characters/CharacterCard";
 import CharacterModal from "../components/characters/CharacterModal";
 import ConfirmDialog from "../components/ui/ConfirmDialog";
-import Button from "../components/ui/Button";
 import Modal from "../components/ui/Modal";
 
 import PlantBerrySelector from "../components/berries/PlantBerrySelector";
@@ -409,19 +410,12 @@ export default function CharactersPage() {
 
       <div
         className="
+          theme-hero
           overflow-hidden
-          rounded-3xl
-          border
-          border-white/[0.08]
-          bg-gradient-to-br
-          from-slate-900
-          via-slate-900/90
-          to-slate-950
+          rounded-xl
           shadow-xl
-          shadow-black/20
         "
       >
-
         <div
           className="
             flex
@@ -434,9 +428,7 @@ export default function CharactersPage() {
             lg:justify-between
           "
         >
-
           {/* Page Identity */}
-
           <div
             className="
               flex
@@ -444,7 +436,6 @@ export default function CharactersPage() {
               gap-4
             "
           >
-
             <div
               className="
                 flex
@@ -453,7 +444,7 @@ export default function CharactersPage() {
                 shrink-0
                 items-center
                 justify-center
-                rounded-2xl
+                rounded-xl
                 border
                 border-emerald-400/20
                 bg-emerald-500/10
@@ -465,138 +456,101 @@ export default function CharactersPage() {
               👤
             </div>
 
-
             <div>
-
-              <h1
-                className="
-                  text-3xl
-                  font-bold
-                  tracking-tight
-                  text-amber-600
-                "
-              >
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white light:text-slate-900">
                 Characters
               </h1>
-
-              <p
-                className="
-                  mt-1
-                  max-w-xl
-                  text-sm
-                  leading-relaxed
-                  text-slate-400
-                "
-              >
+              <p className="mt-1 max-w-xl text-xs sm:text-sm leading-relaxed text-slate-400 light:text-slate-600">
                 Manage and monitor your berry farming characters.
               </p>
-
             </div>
-
           </div>
-
 
           {/* Add Character */}
-
-          <Button
+          <button
+            type="button"
             onClick={openAddModal}
-          >
-            ➕ Add Character
-          </Button>
-
-        </div>
-
-
-        {/* Character Count */}
-
-        <div
-          className="
-            flex
-            items-center
-            gap-3
-            border-t
-            border-white/[0.08]
-            bg-white/[0.02]
-            px-6
-            py-4
-            sm:px-8
-          "
-        >
-
-          <div
             className="
-              flex
+              group
+              relative
+              inline-flex
               items-center
-              gap-2
+              justify-center
+              gap-2.5
               rounded-xl
               border
-              border-emerald-400/20
-              bg-emerald-500/10
-              px-3
-              py-2
+              border-emerald-400/40
+              bg-gradient-to-r
+              from-emerald-500
+              to-teal-500
+              px-6
+              py-3.5
+              text-sm
+              font-bold
+              text-slate-950
+              shadow-lg
+              shadow-emerald-500/25
+              transition-all
+              duration-200
+              hover:-translate-y-0.5
+              hover:from-emerald-400
+              hover:to-teal-400
+              hover:shadow-emerald-500/40
+              active:translate-y-0
+              cursor-pointer
             "
           >
+            <UserPlus className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
+            <span>Add Character</span>
+          </button>
+        </div>
 
-            <span className="text-sm">
-              👥
-            </span>
-
-            <span
-              className="
-                text-sm
-                font-bold
-                text-emerald-400
-              "
-            >
+        {/* Character Count */}
+        <div className="flex items-center gap-3 border-t border-slate-800 light:border-slate-200 bg-white/[0.02] light:bg-slate-50 px-8 py-4">
+          <div className="flex items-center gap-2 rounded-xl border border-emerald-400/20 bg-emerald-500/10 px-3.5 py-2">
+            <span className="text-sm">👥</span>
+            <span className="text-sm font-bold text-emerald-400 light:text-emerald-700">
               {characters.length}
             </span>
-
           </div>
 
-
-          <span
-            className="
-              text-sm
-              text-slate-500
-            "
-          >
+          <span className="text-xs sm:text-sm font-medium text-slate-400 light:text-slate-600">
             {characters.length === 1
               ? "character in your farming team"
               : "characters in your farming team"}
           </span>
-
         </div>
 
         {/* Keyboard Shortcut Hints */}
         {characters.length > 0 && (
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-1 border-t border-white/[0.05] bg-white/[0.01] px-6 py-2.5 sm:px-8">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
-              ⌨️ Shortcuts
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2.5 border-t border-slate-800 light:border-slate-200 bg-slate-950/50 light:bg-slate-100/80 px-6 py-3.5 sm:px-8">
+            <span className="flex items-center gap-1.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-amber-400 light:text-amber-700 mr-1">
+              <span className="text-sm">⌨️</span>
+              <span>Shortcuts:</span>
             </span>
             {[
-              { key: "N", label: "Add" },
+              { key: "N", label: "Add Character" },
               { key: "↑ ↓", label: "Navigate" },
               { key: "E", label: "Edit" },
               { key: "Del", label: "Delete" },
               { key: "W", label: "Water" },
               { key: "H", label: "Harvest" },
             ].map(({ key, label }) => (
-              <span key={key} className="flex items-center gap-1.5">
-                <kbd className="rounded border border-slate-700 bg-slate-800/70 px-1.5 py-0.5 font-mono text-[10px] font-bold text-slate-300">
+              <span key={key} className="flex items-center gap-2">
+                <kbd className="inline-flex min-w-[26px] h-6 sm:h-7 items-center justify-center rounded-lg border border-slate-700 light:border-slate-300 bg-slate-800/95 light:bg-white px-2.5 font-mono text-xs sm:text-[13px] font-bold text-emerald-400 light:text-emerald-700 shadow-xs">
                   {key}
                 </kbd>
-                <span className="text-[10px] text-slate-500">{label}</span>
+                <span className="text-xs sm:text-sm font-medium text-slate-200 light:text-slate-800">{label}</span>
               </span>
             ))}
           </div>
         )}
-
       </div>
-
 
       {/* =====================================
           Character Content
       ===================================== */}
+      <div className="mt-8">
 
       {characters.length === 0 ? (
 
@@ -607,7 +561,7 @@ export default function CharactersPage() {
             flex-col
             items-center
             justify-center
-            rounded-3xl
+            rounded-xl
             border
             border-dashed
             border-slate-700
@@ -627,7 +581,7 @@ export default function CharactersPage() {
               w-24
               items-center
               justify-center
-              rounded-3xl
+              rounded-xl
               border
               border-emerald-400/20
               bg-emerald-500/10
@@ -668,13 +622,42 @@ export default function CharactersPage() {
               mt-7
             "
           >
-
-            <Button
+            <button
+              type="button"
               onClick={openAddModal}
+              className="
+                group
+                relative
+                inline-flex
+                items-center
+                justify-center
+                gap-3
+                rounded-xl
+                border
+                border-emerald-400/40
+                bg-gradient-to-r
+                from-emerald-500
+                to-teal-500
+                px-8
+                py-4
+                text-base
+                font-bold
+                text-slate-950
+                shadow-xl
+                shadow-emerald-500/30
+                transition-all
+                duration-300
+                hover:-translate-y-1
+                hover:from-emerald-400
+                hover:to-teal-400
+                hover:shadow-emerald-500/50
+                active:translate-y-0
+                cursor-pointer
+              "
             >
-              ➕ Add Your First Character
-            </Button>
-
+              <UserPlus className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
+              <span>Add Your First Character</span>
+            </button>
           </div>
 
         </div>
@@ -763,6 +746,7 @@ export default function CharactersPage() {
         </div>
 
       )}
+      </div>
 
 
       {/* =====================================
@@ -833,7 +817,7 @@ export default function CharactersPage() {
         isOpen={
           plantCharacter !== null
         }
-
+        maxWidth="5xl"
         title={
           plantCharacter?.plantedBerryId
             ? "🔄 Change Berry"

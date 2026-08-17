@@ -29,20 +29,20 @@ export default function ConfirmDialog({
       onClose={onCancel}
     >
       <div className="space-y-6">
-        <p className="text-slate-400">
+        <p className="text-slate-400 light:text-slate-600">
           {message}
         </p>
 
         {itemName && (
-          <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4">
-            <p className="text-center text-lg font-semibold text-white">
+          <div className="rounded-xl border border-red-500/30 light:border-red-200 bg-red-500/10 light:bg-red-50 p-4">
+            <p className="text-center text-lg font-semibold text-white light:text-slate-900">
               🌿 {itemName}
             </p>
           </div>
         )}
 
-        <div className="rounded-lg border border-yellow-500/20 bg-yellow-500/10 p-3">
-          <p className="text-sm text-yellow-300">
+        <div className="rounded-lg border border-yellow-500/20 light:border-yellow-200 bg-yellow-500/10 light:bg-yellow-50 p-3">
+          <p className="text-sm text-yellow-300 light:text-yellow-800">
             ⚠ This action cannot be undone.
           </p>
         </div>

@@ -70,40 +70,41 @@ export default function Dashboard() {
     <div className="flex flex-col gap-10">
       {/* Greeting Hero Banner */}
       <div
-        className="relative overflow-hidden rounded-3xl border border-white/[0.07] p-6"
+        className="theme-hero relative overflow-hidden rounded-xl"
         style={{
-          background: `linear-gradient(135deg, rgba(15,23,42,0.9) 0%, rgba(2,6,23,0.95) 60%, rgba(5,46,22,0.4) 100%)`,
-          boxShadow: `inset 0 1px 0 rgba(255,255,255,0.06), 0 20px 60px -20px rgba(16,185,129,0.15)`,
+          padding: "0.875rem 1.25rem",
         }}
       >
         {/* Ambient orb */}
-        <div className="pointer-events-none absolute -top-10 -right-10 h-56 w-56 rounded-full bg-emerald-500/10 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-10 left-20 h-32 w-32 rounded-full bg-teal-500/8 blur-2xl" />
-        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent" />
+        <div className="pointer-events-none absolute -top-8 -right-8 h-28 w-28 rounded-full bg-emerald-500/10 blur-xl" />
+        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent" />
 
-        <div className="relative z-10 space-y-2">
-          <h1 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
+        <div className="relative z-10 space-y-0.5">
+          <h1 className="text-lg sm:text-xl font-bold tracking-tight text-white light:text-slate-900">
             {greetingTitle}
           </h1>
-          <p className="max-w-xl text-sm text-slate-400">
+          <p className="max-w-xl text-xs text-slate-400 light:text-slate-600 leading-normal">
             {greetingSubtitle}
           </p>
         </div>
       </div>
 
       {characters.length === 0 && (
-        <div className="flex items-center justify-between gap-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.05] px-5 py-4">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">🌱</span>
+        <div
+          className="flex items-center justify-between gap-4 rounded-xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-500/[0.05] light:bg-emerald-50/70 shadow-xs"
+          style={{ padding: "1.75rem 2.25rem" }}
+        >
+          <div className="flex items-center gap-4">
+            <span className="text-3xl">🌱</span>
             <div>
-              <p className="text-sm font-bold text-white">Ready to start farming?</p>
-              <p className="text-xs text-slate-400">Add your first character to begin tracking your berry farm.</p>
+              <p className="text-base font-bold text-white light:text-slate-900">Ready to start farming?</p>
+              <p className="text-xs sm:text-sm text-slate-400 light:text-slate-600">Add your first character to begin tracking your berry farm.</p>
             </div>
           </div>
           <button
             type="button"
             onClick={() => navigate('/characters')}
-            className="shrink-0 rounded-xl border border-emerald-500/30 bg-emerald-500/20 px-4 py-2 text-xs font-bold text-emerald-400 transition-all hover:bg-emerald-500 hover:text-slate-950"
+            className="shrink-0 rounded-xl border border-emerald-500/30 bg-emerald-500/20 light:bg-emerald-500 light:text-white px-5 py-2.5 text-sm font-bold text-emerald-400 light:text-white transition-all hover:bg-emerald-500 hover:text-slate-950 light:hover:bg-emerald-600 cursor-pointer shadow-xs"
           >
             Add Character →
           </button>
@@ -130,10 +131,23 @@ export default function Dashboard() {
           </div>
 
           {/* Bottom Row: 2 cards centered */}
-          <div className="grid gap-6 sm:grid-cols-2">
-            {bottomStats.map((stat) => (
-              <StatCard key={stat.title} title={stat.title} value={stat.value} icon={stat.icon} color={stat.color} />
-            ))}
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-6">
+            <div className="lg:col-span-2 lg:col-start-2">
+              <StatCard
+                title={bottomStats[0].title}
+                value={bottomStats[0].value}
+                icon={bottomStats[0].icon}
+                color={bottomStats[0].color}
+              />
+            </div>
+            <div className="lg:col-span-2">
+              <StatCard
+                title={bottomStats[1].title}
+                value={bottomStats[1].value}
+                icon={bottomStats[1].icon}
+                color={bottomStats[1].color}
+              />
+            </div>
           </div>
         </div>
       </Section>

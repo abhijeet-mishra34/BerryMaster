@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import berryMasterIcon from "../../assets/brand/berrymaster-icon.png";
+import { CURRENT_APP_VERSION } from "../../services/updateService";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -83,7 +84,9 @@ export default function Sidebar({
         flex-col
         border-r
         border-slate-800/80
+        light:border-slate-200
         bg-slate-950/90
+        light:bg-white/95
         backdrop-blur-md
         transition-all
         duration-300
@@ -98,6 +101,7 @@ export default function Sidebar({
           items-center
           border-b
           border-slate-800/80
+          light:border-slate-200
           px-4
           ${isOpen ? "justify-between" : "justify-center"}
         `}
@@ -110,14 +114,14 @@ export default function Sidebar({
                 alt="BerryMaster logo"
                 className="h-9 w-9 object-contain drop-shadow-[0_2px_10px_rgba(225,29,72,0.45)] transition-transform duration-200 hover:scale-110"
               />
-              <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-slate-950" />
+              <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-slate-950 light:ring-white" />
             </div>
 
             <div className="flex flex-col">
-              <h1 className="text-lg font-bold tracking-tight text-white flex items-center gap-1.5">
-                Berry<span className="text-emerald-400">Master</span>
+              <h1 className="text-lg font-bold tracking-tight text-white light:text-slate-900 flex items-center gap-1.5">
+                Berry<span className="text-emerald-400 light:text-emerald-600">Master</span>
               </h1>
-              <span className="text-[10px] font-medium tracking-wider text-slate-400 uppercase">
+              <span className="text-[10px] font-medium tracking-wider text-slate-400 light:text-slate-500 uppercase">
                 PokeMMO Assistant
               </span>
             </div>
@@ -129,7 +133,7 @@ export default function Sidebar({
               alt="BerryMaster logo"
               className="h-9 w-9 object-contain drop-shadow-[0_2px_10px_rgba(225,29,72,0.45)] transition-transform duration-200 hover:scale-110"
             />
-            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-slate-950" />
+            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-slate-950 light:ring-white" />
           </div>
         )}
 
@@ -145,13 +149,20 @@ export default function Sidebar({
             rounded-lg
             border
             border-slate-800
+            light:border-slate-200
             bg-slate-900/60
+            light:bg-slate-100
             text-slate-400
+            light:text-slate-600
             transition-all
             duration-200
             hover:border-slate-700
+            light:hover:border-slate-300
             hover:bg-slate-800
+            light:hover:bg-slate-200
             hover:text-white
+            light:hover:text-slate-900
+            cursor-pointer
           "
           aria-label="Toggle sidebar"
         >
@@ -183,8 +194,8 @@ export default function Sidebar({
                   ${isOpen ? "gap-3.5 px-3.5" : "justify-center px-2"}
                   ${
                     isActive
-                      ? "bg-emerald-500/15 text-emerald-300 font-semibold shadow-inner border border-emerald-500/20"
-                      : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
+                      ? "bg-emerald-500/15 light:bg-emerald-50 text-emerald-300 light:text-emerald-800 font-semibold shadow-inner border border-emerald-500/20 light:border-emerald-200"
+                      : "text-slate-400 light:text-slate-600 hover:bg-slate-800/60 light:hover:bg-slate-100 hover:text-slate-200 light:hover:text-slate-900"
                   }
                 `
               }
@@ -203,7 +214,7 @@ export default function Sidebar({
                       transition-transform
                       duration-200
                       group-hover:scale-110
-                      ${isActive ? "text-emerald-400" : "text-slate-400 group-hover:text-slate-200"}
+                      ${isActive ? "text-emerald-400 light:text-emerald-600" : "text-slate-400 light:text-slate-500 group-hover:text-slate-200 light:group-hover:text-slate-900"}
                     `}
                   />
 
@@ -219,14 +230,14 @@ export default function Sidebar({
 
       {/* Sidebar Footer */}
       {isOpen && (
-        <div className="p-3 border-t border-slate-800/80">
-          <div className="rounded-xl border border-emerald-500/20 bg-emerald-950/20 p-3 flex items-center gap-3">
+        <div className="p-3 border-t border-slate-800/80 light:border-slate-200">
+          <div className="rounded-xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-950/20 light:bg-emerald-50/70 p-3 flex items-center gap-3">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400">
               <Sparkles className="h-4 w-4" />
             </div>
             <div className="flex flex-col">
-              <span className="text-xs font-semibold text-slate-200">v0.1.0 Ready</span>
-              <span className="text-[10px] text-emerald-400/80">All systems online</span>
+              <span className="text-xs font-semibold text-slate-200 light:text-slate-800">v{CURRENT_APP_VERSION} Ready</span>
+              <span className="text-[10px] text-emerald-400/80 light:text-emerald-700">All systems online</span>
             </div>
           </div>
         </div>

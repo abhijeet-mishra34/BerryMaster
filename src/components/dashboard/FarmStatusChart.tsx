@@ -123,8 +123,7 @@ export default function FarmStatusChart({
       {/* ================================ */}
 
       <div className="w-full max-w-[320px] space-y-3">
-
-        <h3 className="mb-5 text-sm font-semibold tracking-widest text-slate-400 uppercase">
+        <h3 className="mb-5 text-sm font-semibold tracking-widest text-slate-400 light:text-slate-500 uppercase">
           Status Breakdown
         </h3>
 
@@ -138,19 +137,23 @@ export default function FarmStatusChart({
               rounded-xl
               border
               border-slate-800
+              light:border-slate-200
               bg-slate-900/60
+              light:bg-slate-50
               px-4
               py-3
               transition-all
               duration-200
               hover:border-slate-600
+              light:hover:border-slate-300
               hover:bg-slate-800/70
+              light:hover:bg-slate-100
+              shadow-xs
             "
           >
             <div className="flex items-center gap-3">
-
               <span
-                className="h-3 w-3 rounded-full"
+                className="h-3 w-3 rounded-full shrink-0"
                 style={{
                   backgroundColor: item.color,
                   boxShadow: `0 0 8px ${item.color}`,
@@ -161,7 +164,7 @@ export default function FarmStatusChart({
                 {item.icon}
               </span>
 
-              <span className="text-sm font-medium text-slate-300">
+              <span className="text-sm font-medium text-slate-300 light:text-slate-700">
                 {item.name}
               </span>
             </div>
@@ -178,7 +181,6 @@ export default function FarmStatusChart({
             </span>
           </div>
         ))}
-
       </div>
 
     </div>

@@ -1,4 +1,5 @@
 import type { FeedbackCategory } from "./feedbackService";
+import { CURRENT_APP_VERSION } from "./updateService";
 
 // ── Webhook ────────────────────────────────────────────────────────────────
 
@@ -86,7 +87,7 @@ export async function sendFeedbackToDiscord(
           },
         ],
         footer: {
-          text: "BerryMaster v0.1.0 • PokeMMO Berry Tracker",
+          text: `BerryMaster v${CURRENT_APP_VERSION} • PokeMMO Berry Tracker`,
         },
         timestamp: new Date().toISOString(),
       },

@@ -1,8 +1,8 @@
 import {
-useEffect,
-useMemo,
-useRef,
-useState,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
 } from "react";
 
 import BerryCard from "./BerryCard";
@@ -21,536 +21,283 @@ import type { BerryCategory } from "../../types/BerryCategories";
 
 import { BerryCategories } from "../../types/BerryCategories";
 import { useSettings } from "../../context/SettingsContext";
+
 interface PlantBerrySelectorProps {
-characterId: string;
-onClose: () => void;
-onPlantSuccess?: () => void;
+  characterId: string;
+  onClose: () => void;
+  onPlantSuccess?: () => void;
 }
 
 const categories: ("All" | BerryCategory)[] = [
-"All",
-BerryCategories.STATUS,
-BerryCategories.HEALING,
-BerryCategories.PP_RECOVERY,
-BerryCategories.FLAVOR,
-BerryCategories.EV,
-BerryCategories.TYPE_RESIST,
-BerryCategories.SPECIAL,
+  "All",
+  BerryCategories.STATUS,
+  BerryCategories.HEALING,
+  BerryCategories.PP_RECOVERY,
+  BerryCategories.FLAVOR,
+  BerryCategories.EV,
+  BerryCategories.TYPE_RESIST,
+  BerryCategories.SPECIAL,
 ];
 
 export default function PlantBerrySelector({
-characterId,
-onClose,
-onPlantSuccess,
+  characterId,
+  onClose,
+  onPlantSuccess,
 }: PlantBerrySelectorProps) {
-const { plantBerry } = useCharacters();
-const { isFavorite } = useFavorites();
-const { showDeveloperBerries } =
-  useSettings();
-const [search, setSearch] = useState("");
+  const { plantBerry } = useCharacters();
+  const { isFavorite } = useFavorites();
+  const { showDeveloperBerries } = useSettings();
+  const [search, setSearch] = useState("");
 
-const [
-selectedCategory,
-setSelectedCategory,
-] = useState<"All" | BerryCategory>("All");
+  const [selectedCategory, setSelectedCategory] = useState<"All" | BerryCategory>("All");
+  const [selectedBerry, setSelectedBerry] = useState<Berry | null>(null);
 
-const [selectedBerry, setSelectedBerry] =
-useState<Berry | null>(null);
+  const selectorRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-const selectorRef =
-useRef<HTMLDivElement>(null);
+  // =====================================
+  // Filter & Sort Berries
+  // =====================================
+  const filteredBerries = useMemo(() => {
+    const query = search.trim().toLowerCase();
 
-const itemRefs =
-useRef<(HTMLButtonElement | null)[]>([]);
+    return (showDeveloperBerries ? berryDatabase : publicBerryDatabase)
+      .filter((berry) => {
+        const matchesCategory =
+          selectedCategory === "All" ||
+          berry.categories.includes(selectedCategory);
 
-// =====================================
-// Filter & Sort Berries
-// =====================================
+        const matchesSearch =
+          berry.name.toLowerCase().includes(query) ||
+          berry.id.toLowerCase().includes(query) ||
+          berry.description?.toLowerCase().includes(query) ||
+          berry.tags?.some((tag) => tag.toLowerCase().includes(query));
 
-const filteredBerries = useMemo(() => {
-const query = search.trim().toLowerCase();
+        return matchesCategory && matchesSearch;
+      })
+      .sort((a, b) => {
+        const aFavorite = isFavorite(a.id);
+        const bFavorite = isFavorite(b.id);
 
+        // Favorites first
+        if (aFavorite !== bFavorite) {
+          return aFavorite ? -1 : 1;
+        }
 
-return (
-  showDeveloperBerries
-    ? berryDatabase
-    : publicBerryDatabase
-)
-  .filter((berry) => {
-    const matchesCategory =
-      selectedCategory === "All" ||
-      berry.categories.includes(
-        selectedCategory
-      );
+        // Alphabetical order
+        return a.name.localeCompare(b.name);
+      });
+  }, [search, selectedCategory, isFavorite, showDeveloperBerries]);
 
-    const matchesSearch =
-      berry.name
-        .toLowerCase()
-        .includes(query) ||
-      berry.id
-        .toLowerCase()
-        .includes(query) ||
-      berry.description
-        ?.toLowerCase()
-        .includes(query) ||
-      berry.tags?.some((tag) =>
-        tag
-          .toLowerCase()
-          .includes(query)
-      );
-
-    return (
-      matchesCategory &&
-      matchesSearch
-    );
-  })
-  .sort((a, b) => {
-    const aFavorite =
-      isFavorite(a.id);
-
-    const bFavorite =
-      isFavorite(b.id);
-
-    // Favorites first
+  // =====================================
+  // Keep Selection Valid
+  // =====================================
+  useEffect(() => {
     if (
-      aFavorite !== bFavorite
+      filteredBerries.length > 0 &&
+      !filteredBerries.some((berry) => berry.id === selectedBerry?.id)
     ) {
-      return aFavorite
-        ? -1
-        : 1;
+      setSelectedBerry(filteredBerries[0]);
     }
 
-    // Alphabetical order
-    return a.name.localeCompare(
-      b.name
-    );
-  });
+    if (filteredBerries.length === 0) {
+      setSelectedBerry(null);
+    }
+  }, [filteredBerries, selectedBerry]);
 
+  // =====================================
+  // Focus Selector
+  // =====================================
+  useEffect(() => {
+    selectorRef.current?.focus();
+  }, []);
 
-}, [
-search,
-selectedCategory,
-isFavorite,
-showDeveloperBerries,
-]);
-
-// =====================================
-// Keep Selection Valid
-// =====================================
-
-useEffect(() => {
-if (
-filteredBerries.length > 0 &&
-!filteredBerries.some(
-(berry) =>
-berry.id ===
-selectedBerry?.id
-)
-) {
-setSelectedBerry(
-filteredBerries[0]
-);
-}
-
-
-if (
-  filteredBerries.length === 0
-) {
-  setSelectedBerry(null);
-}
-
-
-}, [
-filteredBerries,
-selectedBerry,
-]);
-
-// =====================================
-// Focus Selector
-// =====================================
-
-useEffect(() => {
-selectorRef.current?.focus();
-}, []);
-
-// =====================================
-// Scroll Selected Berry Into View
-// =====================================
-
-useEffect(() => {
-if (!selectedBerry) {
-return;
-}
-
-
-const index =
-  filteredBerries.findIndex(
-    (berry) =>
-      berry.id ===
-      selectedBerry.id
-  );
-
-itemRefs.current[index]
-  ?.scrollIntoView({
-    behavior: "smooth",
-    block: "nearest",
-  });
-
-
-}, [
-selectedBerry,
-filteredBerries,
-]);
-
-// =====================================
-// Plant Selected Berry
-// =====================================
-
-function handlePlant(
-berry: Berry
-) {
-plantBerry(
-characterId,
-berry
-);
-
-
-onPlantSuccess?.();
-
-onClose();
-
-
-}
-
-// =====================================
-// Keyboard Navigation
-// =====================================
-
-function handleKeyDown(
-event: React.KeyboardEvent<HTMLDivElement>
-) {
-if (
-filteredBerries.length === 0
-) {
-return;
-}
-
-
-const currentIndex =
-  filteredBerries.findIndex(
-    (berry) =>
-      berry.id ===
-      selectedBerry?.id
-  );
-
-switch (event.key) {
-  case "ArrowDown": {
-    event.preventDefault();
-
-    const nextIndex =
-      currentIndex <
-      filteredBerries.length - 1
-        ? currentIndex + 1
-        : 0;
-
-    setSelectedBerry(
-      filteredBerries[nextIndex]
-    );
-
-    break;
-  }
-
-  case "ArrowUp": {
-    event.preventDefault();
-
-    const previousIndex =
-      currentIndex > 0
-        ? currentIndex - 1
-        : filteredBerries.length - 1;
-
-    setSelectedBerry(
-      filteredBerries[
-        previousIndex
-      ]
-    );
-
-    break;
-  }
-
-  case "Enter": {
+  // =====================================
+  // Scroll Selected Berry Into View
+  // =====================================
+  useEffect(() => {
     if (!selectedBerry) {
       return;
     }
 
-    event.preventDefault();
-
-    handlePlant(
-      selectedBerry
+    const index = filteredBerries.findIndex(
+      (berry) => berry.id === selectedBerry.id
     );
 
-    break;
-  }
+    itemRefs.current[index]?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+    });
+  }, [selectedBerry, filteredBerries]);
 
-  case "Escape": {
-    event.preventDefault();
-
+  // =====================================
+  // Plant Selected Berry
+  // =====================================
+  function handlePlant(berry: Berry) {
+    plantBerry(characterId, berry);
+    onPlantSuccess?.();
     onClose();
-
-    break;
   }
-}
 
-
-}
-
-return ( <div
-   ref={selectorRef}
-   tabIndex={0}
-   onKeyDown={handleKeyDown}
-   className="
-     space-y-9
-     outline-none
-   "
- >
-
-
-  {/* =====================================
-      Filters
-  ===================================== */}
-
-  <BerryFilters
-    search={search}
-    onSearchChange={setSearch}
-    categories={categories}
-    selectedCategory={
-      selectedCategory
+  // =====================================
+  // Keyboard Navigation
+  // =====================================
+  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (filteredBerries.length === 0) {
+      return;
     }
-    onCategoryChange={
-      setSelectedCategory
+
+    const currentIndex = filteredBerries.findIndex(
+      (berry) => berry.id === selectedBerry?.id
+    );
+
+    switch (event.key) {
+      case "ArrowDown": {
+        event.preventDefault();
+        const nextIndex =
+          currentIndex < filteredBerries.length - 1 ? currentIndex + 1 : 0;
+        setSelectedBerry(filteredBerries[nextIndex]);
+        break;
+      }
+
+      case "ArrowUp": {
+        event.preventDefault();
+        const previousIndex =
+          currentIndex > 0
+            ? currentIndex - 1
+            : filteredBerries.length - 1;
+        setSelectedBerry(filteredBerries[previousIndex]);
+        break;
+      }
+
+      case "Enter": {
+        if (!selectedBerry) {
+          return;
+        }
+        event.preventDefault();
+        handlePlant(selectedBerry);
+        break;
+      }
+
+      case "Escape": {
+        event.preventDefault();
+        onClose();
+        break;
+      }
     }
-  />
+  }
 
-
-  {/* =====================================
-      Master / Detail Layout
-  ===================================== */}
-
-  <div
-    className="
-      grid
-      grid-cols-1
-      gap-6
-      lg:grid-cols-3
-    "
-  >
-
-    {/* =====================================
-        Berry List
-    ===================================== */}
-
+  return (
     <div
-      className="
-        overflow-hidden
-        rounded-2xl
-        border
-        border-white/[0.08]
-        bg-slate-900/60
-        shadow-xl
-        shadow-black/10
-        backdrop-blur-xl
-      "
+      ref={selectorRef}
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+      className="space-y-6 outline-none"
     >
-
-      <BerryList
-        berries={filteredBerries}
-        selectedBerry={
-          selectedBerry
-        }
-        onSelectBerry={
-          setSelectedBerry
-        }
-        itemRefs={itemRefs}
+      {/* =====================================
+          Filters
+      ===================================== */}
+      <BerryFilters
+        search={search}
+        onSearchChange={setSearch}
+        categories={categories}
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
       />
 
-    </div>
+      {/* =====================================
+          Master / Detail Layout
+      ===================================== */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        {/* Berry List Column */}
+        <BerryList
+          berries={filteredBerries}
+          selectedBerry={selectedBerry}
+          onSelectBerry={setSelectedBerry}
+          itemRefs={itemRefs}
+        />
 
-
-    {/* =====================================
-        Berry Details
-    ===================================== */}
-
-    <div
-      className="
-        overflow-hidden
-        rounded-2xl
-        border
-        border-white/[0.08]
-        bg-slate-900/60
-        shadow-xl
-        shadow-black/10
-        backdrop-blur-xl
-        lg:col-span-2
-      "
-    >
-
-      {/* Details Header */}
-
-      <div
-        className="
-          border-b
-          border-white/[0.08]
-          bg-white/[0.02]
-          px-5
-          py-4
-        "
-      >
-
+        {/* Berry Details Column */}
         <div
           className="
             flex
-            items-center
-            justify-between
-            gap-4
+            h-[580px]
+            flex-col
+            overflow-hidden
+            rounded-2xl
+            border
+            border-slate-800
+            light:border-slate-200
+            bg-slate-900/60
+            light:bg-white
+            shadow-xl
+            shadow-black/10
+            backdrop-blur-xl
+            lg:col-span-2
           "
         >
-
-          <div>
-
-            <p
-              className="
-                text-xs
-                font-semibold
-                uppercase
-                tracking-[0.16em]
-                text-emerald-400
-              "
-            >
-              Berry Information
-            </p>
-
-            <h2
-              className="
-                mt-1
-                text-lg
-                font-semibold
-                text-white
-              "
-            >
-              📖 Berry Details
-            </h2>
-
-            <p
-              className="
-                mt-1
-                text-sm
-                text-slate-400
-              "
-            >
-              Review the berry before planting it.
-            </p>
-
-          </div>
-
+          {/* Details Header */}
           <div
             className="
-              hidden
-              rounded-lg
-              border
-              border-white/[0.06]
-              bg-slate-950/40
-              px-3
-              py-2
-              text-xs
-              text-slate-500
-              sm:block
+              shrink-0
+              border-b
+              border-slate-800
+              light:border-slate-200
+              bg-slate-900/40
+              light:bg-slate-50
+              px-5
+              py-4
             "
           >
-            Use ↑ ↓ to navigate
-          </div>
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-400 light:text-emerald-700">
+                  Berry Information
+                </p>
 
-        </div>
+                <h2 className="mt-1 text-lg font-semibold text-white light:text-slate-900">
+                  Berry Details
+                </h2>
 
-      </div>
-
-
-      {/* Details Content */}
-
-      <div
-        className="
-          h-[550px]
-          overflow-y-auto
-          p-5
-        "
-      >
-
-        {selectedBerry ? (
-
-          <BerryCard
-            berry={selectedBerry}
-            actionLabel="🌱 Plant This Berry"
-            onAction={handlePlant}
-          />
-
-        ) : (
-
-          <div
-            className="
-              flex
-              h-full
-              items-center
-              justify-center
-              rounded-xl
-              border
-              border-dashed
-              border-white/[0.08]
-              bg-white/[0.02]
-            "
-          >
-
-            <div
-              className="
-                text-center
-              "
-            >
-
-              <div className="text-5xl">
-                🍓
+                <p className="mt-1 text-xs text-slate-400 light:text-slate-600">
+                  Review requirements and growth stats before planting.
+                </p>
               </div>
 
-              <h2
-                className="
-                  mt-4
-                  text-xl
-                  font-semibold
-                  text-white
-                "
-              >
-                No Berry Selected
-              </h2>
-
-              <p
-                className="
-                  mt-2
-                  text-slate-400
-                "
-              >
-                Choose a berry from the list.
-              </p>
-
+              <div className="hidden rounded-lg border border-slate-800 light:border-slate-200 bg-slate-950/40 light:bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-400 light:text-slate-600 sm:block">
+                Use ↑ ↓ to navigate
+              </div>
             </div>
-
           </div>
 
-        )}
+          {/* Details Content */}
+          <div className="flex-1 overflow-y-auto p-5">
+            {selectedBerry ? (
+              <BerryCard
+                berry={selectedBerry}
+                actionLabel="Plant This Berry"
+                onAction={handlePlant}
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-slate-800 light:border-slate-300 bg-slate-900/20 light:bg-slate-50/50">
+                <div className="text-center p-8">
+                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-emerald-500/20 bg-emerald-500/10 text-4xl shadow-xs">
+                    🌱
+                  </div>
 
+                  <h2 className="mt-4 text-lg font-bold text-white light:text-slate-900">
+                    No Berry Selected
+                  </h2>
+
+                  <p className="mt-1.5 text-xs text-slate-400 light:text-slate-500">
+                    Choose a berry from the list on the left.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-
     </div>
-
-  </div>
-
-</div>
-
-
-);
+  );
 }

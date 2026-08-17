@@ -21,7 +21,7 @@ export const berryDatabase: Berry[] = [
   ...typeResistanceBerries,
   ...specialBerries,
   debugBerry,
-];
+].sort((a, b) => a.name.localeCompare(b.name));
 
 
 // =====================================

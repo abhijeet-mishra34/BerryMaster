@@ -86,17 +86,19 @@ export default function Header() {
         justify-between
         border-b
         border-slate-800/80
+        light:border-slate-200
         bg-slate-950/80
+        light:bg-white/90
         px-8
         backdrop-blur-md
       "
     >
       {/* Header Title */}
       <div className="flex flex-col justify-center">
-        <h2 className="text-lg font-bold text-white tracking-tight">
+        <h2 className="text-lg font-bold text-white light:text-slate-900 tracking-tight">
           {currentPage.title}
         </h2>
-        <p className="text-xs text-slate-400">
+        <p className="text-xs text-slate-400 light:text-slate-500">
           {currentPage.subtitle}
         </p>
       </div>
@@ -119,13 +121,19 @@ export default function Header() {
             rounded-xl
             border
             border-slate-800
+            light:border-slate-200
             bg-slate-900/60
+            light:bg-slate-100
             text-slate-400
+            light:text-slate-600
             transition-all
             duration-200
             hover:border-slate-700
+            light:hover:border-slate-300
             hover:bg-slate-800
+            light:hover:bg-slate-200
             hover:text-emerald-400
+            cursor-pointer
           "
           aria-label="Open settings"
           title="Settings"
@@ -145,15 +153,22 @@ export default function Header() {
               rounded-xl
               border
               border-slate-800
+              light:border-slate-200
               bg-slate-900/60
+              light:bg-slate-100
               px-3
               py-1.5
               text-slate-300
+              light:text-slate-700
               transition-all
               duration-200
               hover:border-slate-700
+              light:hover:border-slate-300
               hover:bg-slate-800
+              light:hover:bg-slate-200
               hover:text-white
+              light:hover:text-slate-900
+              cursor-pointer
             "
             aria-label="Open profile menu"
           >
@@ -161,36 +176,33 @@ export default function Header() {
               <User className="h-3.5 w-3.5" />
             </div>
             <span className="text-xs font-semibold">Farmer</span>
-            <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
+            <ChevronDown className="h-3.5 w-3.5 text-slate-400 light:text-slate-500" />
           </button>
 
           {/* Profile Menu Dropdown */}
           {isProfileMenuOpen && (
             <div
               className="
+                theme-modal
                 absolute
                 right-0
                 top-12
                 z-50
                 w-60
                 rounded-2xl
-                border
-                border-slate-800
-                bg-slate-900/95
                 p-3
                 backdrop-blur-xl
                 shadow-2xl
-                shadow-black/50
               "
             >
-              <div className="rounded-xl bg-slate-800/50 p-3">
+              <div className="rounded-xl bg-slate-800/50 light:bg-slate-100 p-3">
                 <div className="flex items-center gap-2.5">
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400 font-bold text-xs">
                     BM
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-white">BerryMaster User</p>
-                    <p className="text-[11px] text-slate-400">PokeMMO Trainer</p>
+                    <p className="text-xs font-bold text-white light:text-slate-900">BerryMaster User</p>
+                    <p className="text-[11px] text-slate-400 light:text-slate-500">PokeMMO Trainer</p>
                   </div>
                 </div>
               </div>
