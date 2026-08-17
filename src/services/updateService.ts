@@ -17,6 +17,7 @@ export interface UpdateCheckResult {
   latestVersion: string;
   release?: ReleaseInfo;
   message: string;
+  error?: string;
 }
 
 export const CURRENT_APP_VERSION = "0.1.6";
@@ -85,6 +86,10 @@ export async function checkForAppUpdates(): Promise<UpdateCheckResult> {
       hasUpdate: false,
       currentVersion: CURRENT_APP_VERSION,
       latestVersion: CURRENT_APP_VERSION,
+      error:
+        error instanceof Error
+          ? error.message
+          : "Unable to connect to GitHub releases.",
       message:
         error instanceof Error
           ? error.message

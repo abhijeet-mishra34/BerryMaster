@@ -5,7 +5,6 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import Button from "../ui/Button";
 import type { Berry } from "../../types/Berry";
 import { seedDisplay } from "../../utils/seedDisplay";
 import { useFavorites } from "../../context/FavoritesContext";
