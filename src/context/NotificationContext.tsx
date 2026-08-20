@@ -15,6 +15,7 @@ import {
 } from "../services/browserNotificationService";
 import { scheduleFutureCharacterAlerts } from "../services/nativeNotificationService";
 import { useCharacters } from "./CharacterContext";
+import { useSettings } from "./SettingsContext";
 
 type NotificationContextType = {
   notifications: Notification[];
@@ -31,6 +32,12 @@ export function NotificationProvider({
   children: React.ReactNode;
 }) {
   const { characters } = useCharacters();
+  const { notifyOnWater, notifyOnHarvest, notifyOnWilt } = useSettings();
+
+  const settings = useMemo(
+    () => ({ notifyOnWater, notifyOnHarvest, notifyOnWilt }),
+    [notifyOnWater, notifyOnHarvest, notifyOnWilt]
+  );
 
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const prevIdsRef = useRef<string>("");
@@ -40,15 +47,15 @@ export function NotificationProvider({
     requestNotificationPermission();
   }, []);
 
-  // Pre-schedule future OS alerts whenever characters are updated
+  // Pre-schedule future OS alerts whenever characters or settings are updated
   useEffect(() => {
-    scheduleFutureCharacterAlerts(characters);
-  }, [characters]);
+    scheduleFutureCharacterAlerts(characters, settings);
+  }, [characters, settings]);
 
   // Refresh notifications efficiently without redundant React re-renders
   useEffect(() => {
     const updateNotifications = () => {
-      const latestNotifications = generateNotifications(characters);
+      const latestNotifications = generateNotifications(characters, settings);
       const newIds = latestNotifications.map((n) => n.id).join(",");
 
       // Only update state when notifications actually change
@@ -63,11 +70,11 @@ export function NotificationProvider({
     // Run immediately
     updateNotifications();
 
-    // Refresh every second
-    const interval = setInterval(updateNotifications, 1000);
+    // Refresh every 5 seconds for efficiency
+    const interval = setInterval(updateNotifications, 5000);
 
     return () => clearInterval(interval);
-  }, [characters]);
+  }, [characters, settings]);
 
   const notificationCount = useMemo(
     () => notifications.length,

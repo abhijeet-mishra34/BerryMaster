@@ -17,6 +17,7 @@ import {
   Check,
   Activity,
   Database,
+  Smartphone,
 } from "lucide-react";
 
 import { exportBerryMasterData } from "../utils/dataExport";
@@ -776,9 +777,9 @@ export default function SettingsPage() {
             <button
               type="button"
               onClick={exportBerryMasterData}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-500/20 px-4 py-3 text-xs font-bold text-emerald-300 transition-all hover:bg-emerald-500 hover:text-slate-950 hover:shadow-md hover:shadow-emerald-500/20 active:scale-[0.98] cursor-pointer"
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-500/20 px-5 py-3.5 text-sm font-bold text-emerald-300 transition-all hover:bg-emerald-500 hover:text-slate-950 hover:shadow-md hover:shadow-emerald-500/20 active:scale-[0.98] cursor-pointer"
             >
-              <Download className="h-4 w-4" />
+              <Download className="h-4.5 w-4.5" />
               Download Backup
             </button>
           </div>
@@ -802,9 +803,9 @@ export default function SettingsPage() {
             <button
               type="button"
               onClick={handleImportClick}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-800/80 px-4 py-3 text-xs font-bold text-slate-200 hover:bg-slate-700 hover:text-white transition-all active:scale-[0.98] cursor-pointer"
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-800/80 px-5 py-3.5 text-sm font-bold text-slate-200 hover:bg-slate-700 hover:text-white transition-all active:scale-[0.98] cursor-pointer"
             >
-              <Upload className="h-4 w-4" />
+              <Upload className="h-4.5 w-4.5" />
               Restore Backup
             </button>
           </div>
@@ -828,9 +829,9 @@ export default function SettingsPage() {
             <button
               type="button"
               onClick={() => setIsClearActivitiesOpen(true)}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-xs font-bold text-rose-300 transition-all hover:bg-rose-500 hover:text-white hover:shadow-md hover:shadow-rose-500/20 active:scale-[0.98] cursor-pointer"
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-5 py-3.5 text-sm font-bold text-rose-300 transition-all hover:bg-rose-500 hover:text-white hover:shadow-md hover:shadow-rose-500/20 active:scale-[0.98] cursor-pointer"
             >
-              <Trash2 className="h-4 w-4" />
+              <Trash2 className="h-4.5 w-4.5" />
               Clear Logs
             </button>
           </div>
@@ -858,7 +859,7 @@ export default function SettingsPage() {
       </section>
 
       {/* =====================================
-          4. App Updates & Releases
+          4. App Updates & Downloads
       ===================================== */}
       <section
         className="
@@ -880,26 +881,140 @@ export default function SettingsPage() {
             </div>
             <div>
               <h2 className="text-lg font-bold text-white light:text-slate-900">
-                App Updates & Releases
+                App Updates & Downloads
               </h2>
               <p className="text-xs text-slate-400 light:text-slate-500">
-                Check GitHub for new features, bug fixes, and installer updates.
+                Download the latest desktop installer (EXE), Android APK, or check for online updates.
               </p>
             </div>
           </div>
 
-          <span className="rounded-full border border-sky-500/30 bg-sky-500/10 px-3.5 py-1 font-mono text-xs font-bold text-sky-400">
+          <span className="rounded-full border border-sky-500/30 bg-sky-500/10 px-4 py-1.5 font-mono text-xs font-bold text-sky-400">
             v{CURRENT_APP_VERSION}
           </span>
         </div>
 
+        {/* Prominent Quick-Download Cards (Windows EXE & Android APK) */}
+        <div className="grid gap-4 sm:grid-cols-2">
+          {/* Windows Setup EXE */}
+          <div className="flex flex-col justify-between rounded-2xl border border-sky-500/20 light:border-sky-200 bg-sky-950/20 light:bg-sky-50/60 p-6 transition-all hover:border-sky-500/40">
+            <div className="flex items-start gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-sky-500/15 text-sky-400 light:text-sky-700 border border-sky-500/30">
+                <Monitor className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-white light:text-slate-900">
+                  Windows Desktop Setup
+                </h3>
+                <p className="mt-1 text-xs text-slate-400 light:text-slate-600 leading-relaxed">
+                  Official Windows installer with automatic system tray support and local notifications.
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() =>
+                openExternalUrl(
+                  "https://github.com/abhijeet-mishra34/BerryMaster/releases/latest/download/BerryMaster-Windows-Setup.exe"
+                )
+              }
+              className="
+                mt-5
+                flex
+                w-full
+                items-center
+                justify-center
+                gap-2.5
+                rounded-xl
+                border
+                border-sky-400/40
+                bg-sky-500
+                px-6
+                py-3.5
+                text-sm
+                font-bold
+                text-slate-950
+                shadow-md
+                shadow-sky-500/20
+                transition-all
+                duration-200
+                hover:bg-sky-400
+                hover:shadow-lg
+                hover:shadow-sky-500/30
+                active:scale-[0.98]
+                cursor-pointer
+              "
+            >
+              <Download className="h-4.5 w-4.5" />
+              <span>Download Windows Setup (.exe)</span>
+            </button>
+          </div>
+
+          {/* Android APK */}
+          <div className="flex flex-col justify-between rounded-2xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-950/20 light:bg-emerald-50/60 p-6 transition-all hover:border-emerald-500/40">
+            <div className="flex items-start gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-400 light:text-emerald-700 border border-emerald-500/30">
+                <Smartphone className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-white light:text-slate-900">
+                  Android Mobile APK
+                </h3>
+                <p className="mt-1 text-xs text-slate-400 light:text-slate-600 leading-relaxed">
+                  Universal Android mobile application with offline tracking and background alarms.
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() =>
+                openExternalUrl(
+                  "https://github.com/abhijeet-mishra34/BerryMaster/releases/latest/download/BerryMaster-universal.apk"
+                )
+              }
+              className="
+                mt-5
+                flex
+                w-full
+                items-center
+                justify-center
+                gap-2.5
+                rounded-xl
+                border
+                border-emerald-400/40
+                bg-emerald-500
+                px-6
+                py-3.5
+                text-sm
+                font-bold
+                text-slate-950
+                shadow-md
+                shadow-emerald-500/20
+                transition-all
+                duration-200
+                hover:bg-emerald-400
+                hover:shadow-lg
+                hover:shadow-emerald-500/30
+                active:scale-[0.98]
+                cursor-pointer
+              "
+            >
+              <Download className="h-4.5 w-4.5" />
+              <span>Download Android APK (.apk)</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Update Check Control Row */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-white/[0.08] light:border-slate-200 bg-slate-950/40 light:bg-slate-50/80 p-6">
           <div>
             <h3 className="text-sm font-bold text-white light:text-slate-900">
-              Official GitHub Releases
+              Check for Online Updates
             </h3>
             <p className="mt-1 text-xs text-slate-400 light:text-slate-500 max-w-md leading-relaxed">
-              Verify if an updated desktop installer (Windows Setup EXE) or Android APK is available.
+              Verify with GitHub Releases to check if a newer patch or feature version has been published.
             </p>
           </div>
 
@@ -911,62 +1026,65 @@ export default function SettingsPage() {
                   "https://github.com/abhijeet-mishra34/BerryMaster/releases"
                 )
               }
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-700 light:border-slate-300 bg-slate-800/80 light:bg-white px-5 py-3 text-xs font-bold text-slate-200 light:text-slate-800 hover:bg-slate-700 light:hover:bg-slate-100 hover:text-white light:hover:text-slate-900 transition-all cursor-pointer active:scale-95 shadow-xs"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-700 light:border-slate-300 bg-slate-800/80 light:bg-white px-6 py-3.5 text-sm font-bold text-slate-200 light:text-slate-800 hover:bg-slate-700 light:hover:bg-slate-100 hover:text-white light:hover:text-slate-900 transition-all cursor-pointer active:scale-95 shadow-xs"
             >
-              <ExternalLink className="h-4 w-4" />
-              Releases Page
+              <ExternalLink className="h-4.5 w-4.5" />
+              <span>All Releases</span>
             </button>
             <button
               type="button"
               disabled={isCheckingUpdate}
               onClick={handleCheckUpdate}
-              className="inline-flex items-center gap-2 rounded-xl border border-sky-400/30 light:border-sky-300 bg-sky-500/20 light:bg-sky-100 px-5 py-2.5 text-xs font-bold text-sky-300 light:text-sky-800 hover:bg-sky-500 hover:text-slate-950 light:hover:text-slate-950 transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
+              className="inline-flex items-center gap-2.5 rounded-xl border border-sky-400/30 light:border-sky-300 bg-sky-500/20 light:bg-sky-100 px-6 py-3.5 text-sm font-bold text-sky-300 light:text-sky-800 hover:bg-sky-500 hover:text-slate-950 light:hover:text-slate-950 transition-all active:scale-95 disabled:opacity-50 cursor-pointer shadow-xs"
             >
-              <RefreshCw className={`h-4 w-4 ${isCheckingUpdate ? "animate-spin" : ""}`} />
-              <span>{isCheckingUpdate ? "Checking..." : "Check for Updates"}</span>
+              <RefreshCw className={`h-4.5 w-4.5 ${isCheckingUpdate ? "animate-spin" : ""}`} />
+              <span>{isCheckingUpdate ? "Checking GitHub..." : "Check for Updates"}</span>
             </button>
           </div>
         </div>
 
+        {/* Update Check Results */}
         {updateResult && (
           <div
-            className={`rounded-xl border p-6 ${
+            className={`rounded-2xl border p-6 sm:p-7 ${
               updateResult.hasUpdate
-                ? "border-emerald-500/30 bg-emerald-500/10"
+                ? "border-emerald-500/40 bg-emerald-950/20 light:bg-emerald-50/70 shadow-lg shadow-emerald-500/10"
                 : updateResult.error
                 ? "border-rose-500/30 bg-rose-500/10"
                 : "border-sky-500/30 bg-sky-500/10"
             }`}
           >
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
               <div>
-                <p className="text-sm font-bold text-white light:text-slate-900">
+                <p className="text-base font-bold text-white light:text-slate-900">
                   {updateResult.error
                     ? "Update Check Failed"
                     : updateResult.hasUpdate
-                    ? `New Version Available: v${updateResult.latestVersion}`
-                    : "You are on the latest version"}
+                    ? `🎉 New Version Available: ${updateResult.latestVersion}`
+                    : "✨ You are running the latest version"}
                 </p>
-                <p className="mt-1 text-xs text-slate-400 light:text-slate-600">
+                <p className="mt-1 text-xs sm:text-sm text-slate-300 light:text-slate-600 leading-relaxed">
                   {updateResult.error ||
                     (updateResult.hasUpdate
-                      ? "A new release is available on GitHub."
-                      : `BerryMaster v${CURRENT_APP_VERSION} is up to date.`)}
+                      ? `Version ${updateResult.latestVersion} has been released on GitHub with new improvements.`
+                      : `BerryMaster v${CURRENT_APP_VERSION} is currently up to date.`)}
                 </p>
               </div>
 
-              {updateResult.release?.htmlUrl && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    openExternalUrl(updateResult.release?.htmlUrl || "")
-                  }
-                  className="inline-flex items-center gap-2 rounded-xl border border-emerald-400/40 bg-emerald-500 px-5 py-2.5 text-xs font-bold text-slate-950 hover:bg-emerald-400 transition-all shadow-sm active:scale-95 cursor-pointer"
-                >
-                  <ExternalLink className="h-4 w-4" />
-                  View Release Notes
-                </button>
-              )}
+              <div className="flex items-center gap-3 flex-wrap shrink-0">
+                {updateResult.release?.htmlUrl && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      openExternalUrl(updateResult.release?.htmlUrl || "")
+                    }
+                    className="inline-flex items-center gap-2 rounded-xl border border-emerald-400/40 bg-emerald-500 px-6 py-3.5 text-sm font-bold text-slate-950 hover:bg-emerald-400 transition-all shadow-md shadow-emerald-500/20 active:scale-95 cursor-pointer"
+                  >
+                    <ExternalLink className="h-4.5 w-4.5" />
+                    <span>View Release & Downloads</span>
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         )}

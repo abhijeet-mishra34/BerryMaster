@@ -4,6 +4,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { isTauriEnvironment } from "../services/nativeNotificationService";
 
 export type AppTheme = "dark" | "light";
 
@@ -123,6 +124,14 @@ export function SettingsProvider({
     } else {
       root.classList.add("dark");
       root.classList.remove("light");
+    }
+
+    if (isTauriEnvironment()) {
+      import("@tauri-apps/api/core")
+        .then(({ invoke }) => {
+          invoke("set_minimize_to_tray", { enabled: desktopMinimizeToTray }).catch(() => {});
+        })
+        .catch(() => {});
     }
   }, [
     showDeveloperBerries,

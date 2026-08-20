@@ -2,11 +2,13 @@ import { useNavigate } from "react-router-dom";
 import { Droplets, Wheat, AlertTriangle, ArrowRight, Sparkles } from "lucide-react";
 
 import { useCharacters } from "../../context/CharacterContext";
+import { useToast } from "../../context/ToastContext";
 import { getCharacterStatus } from "../../utils/characterStatus";
 
 export default function NeedsAttention() {
   const navigate = useNavigate();
-  const { characters } = useCharacters();
+  const { characters, waterAllReady, harvestAllReady } = useCharacters();
+  const { addToast } = useToast();
 
   const charactersNeedingWater = characters.filter(
     (character) => getCharacterStatus(character).status === "needWater"
@@ -26,6 +28,22 @@ export default function NeedsAttention() {
         highlightCharacterId: characterId,
       },
     });
+  }
+
+  function handleWaterAll(e: React.MouseEvent) {
+    e.stopPropagation();
+    const count = waterAllReady();
+    if (count > 0) {
+      addToast(`💧 Watered all ${count} berry plots!`, "info");
+    }
+  }
+
+  function handleHarvestAll(e: React.MouseEvent) {
+    e.stopPropagation();
+    const count = harvestAllReady();
+    if (count > 0) {
+      addToast(`🌾 Harvested all ${count} ripe crops!`, "success");
+    }
   }
 
   if (
@@ -70,6 +88,31 @@ export default function NeedsAttention() {
 
   return (
     <div className="space-y-3">
+      {/* Quick Bulk Actions */}
+      {(charactersNeedingWater.length > 1 || charactersReadyToHarvest.length > 1) && (
+        <div className="flex flex-wrap items-center justify-end gap-2.5 pb-1">
+          {charactersNeedingWater.length > 1 && (
+            <button
+              type="button"
+              onClick={handleWaterAll}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-sky-500/30 bg-sky-500/15 hover:bg-sky-500 hover:text-slate-950 light:hover:text-white px-3.5 py-1.5 text-xs font-bold text-sky-400 light:text-sky-700 transition-all cursor-pointer shadow-xs active:scale-95"
+            >
+              <Droplets className="h-3.5 w-3.5" />
+              <span>Water All ({charactersNeedingWater.length})</span>
+            </button>
+          )}
+          {charactersReadyToHarvest.length > 1 && (
+            <button
+              type="button"
+              onClick={handleHarvestAll}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/15 hover:bg-amber-500 hover:text-slate-950 light:hover:text-white px-3.5 py-1.5 text-xs font-bold text-amber-400 light:text-amber-700 transition-all cursor-pointer shadow-xs active:scale-95"
+            >
+              <Wheat className="h-3.5 w-3.5" />
+              <span>Harvest All ({charactersReadyToHarvest.length})</span>
+            </button>
+          )}
+        </div>
+      )}
       {/* Need Water Items */}
       {charactersNeedingWater.map((character) => (
         <button

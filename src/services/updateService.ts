@@ -20,7 +20,7 @@ export interface UpdateCheckResult {
   error?: string;
 }
 
-export const CURRENT_APP_VERSION = "0.1.6";
+export const CURRENT_APP_VERSION = "0.1.7";
 
 const GITHUB_REPO = "abhijeet-mishra34/BerryMaster";
 

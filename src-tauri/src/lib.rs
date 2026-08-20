@@ -1,9 +1,22 @@
 #[cfg(desktop)]
+use std::sync::atomic::{AtomicBool, Ordering};
+#[cfg(desktop)]
 use tauri::{
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
     Manager,
 };
+
+#[cfg(desktop)]
+static MINIMIZE_TO_TRAY: AtomicBool = AtomicBool::new(true);
+
+#[tauri::command]
+fn set_minimize_to_tray(#[allow(unused_variables)] enabled: bool) {
+    #[cfg(desktop)]
+    {
+        MINIMIZE_TO_TRAY.store(enabled, Ordering::Relaxed);
+    }
+}
 
 #[tauri::command]
 fn open_external_url(#[allow(unused_variables)] app: tauri::AppHandle, url: String) -> Result<(), String> {
@@ -63,7 +76,7 @@ pub fn run() {
     let mut builder = tauri::Builder::default()
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![open_external_url]);
+        .invoke_handler(tauri::generate_handler![open_external_url, set_minimize_to_tray]);
 
     #[cfg(desktop)]
     {
@@ -130,8 +143,10 @@ pub fn run() {
             #[cfg(desktop)]
             {
                 if let tauri::WindowEvent::CloseRequested { api, .. } = _event {
-                    api.prevent_close();
-                    let _ = _window.hide();
+                    if MINIMIZE_TO_TRAY.load(Ordering::Relaxed) {
+                        api.prevent_close();
+                        let _ = _window.hide();
+                    }
                 }
             }
         })

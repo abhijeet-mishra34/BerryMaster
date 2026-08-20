@@ -2,13 +2,21 @@ import {
   useEffect,
   useRef,
   useState,
+  useMemo,
 } from "react";
 
 import {
   useLocation,
 } from "react-router-dom";
 
-import { UserPlus } from "lucide-react";
+import {
+  UserPlus,
+  Search,
+  X,
+  Droplets,
+  Wheat,
+  RotateCcw,
+} from "lucide-react";
 
 import CharacterCard from "../components/characters/CharacterCard";
 import CharacterModal from "../components/characters/CharacterModal";
@@ -19,6 +27,8 @@ import PlantBerrySelector from "../components/berries/PlantBerrySelector";
 
 import { useCharacters } from "../context/CharacterContext";
 import { useToast } from '../context/ToastContext';
+import { getCharacterStatus } from "../utils/characterStatus";
+import { berryDatabase } from "../data/berryDatabase";
 
 import type { Character } from "../types/Character";
 
@@ -34,8 +44,18 @@ export default function CharactersPage() {
     removeBerry,
     waterBerry,
     harvestBerry,
+    waterAllReady,
+    harvestAllReady,
   } = useCharacters();
 
+  // =====================================
+  // Search & Filter State
+  // =====================================
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "needWater" | "harvestReady" | "growing" | "ready" | "wilted"
+  >("all");
 
   // =====================================
   // Modal State
@@ -171,6 +191,50 @@ export default function CharactersPage() {
 
 
   // =====================================
+  // Computed Status Counts & Filtered List
+  // =====================================
+
+  const countNeedWater = useMemo(
+    () => characters.filter((c) => getCharacterStatus(c).status === "needWater").length,
+    [characters]
+  );
+  const countHarvestReady = useMemo(
+    () => characters.filter((c) => getCharacterStatus(c).status === "harvestReady").length,
+    [characters]
+  );
+  const countGrowing = useMemo(
+    () => characters.filter((c) => getCharacterStatus(c).status === "growing").length,
+    [characters]
+  );
+  const countReadyToPlant = useMemo(
+    () => characters.filter((c) => getCharacterStatus(c).status === "ready").length,
+    [characters]
+  );
+  const countWilted = useMemo(
+    () => characters.filter((c) => getCharacterStatus(c).status === "wilted").length,
+    [characters]
+  );
+
+  const filteredCharacters = useMemo(() => {
+    return characters.filter((character) => {
+      const status = getCharacterStatus(character).status;
+      if (statusFilter !== "all" && status !== statusFilter) {
+        return false;
+      }
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase().trim();
+        const matchesName = character.name.toLowerCase().includes(q);
+        const berry = character.plantedBerryId
+          ? berryDatabase.find((b) => b.id === character.plantedBerryId)
+          : null;
+        const matchesBerry = berry?.name.toLowerCase().includes(q) ?? false;
+        return matchesName || matchesBerry;
+      }
+      return true;
+    });
+  }, [characters, statusFilter, searchQuery]);
+
+  // =====================================
   // Keyboard Shortcuts
   // =====================================
 
@@ -198,50 +262,50 @@ export default function CharactersPage() {
       case "ArrowDown":
       case "ArrowRight":
         e.preventDefault();
-        if (characters.length === 0) return;
+        if (filteredCharacters.length === 0) return;
         setFocusedIndex((prev) =>
-          prev === null ? 0 : Math.min(prev + 1, characters.length - 1)
+          prev === null ? 0 : Math.min(prev + 1, filteredCharacters.length - 1)
         );
         break;
 
       case "ArrowUp":
       case "ArrowLeft":
         e.preventDefault();
-        if (characters.length === 0) return;
+        if (filteredCharacters.length === 0) return;
         setFocusedIndex((prev) =>
-          prev === null ? characters.length - 1 : Math.max(prev - 1, 0)
+          prev === null ? filteredCharacters.length - 1 : Math.max(prev - 1, 0)
         );
         break;
 
       case "e":
       case "E": {
-        if (focusedIndex === null || !characters[focusedIndex]) return;
+        if (focusedIndex === null || !filteredCharacters[focusedIndex]) return;
         e.preventDefault();
-        openEditModal(characters[focusedIndex]);
+        openEditModal(filteredCharacters[focusedIndex]);
         break;
       }
 
       case "Delete":
       case "Backspace": {
-        if (focusedIndex === null || !characters[focusedIndex]) return;
+        if (focusedIndex === null || !filteredCharacters[focusedIndex]) return;
         e.preventDefault();
-        openDeleteDialog(characters[focusedIndex], focusedIndex);
+        openDeleteDialog(filteredCharacters[focusedIndex], focusedIndex);
         break;
       }
 
       case "w":
       case "W": {
-        if (focusedIndex === null || !characters[focusedIndex]) return;
+        if (focusedIndex === null || !filteredCharacters[focusedIndex]) return;
         e.preventDefault();
-        handleWater(characters[focusedIndex]);
+        handleWater(filteredCharacters[focusedIndex]);
         break;
       }
 
       case "h":
       case "H": {
-        if (focusedIndex === null || !characters[focusedIndex]) return;
+        if (focusedIndex === null || !filteredCharacters[focusedIndex]) return;
         e.preventDefault();
-        handleHarvest(characters[focusedIndex]);
+        handleHarvest(filteredCharacters[focusedIndex]);
         break;
       }
 
@@ -378,6 +442,20 @@ export default function CharactersPage() {
     addToast(`🌾 ${character.name}'s berries harvested!`, 'success');
   }
 
+  function handleWaterAll() {
+    const count = waterAllReady();
+    if (count > 0) {
+      addToast(`💧 Watered all ${count} ready plots!`, 'info');
+    }
+  }
+
+  function handleHarvestAll() {
+    const count = harvestAllReady();
+    if (count > 0) {
+      addToast(`🌾 Harvested all ${count} ready crops!`, 'success');
+    }
+  }
+
   function highlightCharacter(
     characterId: string
   ) {
@@ -395,15 +473,12 @@ export default function CharactersPage() {
     }, 2000);
   }
 
-
   return (
     <div
       className="
-        space-y-12
+        space-y-8
       "
     >
-
-
       {/* =====================================
           Page Header
       ===================================== */}
@@ -420,7 +495,7 @@ export default function CharactersPage() {
           className="
             flex
             flex-col
-            gap-8
+            gap-6
             p-6
             sm:p-8
             lg:flex-row
@@ -466,43 +541,113 @@ export default function CharactersPage() {
             </div>
           </div>
 
-          {/* Add Character */}
-          <button
-            type="button"
-            onClick={openAddModal}
-            className="
-              group
-              relative
-              inline-flex
-              items-center
-              justify-center
-              gap-2.5
-              rounded-xl
-              border
-              border-emerald-400/40
-              bg-gradient-to-r
-              from-emerald-500
-              to-teal-500
-              px-6
-              py-3.5
-              text-sm
-              font-bold
-              text-slate-950
-              shadow-lg
-              shadow-emerald-500/25
-              transition-all
-              duration-200
-              hover:-translate-y-0.5
-              hover:from-emerald-400
-              hover:to-teal-400
-              hover:shadow-emerald-500/40
-              active:translate-y-0
-              cursor-pointer
-            "
-          >
-            <UserPlus className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
-            <span>Add Character</span>
-          </button>
+          {/* Action Buttons: Bulk actions + Add Character */}
+          <div className="flex flex-wrap items-center gap-3">
+            {countNeedWater > 1 && (
+              <button
+                type="button"
+                onClick={handleWaterAll}
+                className="
+                  inline-flex
+                  items-center
+                  justify-center
+                  gap-2
+                  rounded-xl
+                  border
+                  border-sky-500/30
+                  bg-sky-500/15
+                  hover:bg-sky-500
+                  hover:text-slate-950
+                  light:hover:text-white
+                  px-4
+                  py-3.5
+                  text-sm
+                  font-bold
+                  text-sky-400
+                  light:text-sky-700
+                  transition-all
+                  duration-200
+                  cursor-pointer
+                  shadow-sm
+                  active:scale-95
+                "
+              >
+                <Droplets className="h-4.5 w-4.5" />
+                <span>Water All ({countNeedWater})</span>
+              </button>
+            )}
+
+            {countHarvestReady > 1 && (
+              <button
+                type="button"
+                onClick={handleHarvestAll}
+                className="
+                  inline-flex
+                  items-center
+                  justify-center
+                  gap-2
+                  rounded-xl
+                  border
+                  border-amber-500/30
+                  bg-amber-500/15
+                  hover:bg-amber-500
+                  hover:text-slate-950
+                  light:hover:text-white
+                  px-4
+                  py-3.5
+                  text-sm
+                  font-bold
+                  text-amber-400
+                  light:text-amber-700
+                  transition-all
+                  duration-200
+                  cursor-pointer
+                  shadow-sm
+                  active:scale-95
+                "
+              >
+                <Wheat className="h-4.5 w-4.5" />
+                <span>Harvest All ({countHarvestReady})</span>
+              </button>
+            )}
+
+            <button
+              type="button"
+              onClick={openAddModal}
+              className="
+                group
+                relative
+                inline-flex
+                items-center
+                justify-center
+                gap-2.5
+                rounded-xl
+                border
+                border-emerald-400/40
+                bg-gradient-to-r
+                from-emerald-500
+                to-teal-500
+                px-6
+                py-3.5
+                text-sm
+                font-bold
+                text-slate-950
+                shadow-lg
+                shadow-emerald-500/25
+                transition-all
+                duration-200
+                hover:-translate-y-0.5
+                hover:from-emerald-400
+                hover:to-teal-400
+                hover:shadow-emerald-500/40
+                active:translate-y-0
+                cursor-pointer
+              "
+            >
+              <UserPlus className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
+              <span>Add Character</span>
+            </button>
+          </div>
         </div>
 
         {/* Character Count */}
@@ -547,10 +692,116 @@ export default function CharactersPage() {
         )}
       </div>
 
+      {/* Search & Filter Bar */}
+      {characters.length > 0 && (
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          {/* Search Input */}
+          <div className="relative flex-1 max-w-md">
+            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search characters or planted berries..."
+              className="
+                w-full
+                rounded-xl
+                border
+                border-slate-800
+                light:border-slate-300
+                bg-slate-900/60
+                light:bg-white
+                py-2.5
+                pl-10
+                pr-9
+                text-sm
+                text-white
+                light:text-slate-900
+                placeholder-slate-500
+                transition-all
+                focus:border-emerald-500
+                focus:outline-none
+                focus:ring-1
+                focus:ring-emerald-500
+              "
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white light:hover:text-slate-900 cursor-pointer"
+                aria-label="Clear search"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+
+          {/* Filter Pills */}
+          <div className="flex flex-wrap items-center gap-2">
+            {[
+              { id: "all", label: "All", count: characters.length },
+              { id: "needWater", label: "Needs Water", count: countNeedWater, icon: "💧" },
+              { id: "harvestReady", label: "Harvest Ready", count: countHarvestReady, icon: "🌾" },
+              { id: "growing", label: "Growing", count: countGrowing, icon: "🌱" },
+              { id: "ready", label: "Ready to Plant", count: countReadyToPlant, icon: "⚪" },
+              ...(countWilted > 0
+                ? [{ id: "wilted", label: "Wilted", count: countWilted, icon: "🍂" }]
+                : []),
+            ].map((pill) => {
+              const isActive = statusFilter === pill.id;
+              return (
+                <button
+                  key={pill.id}
+                  type="button"
+                  onClick={() => setStatusFilter(pill.id as any)}
+                  className={`
+                    inline-flex
+                    items-center
+                    gap-1.5
+                    rounded-xl
+                    px-3.5
+                    py-2
+                    text-xs
+                    font-bold
+                    transition-all
+                    cursor-pointer
+                    ${
+                      isActive
+                        ? "border border-emerald-400/40 bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20"
+                        : "border border-slate-800 light:border-slate-200 bg-slate-900/60 light:bg-slate-100 text-slate-400 light:text-slate-600 hover:border-slate-700 light:hover:border-slate-300 hover:text-white light:hover:text-slate-900"
+                    }
+                  `}
+                >
+                  {pill.icon && <span>{pill.icon}</span>}
+                  <span>{pill.label}</span>
+                  <span
+                    className={`
+                      rounded-md
+                      px-1.5
+                      py-0.5
+                      text-[10px]
+                      font-extrabold
+                      ${
+                        isActive
+                          ? "bg-slate-950/20 text-slate-950"
+                          : "bg-slate-800 light:bg-slate-200 text-slate-300 light:text-slate-700"
+                      }
+                    `}
+                  >
+                    {pill.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* =====================================
           Character Content
       ===================================== */}
-      <div className="mt-8">
+      <div>
 
       {characters.length === 0 ? (
 
@@ -662,6 +913,31 @@ export default function CharactersPage() {
 
         </div>
 
+      ) : filteredCharacters.length === 0 ? (
+
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-800 light:border-slate-300 bg-slate-900/40 light:bg-slate-50 py-16 px-6 text-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-800/80 light:bg-slate-200 text-2xl text-slate-400 mb-4">
+            <Search className="h-7 w-7" />
+          </div>
+          <h3 className="text-lg font-bold text-white light:text-slate-900">
+            No matching characters
+          </h3>
+          <p className="mt-1 max-w-sm text-xs sm:text-sm text-slate-400 light:text-slate-600">
+            No characters match your current search or status filter.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              setSearchQuery("");
+              setStatusFilter("all");
+            }}
+            className="mt-5 inline-flex items-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-500/10 hover:bg-emerald-500/20 px-4 py-2 text-xs font-bold text-emerald-400 light:text-emerald-700 transition-colors cursor-pointer"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            <span>Reset Filters</span>
+          </button>
+        </div>
+
       ) : (
 
         <div
@@ -672,7 +948,7 @@ export default function CharactersPage() {
           "
         >
 
-          {characters.map(
+          {filteredCharacters.map(
             (
               character,
               index

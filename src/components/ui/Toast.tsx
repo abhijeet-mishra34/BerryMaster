@@ -1,40 +1,45 @@
 import { createPortal } from "react-dom";
-import { X } from "lucide-react";
+import { X, CheckCircle2, AlertCircle, Droplets, AlertTriangle, Sparkles } from "lucide-react";
 import { useToast, type ToastType } from "../../context/ToastContext";
 
 // ── Per-type visual config ─────────────────────────────────────────────────
 
-const config: Record<
-  ToastType,
-  { icon: string; bar: string; text: string; border: string; bg: string }
-> = {
+const config = {
   success: {
-    icon: "✅",
+    icon: CheckCircle2,
+    iconColor: "text-emerald-400 light:text-emerald-700",
     bar: "bg-emerald-500",
-    text: "text-emerald-300",
-    border: "border-emerald-500/30",
-    bg: "bg-emerald-500/10",
+    text: "text-slate-100 light:text-slate-900",
+    border: "border-emerald-500/30 light:border-emerald-200",
+    bg: "bg-slate-950/90 light:bg-white/95",
+    iconBg: "bg-emerald-500/15 light:bg-emerald-50 text-emerald-400 light:text-emerald-700",
   },
   error: {
-    icon: "❌",
-    bar: "bg-red-500",
-    text: "text-red-300",
-    border: "border-red-500/30",
-    bg: "bg-red-500/10",
+    icon: AlertCircle,
+    iconColor: "text-rose-400 light:text-rose-700",
+    bar: "bg-rose-500",
+    text: "text-slate-100 light:text-slate-900",
+    border: "border-rose-500/30 light:border-rose-200",
+    bg: "bg-slate-950/90 light:bg-white/95",
+    iconBg: "bg-rose-500/15 light:bg-rose-50 text-rose-400 light:text-rose-700",
   },
   info: {
-    icon: "💧",
+    icon: Droplets,
+    iconColor: "text-sky-400 light:text-sky-700",
     bar: "bg-sky-500",
-    text: "text-sky-300",
-    border: "border-sky-500/30",
-    bg: "bg-sky-500/10",
+    text: "text-slate-100 light:text-slate-900",
+    border: "border-sky-500/30 light:border-sky-200",
+    bg: "bg-slate-950/90 light:bg-white/95",
+    iconBg: "bg-sky-500/15 light:bg-sky-50 text-sky-400 light:text-sky-700",
   },
   warning: {
-    icon: "⚠️",
+    icon: AlertTriangle,
+    iconColor: "text-amber-400 light:text-amber-700",
     bar: "bg-amber-500",
-    text: "text-amber-300",
-    border: "border-amber-500/30",
-    bg: "bg-amber-500/10",
+    text: "text-slate-100 light:text-slate-900",
+    border: "border-amber-500/30 light:border-amber-200",
+    bg: "bg-slate-950/90 light:bg-white/95",
+    iconBg: "bg-amber-500/15 light:bg-amber-50 text-amber-400 light:text-amber-700",
   },
 };
 
@@ -51,19 +56,44 @@ function Toast({
 }) {
   const { removeToast } = useToast();
   const c = config[type];
+  const IconComponent = c.icon;
 
   return (
     <div
-      className={`toast-slide-in relative flex w-80 items-start gap-3 overflow-hidden rounded-2xl border ${c.border} ${c.bg} px-4 py-3.5 shadow-2xl shadow-black/40 backdrop-blur-xl`}
+      className={`
+        toast-slide-in
+        relative
+        flex
+        w-84
+        sm:w-92
+        items-center
+        gap-3
+        overflow-hidden
+        rounded-2xl
+        border
+        ${c.border}
+        ${c.bg}
+        px-4
+        py-3.5
+        shadow-2xl
+        shadow-black/30
+        light:shadow-slate-300/50
+        backdrop-blur-xl
+        transition-all
+        duration-200
+        hover:scale-[1.01]
+      `}
     >
-      {/* Accent bar */}
-      <div className={`absolute left-0 top-0 bottom-0 w-[3px] ${c.bar} rounded-l-2xl`} />
+      {/* Accent indicator bar */}
+      <div className={`absolute left-0 top-0 bottom-0 w-1 ${c.bar} rounded-l-2xl`} />
 
       {/* Progress bar */}
       <div className={`toast-progress absolute bottom-0 left-0 right-0 h-[2px] ${c.bar} opacity-40`} />
 
       {/* Icon */}
-      <span className="mt-0.5 shrink-0 text-base leading-none">{c.icon}</span>
+      <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${c.iconBg}`}>
+        <IconComponent className="h-4 w-4" />
+      </div>
 
       {/* Message */}
       <p className={`flex-1 text-xs font-semibold leading-relaxed ${c.text}`}>
@@ -74,7 +104,7 @@ function Toast({
       <button
         type="button"
         onClick={() => removeToast(id)}
-        className="mt-0.5 shrink-0 rounded-md p-0.5 text-slate-500 transition-colors hover:text-slate-300"
+        className="shrink-0 rounded-lg p-1 text-slate-400 transition-colors hover:bg-slate-800/50 light:hover:bg-slate-100 hover:text-white light:hover:text-slate-900 cursor-pointer"
         aria-label="Dismiss notification"
       >
         <X className="h-3.5 w-3.5" />
@@ -94,7 +124,7 @@ export default function ToastContainer() {
     <div
       aria-live="polite"
       aria-label="Notifications"
-      className="fixed bottom-6 right-6 z-[200] flex flex-col gap-3"
+      className="fixed bottom-6 right-6 z-[200] flex flex-col gap-2.5 pointer-events-auto"
     >
       {toasts.map((t) => (
         <Toast key={t.id} {...t} />

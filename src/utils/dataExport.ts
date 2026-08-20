@@ -1,19 +1,23 @@
 import { STORAGE_KEYS } from "../constants/storageKeys";
 
+function getParsedStorageItem(key: string): unknown {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
 export function exportBerryMasterData() {
+  const characters = getParsedStorageItem(STORAGE_KEYS.CHARACTERS);
+  const favoriteBerries = getParsedStorageItem(STORAGE_KEYS.FAVORITE_BERRIES);
+  const activities = getParsedStorageItem(STORAGE_KEYS.ACTIVITIES);
+
   const backup = {
-    characters: localStorage.getItem(
-      STORAGE_KEYS.CHARACTERS
-    ),
-
-    favoriteBerries: localStorage.getItem(
-      STORAGE_KEYS.FAVORITE_BERRIES
-    ),
-
-    activities: localStorage.getItem(
-      STORAGE_KEYS.ACTIVITIES
-    ),
-
+    characters,
+    favoriteBerries,
+    activities,
     exportedAt: new Date().toISOString(),
   };
 
@@ -26,7 +30,7 @@ export function exportBerryMasterData() {
       ),
     ],
     {
-      type: "application/json",
+      type: "application/json;charset=utf-8",
     }
   );
 
@@ -41,7 +45,11 @@ export function exportBerryMasterData() {
       .toISOString()
       .split("T")[0]}.json`;
 
+  document.body.appendChild(link);
   link.click();
+  document.body.removeChild(link);
 
-  URL.revokeObjectURL(url);
+  setTimeout(() => {
+    URL.revokeObjectURL(url);
+  }, 1000);
 }

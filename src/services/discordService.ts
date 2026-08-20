@@ -49,15 +49,29 @@ export interface DiscordFeedbackPayload {
 
 // ── Send ───────────────────────────────────────────────────────────────────
 
+let lastSubmittedAt = 0;
+const SUBMISSION_COOLDOWN_MS = 5000;
+
 export async function sendFeedbackToDiscord(
   payload: DiscordFeedbackPayload
 ): Promise<void> {
+  const now = Date.now();
+  if (now - lastSubmittedAt < SUBMISSION_COOLDOWN_MS) {
+    throw new Error("Please wait a few seconds before submitting more feedback.");
+  }
+  lastSubmittedAt = now;
+
   const emoji = CATEGORY_EMOJIS[payload.category];
   const color = CATEGORY_COLORS[payload.category];
   const stars =
     "⭐".repeat(payload.rating) + "☆".repeat(5 - payload.rating);
   const ratingLabel = RATING_LABELS[payload.rating] ?? `${payload.rating}/5`;
   const categoryLabel = CATEGORY_LABELS[payload.category];
+
+  // Truncate fields to safe Discord limits
+  const safeSubject = payload.subject.slice(0, 250);
+  const safeMessage = payload.message.slice(0, 1900);
+  const safeEmail = payload.email ? payload.email.slice(0, 200) : "*Anonymous*";
 
   const body = {
     username: "BerryMaster Feedback",
@@ -66,8 +80,8 @@ export async function sendFeedbackToDiscord(
         author: {
           name: `${emoji} New ${categoryLabel}`,
         },
-        title: payload.subject,
-        description: payload.message,
+        title: safeSubject,
+        description: safeMessage,
         color,
         fields: [
           {
@@ -82,7 +96,7 @@ export async function sendFeedbackToDiscord(
           },
           {
             name: "📧 Contact",
-            value: payload.email ? payload.email : "*Anonymous*",
+            value: safeEmail,
             inline: true,
           },
         ],
@@ -94,13 +108,21 @@ export async function sendFeedbackToDiscord(
     ],
   };
 
-  const response = await fetch(WEBHOOK_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 8000);
 
-  if (!response.ok) {
-    throw new Error(`Discord webhook returned ${response.status}`);
+  try {
+    const response = await fetch(WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Discord webhook returned status ${response.status}`);
+    }
+  } finally {
+    clearTimeout(timeoutId);
   }
 }

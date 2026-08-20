@@ -47,6 +47,10 @@ type CharacterContextType = {
   harvestBerry: (
     characterId: string
   ) => void;
+
+  waterAllReady: () => number;
+
+  harvestAllReady: () => number;
 };
 
 const CharacterContext = createContext<
@@ -362,6 +366,79 @@ export function CharacterProvider({
     }
   }
 
+  /**
+   * Bulk waters all characters that currently need water.
+   */
+  function waterAllReady(): number {
+    const now = new Date();
+    const charactersToWater = characters.filter((c) => {
+      if (!c.plantedBerryId || !c.nextWaterAt) return false;
+      const harvestAt = c.harvestAt ? new Date(c.harvestAt) : null;
+      return now >= new Date(c.nextWaterAt) && (!harvestAt || now < harvestAt);
+    });
+
+    if (charactersToWater.length === 0) return 0;
+
+    const idsToWater = new Set(charactersToWater.map((c) => c.id));
+
+    setCharacters((current) =>
+      current.map((character) => {
+        if (!idsToWater.has(character.id) || !character.plantedBerryId) {
+          return character;
+        }
+        const berry = berryDatabase.find((b) => b.id === character.plantedBerryId);
+        if (!berry) return character;
+        return waterBerryOnCharacter(character, berry);
+      })
+    );
+
+    charactersToWater.forEach((c) => {
+      const berry = berryDatabase.find((b) => b.id === c.plantedBerryId);
+      addActivity(
+        "watered",
+        `Watered ${c.name}'s ${berry?.name ?? "berry"}`
+      );
+    });
+
+    return charactersToWater.length;
+  }
+
+  /**
+   * Bulk harvests all characters whose crops are ripe.
+   */
+  function harvestAllReady(): number {
+    const now = Date.now();
+    const charactersToHarvest = characters.filter((c) => {
+      if (!c.plantedBerryId || !c.harvestAt) return false;
+      const harvestAt = new Date(c.harvestAt).getTime();
+      const wiltAt = c.wiltAt ? new Date(c.wiltAt).getTime() : Infinity;
+      return now >= harvestAt && now < wiltAt;
+    });
+
+    if (charactersToHarvest.length === 0) return 0;
+
+    const idsToHarvest = new Set(charactersToHarvest.map((c) => c.id));
+
+    setCharacters((current) =>
+      current.map((character) => {
+        if (!idsToHarvest.has(character.id)) {
+          return character;
+        }
+        return harvestBerryOnCharacter(character);
+      })
+    );
+
+    charactersToHarvest.forEach((c) => {
+      const berry = berryDatabase.find((b) => b.id === c.plantedBerryId);
+      addActivity(
+        "harvested",
+        `Harvested ${berry?.name ?? "berries"} from ${c.name}`
+      );
+    });
+
+    return charactersToHarvest.length;
+  }
+
   return (
     <CharacterContext.Provider
       value={{
@@ -373,6 +450,8 @@ export function CharacterProvider({
         removeBerry,
         waterBerry,
         harvestBerry,
+        waterAllReady,
+        harvestAllReady,
       }}
     >
       {children}

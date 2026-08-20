@@ -6,6 +6,9 @@ import {
   PackageCheck,
   CheckCircle2,
   ExternalLink,
+  Download,
+  Monitor,
+  Smartphone,
 } from "lucide-react";
 import berryMasterIcon from "../assets/brand/berrymaster-icon.png";
 import { CURRENT_APP_VERSION } from "../services/updateService";
@@ -201,22 +204,96 @@ export default function AboutPage() {
       </section>
 
       {/* App Version Card */}
-      <section className="theme-card rounded-xl border border-emerald-500/30 light:border-emerald-200 bg-emerald-950/20 light:bg-emerald-50/60 p-7 sm:p-8 backdrop-blur-xl shadow-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
-        <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 light:text-emerald-600 border border-emerald-500/20">
-            <PackageCheck className="h-6 w-6" />
+      <section className="theme-card rounded-xl border border-emerald-500/30 light:border-emerald-200 bg-emerald-950/20 light:bg-emerald-50/60 p-7 sm:p-8 backdrop-blur-xl shadow-xl flex flex-col gap-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 light:text-emerald-600 border border-emerald-500/20">
+              <PackageCheck className="h-6 w-6" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-white light:text-slate-900">
+                BerryMaster Official Release
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-400 light:text-slate-600">
+                Desktop Application & Mobile APK
+              </p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-base font-bold text-white light:text-slate-900">
-              BerryMaster Official Release
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-400 light:text-slate-600">
-              Desktop Application & Web Edition
-            </p>
-          </div>
+
+          <span className="self-start sm:self-auto rounded-full border border-emerald-500/40 bg-emerald-500/10 px-4 py-1.5 text-xs font-mono font-extrabold text-emerald-400 light:text-emerald-700">
+            v{CURRENT_APP_VERSION}
+          </span>
         </div>
 
-        <div className="flex items-center gap-3.5 flex-wrap">
+        <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-white/[0.08] light:border-slate-200">
+          <button
+            type="button"
+            onClick={() =>
+              openExternalUrl(
+                "https://github.com/abhijeet-mishra34/BerryMaster/releases/latest/download/BerryMaster-Windows-Setup.exe"
+              )
+            }
+            className="
+              inline-flex
+              items-center
+              gap-2
+              rounded-xl
+              border
+              border-sky-400/40
+              bg-sky-500
+              px-5
+              py-3
+              text-xs
+              font-bold
+              text-slate-950
+              shadow-sm
+              shadow-sky-500/20
+              hover:bg-sky-400
+              hover:shadow-md
+              hover:shadow-sky-500/30
+              transition-all
+              cursor-pointer
+              active:scale-95
+            "
+          >
+            <Monitor className="h-4 w-4" />
+            <span>Download Windows (.exe)</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() =>
+              openExternalUrl(
+                "https://github.com/abhijeet-mishra34/BerryMaster/releases/latest/download/BerryMaster-universal.apk"
+              )
+            }
+            className="
+              inline-flex
+              items-center
+              gap-2
+              rounded-xl
+              border
+              border-emerald-400/40
+              bg-emerald-500
+              px-5
+              py-3
+              text-xs
+              font-bold
+              text-slate-950
+              shadow-sm
+              shadow-emerald-500/20
+              hover:bg-emerald-400
+              hover:shadow-md
+              hover:shadow-emerald-500/30
+              transition-all
+              cursor-pointer
+              active:scale-95
+            "
+          >
+            <Smartphone className="h-4 w-4" />
+            <span>Download Android (.apk)</span>
+          </button>
+
           <button
             type="button"
             onClick={() =>
@@ -230,30 +307,28 @@ export default function AboutPage() {
               gap-2
               rounded-xl
               border
-              border-emerald-500/40
-              light:border-emerald-300
-              bg-emerald-500/10
-              light:bg-emerald-100
+              border-slate-700
+              light:border-slate-300
+              bg-slate-800/80
+              light:bg-white
               px-5
-              py-2.5
+              py-3
               text-xs
               font-bold
-              text-emerald-400
-              light:text-emerald-800
-              hover:bg-emerald-500
-              hover:text-slate-950
-              light:hover:text-white
+              text-slate-200
+              light:text-slate-800
+              hover:bg-slate-700
+              light:hover:bg-slate-100
+              hover:text-white
+              light:hover:text-slate-900
               transition-all
               cursor-pointer
+              active:scale-95
             "
           >
             <ExternalLink className="h-4 w-4" />
-            <span>Release Notes</span>
+            <span>GitHub Releases</span>
           </button>
-
-          <span className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-4 py-1.5 text-xs font-mono font-extrabold text-emerald-400 light:text-emerald-700">
-            v{CURRENT_APP_VERSION}
-          </span>
         </div>
       </section>
     </div>
