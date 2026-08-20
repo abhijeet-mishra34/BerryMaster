@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom";
-import { X, CheckCircle2, AlertCircle, Droplets, AlertTriangle, Sparkles } from "lucide-react";
+import { X, CheckCircle2, AlertCircle, Droplets, AlertTriangle } from "lucide-react";
 import { useToast, type ToastType } from "../../context/ToastContext";
 
 // ── Per-type visual config ─────────────────────────────────────────────────

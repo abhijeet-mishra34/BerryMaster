@@ -6,7 +6,6 @@ import {
   PackageCheck,
   CheckCircle2,
   ExternalLink,
-  Download,
   Monitor,
   Smartphone,
 } from "lucide-react";
