@@ -24,6 +24,7 @@ import { exportBerryMasterData } from "../utils/dataExport";
 import { importBerryMasterData } from "../utils/dataImport";
 import { useActivities } from "../context/ActivityContext";
 import { useSettings } from "../context/SettingsContext";
+import { useToast } from "../context/ToastContext";
 import { resetBerryMaster } from "../utils/resetApp";
 import {
   checkForAppUpdates,
@@ -60,10 +61,41 @@ export default function SettingsPage() {
     setNotifyOnWilt,
   } = useSettings();
 
+  const { addToast } = useToast();
+
+  const [exportMessage, setExportMessage] = useState<string | null>(null);
+  const [exportError, setExportError] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+
   const [importMessage, setImportMessage] = useState<string | null>(null);
   const [importError, setImportError] = useState(false);
   const [isClearActivitiesOpen, setIsClearActivitiesOpen] = useState(false);
   const [isResetOpen, setIsResetOpen] = useState(false);
+
+  async function handleExportData() {
+    setIsExporting(true);
+    setExportMessage(null);
+    try {
+      const res = await exportBerryMasterData();
+      if (res.cancelled) {
+        setIsExporting(false);
+        return;
+      }
+      setExportError(!res.success);
+      setExportMessage(res.message);
+      if (res.success) {
+        addToast("Backup saved successfully!", "success");
+      } else {
+        addToast(res.message || "Failed to export backup", "error");
+      }
+    } catch {
+      setExportError(true);
+      setExportMessage("Failed to export backup.");
+      addToast("Failed to export backup.", "error");
+    } finally {
+      setIsExporting(false);
+    }
+  }
 
   // Notification state
   const [permissionState, setPermissionState] =
@@ -776,11 +808,12 @@ export default function SettingsPage() {
 
             <button
               type="button"
-              onClick={exportBerryMasterData}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-500/20 px-5 py-3.5 text-sm font-bold text-emerald-300 transition-all hover:bg-emerald-500 hover:text-slate-950 hover:shadow-md hover:shadow-emerald-500/20 active:scale-[0.98] cursor-pointer"
+              disabled={isExporting}
+              onClick={handleExportData}
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-500/20 px-5 py-3.5 text-sm font-bold text-emerald-300 transition-all hover:bg-emerald-500 hover:text-slate-950 hover:shadow-md hover:shadow-emerald-500/20 active:scale-[0.98] disabled:opacity-60 cursor-pointer"
             >
-              <Download className="h-4.5 w-4.5" />
-              Download Backup
+              <Download className={`h-4.5 w-4.5 ${isExporting ? "animate-bounce" : ""}`} />
+              <span>{isExporting ? "Exporting Backup..." : "Download Backup"}</span>
             </button>
           </div>
 
@@ -844,6 +877,18 @@ export default function SettingsPage() {
           onChange={handleFileSelected}
           className="hidden"
         />
+
+        {exportMessage && (
+          <div
+            className={`rounded-xl border px-5 py-3.5 text-xs font-medium ${
+              exportError
+                ? "border-rose-500/30 bg-rose-500/10 text-rose-400"
+                : "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+            }`}
+          >
+            {exportMessage}
+          </div>
+        )}
 
         {importMessage && (
           <div

@@ -70,13 +70,68 @@ fn open_external_url(#[allow(unused_variables)] app: tauri::AppHandle, url: Stri
     Ok(())
 }
 
+#[tauri::command]
+fn save_backup_file(filename: String, content: String) -> Result<String, String> {
+    #[cfg(target_os = "windows")]
+    {
+        // 1. Try Windows native SaveFileDialog via PowerShell
+        let safe_filename = filename.replace('\'', "");
+        let ps_script = format!(
+            "[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms') | Out-Null; \
+             $d = New-Object System.Windows.Forms.SaveFileDialog; \
+             $d.Filter = 'JSON Files (*.json)|*.json|All Files (*.*)|*.*'; \
+             $d.FileName = '{}'; \
+             $d.Title = 'Save BerryMaster Backup'; \
+             if ($d.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {{ $d.FileName }} else {{ 'CANCELLED' }}",
+            safe_filename
+        );
+
+        if let Ok(output) = std::process::Command::new("powershell")
+            .args(["-NoProfile", "-NonInteractive", "-Command", &ps_script])
+            .output()
+        {
+            let path_str = String::from_utf8_lossy(&output.stdout).trim().to_string();
+            if path_str == "CANCELLED" {
+                return Ok("cancelled".to_string());
+            }
+            if !path_str.is_empty() && std::fs::write(&path_str, &content).is_ok() {
+                return Ok(path_str);
+            }
+        }
+
+        // 2. Fallback to saving to user's Downloads folder
+        if let Ok(userprofile) = std::env::var("USERPROFILE") {
+            let download_path = std::path::Path::new(&userprofile).join("Downloads").join(&filename);
+            if std::fs::write(&download_path, &content).is_ok() {
+                return Ok(download_path.to_string_lossy().to_string());
+            }
+        }
+    }
+
+    #[cfg(not(target_os = "windows"))]
+    {
+        if let Ok(home) = std::env::var("HOME") {
+            let download_path = std::path::Path::new(&home).join("Downloads").join(&filename);
+            if std::fs::write(&download_path, &content).is_ok() {
+                return Ok(download_path.to_string_lossy().to_string());
+            }
+        }
+    }
+
+    if std::fs::write(&filename, &content).is_ok() {
+        return Ok(filename);
+    }
+
+    Err("Unable to write backup file to disk".to_string())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     #[allow(unused_mut)]
     let mut builder = tauri::Builder::default()
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![open_external_url, set_minimize_to_tray]);
+        .invoke_handler(tauri::generate_handler![open_external_url, set_minimize_to_tray, save_backup_file]);
 
     #[cfg(desktop)]
     {
