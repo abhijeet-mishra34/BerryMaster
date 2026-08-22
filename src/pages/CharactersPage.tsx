@@ -245,94 +245,89 @@ export default function CharactersPage() {
     isChangeBerryOpen ||
     plantCharacter !== null;
 
-  const keyHandlerRef = useRef<((e: KeyboardEvent) => void) | null>(null);
-
-  keyHandlerRef.current = (e: KeyboardEvent) => {
-    const tag = (document.activeElement?.tagName ?? "").toLowerCase();
-    if (["input", "textarea", "select"].includes(tag)) return;
-    if (anyModalOpen) return;
-
-    switch (e.key) {
-      case "n":
-      case "N":
-        e.preventDefault();
-        openAddModal();
-        break;
-
-      case "ArrowDown":
-      case "ArrowRight":
-        e.preventDefault();
-        if (filteredCharacters.length === 0) return;
-        setFocusedIndex((prev) =>
-          prev === null ? 0 : Math.min(prev + 1, filteredCharacters.length - 1)
-        );
-        break;
-
-      case "ArrowUp":
-      case "ArrowLeft":
-        e.preventDefault();
-        if (filteredCharacters.length === 0) return;
-        setFocusedIndex((prev) =>
-          prev === null ? filteredCharacters.length - 1 : Math.max(prev - 1, 0)
-        );
-        break;
-
-      case "e":
-      case "E": {
-        if (focusedIndex === null || !filteredCharacters[focusedIndex]) return;
-        e.preventDefault();
-        openEditModal(filteredCharacters[focusedIndex]);
-        break;
-      }
-
-      case "Delete":
-      case "Backspace": {
-        if (focusedIndex === null || !filteredCharacters[focusedIndex]) return;
-        e.preventDefault();
-        openDeleteDialog(filteredCharacters[focusedIndex], focusedIndex);
-        break;
-      }
-
-      case "w":
-      case "W": {
-        if (focusedIndex === null || !filteredCharacters[focusedIndex]) return;
-        e.preventDefault();
-        handleWater(filteredCharacters[focusedIndex]);
-        break;
-      }
-
-      case "h":
-      case "H": {
-        if (focusedIndex === null || !filteredCharacters[focusedIndex]) return;
-        e.preventDefault();
-        handleHarvest(filteredCharacters[focusedIndex]);
-        break;
-      }
-
-      case "Escape":
-        setFocusedIndex(null);
-        break;
-    }
-  };
-
   useEffect(() => {
-    function handle(e: KeyboardEvent) {
-      keyHandlerRef.current?.(e);
+    function handleKeyDown(e: KeyboardEvent) {
+      const tag = (document.activeElement?.tagName ?? "").toLowerCase();
+      if (["input", "textarea", "select"].includes(tag)) return;
+      if (anyModalOpen) return;
+
+      switch (e.key) {
+        case "n":
+        case "N":
+          e.preventDefault();
+          openAddModal();
+          break;
+
+        case "ArrowDown":
+        case "ArrowRight":
+          e.preventDefault();
+          if (filteredCharacters.length === 0) return;
+          setFocusedIndex((prev) =>
+            prev === null ? 0 : Math.min(prev + 1, filteredCharacters.length - 1)
+          );
+          break;
+
+        case "ArrowUp":
+        case "ArrowLeft":
+          e.preventDefault();
+          if (filteredCharacters.length === 0) return;
+          setFocusedIndex((prev) =>
+            prev === null ? filteredCharacters.length - 1 : Math.max(prev - 1, 0)
+          );
+          break;
+
+        case "e":
+        case "E": {
+          if (focusedIndex === null || !filteredCharacters[focusedIndex]) return;
+          e.preventDefault();
+          openEditModal(filteredCharacters[focusedIndex]);
+          break;
+        }
+
+        case "Delete":
+        case "Backspace": {
+          if (focusedIndex === null || !filteredCharacters[focusedIndex]) return;
+          e.preventDefault();
+          openDeleteDialog(filteredCharacters[focusedIndex], focusedIndex);
+          break;
+        }
+
+        case "w":
+        case "W": {
+          if (focusedIndex === null || !filteredCharacters[focusedIndex]) return;
+          e.preventDefault();
+          handleWater(filteredCharacters[focusedIndex]);
+          break;
+        }
+
+        case "h":
+        case "H": {
+          if (focusedIndex === null || !filteredCharacters[focusedIndex]) return;
+          e.preventDefault();
+          handleHarvest(filteredCharacters[focusedIndex]);
+          break;
+        }
+
+        case "Escape":
+          setFocusedIndex(null);
+          break;
+      }
     }
-    document.addEventListener("keydown", handle);
-    return () => document.removeEventListener("keydown", handle);
-  }, []);
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  });
 
   // Scroll focused card into view when navigating
   useEffect(() => {
     if (focusedIndex === null) return;
-    const char = characters[focusedIndex];
+    const char = filteredCharacters[focusedIndex];
     if (!char) return;
     characterRefs.current[char.id]?.scrollIntoView({
       behavior: "smooth",
       block: "nearest",
     });
-  }, [focusedIndex, characters]);
+  }, [focusedIndex, filteredCharacters]);
 
 
   // =====================================
@@ -739,22 +734,24 @@ export default function CharactersPage() {
 
           {/* Filter Pills */}
           <div className="flex flex-wrap items-center gap-2">
-            {[
-              { id: "all", label: "All", count: characters.length },
-              { id: "needWater", label: "Needs Water", count: countNeedWater, icon: "💧" },
-              { id: "harvestReady", label: "Harvest Ready", count: countHarvestReady, icon: "🌾" },
-              { id: "growing", label: "Growing", count: countGrowing, icon: "🌱" },
-              { id: "ready", label: "Ready to Plant", count: countReadyToPlant, icon: "⚪" },
-              ...(countWilted > 0
-                ? [{ id: "wilted", label: "Wilted", count: countWilted, icon: "🍂" }]
-                : []),
-            ].map((pill) => {
+            {(
+              [
+                { id: "all" as const, label: "All", count: characters.length },
+                { id: "needWater" as const, label: "Needs Water", count: countNeedWater, icon: "💧" },
+                { id: "harvestReady" as const, label: "Harvest Ready", count: countHarvestReady, icon: "🌾" },
+                { id: "growing" as const, label: "Growing", count: countGrowing, icon: "🌱" },
+                { id: "ready" as const, label: "Ready to Plant", count: countReadyToPlant, icon: "⚪" },
+                ...(countWilted > 0
+                  ? [{ id: "wilted" as const, label: "Wilted", count: countWilted, icon: "🍂" }]
+                  : []),
+              ]
+            ).map((pill) => {
               const isActive = statusFilter === pill.id;
               return (
                 <button
                   key={pill.id}
                   type="button"
-                  onClick={() => setStatusFilter(pill.id as any)}
+                  onClick={() => setStatusFilter(pill.id)}
                   className={`
                     inline-flex
                     items-center

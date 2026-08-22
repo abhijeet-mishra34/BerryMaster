@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Settings, User, ChevronDown } from "lucide-react";
+import { Settings, User, ChevronDown, MessageSquareHeart, Info } from "lucide-react";
 
 import NotificationBell from "../notifications/NotificationBell";
 
@@ -188,23 +188,59 @@ export default function Header() {
                 right-0
                 top-12
                 z-50
-                w-60
+                w-64
                 rounded-2xl
                 p-3
                 backdrop-blur-xl
                 shadow-2xl
               "
             >
-              <div className="rounded-xl bg-slate-800/50 light:bg-slate-100 p-3">
+              <div className="rounded-xl bg-slate-800/50 light:bg-slate-100 p-3 mb-2">
                 <div className="flex items-center gap-2.5">
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400 font-bold text-xs">
                     BM
                   </div>
-                  <div>
-                    <p className="text-xs font-bold text-white light:text-slate-900">BerryMaster User</p>
-                    <p className="text-[11px] text-slate-400 light:text-slate-500">PokeMMO Trainer</p>
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-white light:text-slate-900 truncate">BerryMaster Farmer</p>
+                    <p className="text-[11px] text-slate-400 light:text-slate-500">PokeMMO Companion</p>
                   </div>
                 </div>
+              </div>
+
+              <div className="flex flex-col gap-1 border-t border-slate-800/60 light:border-slate-200 pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigate("/settings");
+                    setIsProfileMenuOpen(false);
+                  }}
+                  className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-semibold text-slate-300 light:text-slate-700 hover:bg-slate-800/60 light:hover:bg-slate-100 hover:text-white light:hover:text-slate-900 transition-colors text-left cursor-pointer"
+                >
+                  <Settings className="h-4 w-4 text-emerald-400 light:text-emerald-600" />
+                  <span>Settings & Preferences</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigate("/feedback");
+                    setIsProfileMenuOpen(false);
+                  }}
+                  className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-semibold text-slate-300 light:text-slate-700 hover:bg-slate-800/60 light:hover:bg-slate-100 hover:text-white light:hover:text-slate-900 transition-colors text-left cursor-pointer"
+                >
+                  <MessageSquareHeart className="h-4 w-4 text-amber-400 light:text-amber-600" />
+                  <span>Feedback & Suggestions</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigate("/about");
+                    setIsProfileMenuOpen(false);
+                  }}
+                  className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-semibold text-slate-300 light:text-slate-700 hover:bg-slate-800/60 light:hover:bg-slate-100 hover:text-white light:hover:text-slate-900 transition-colors text-left cursor-pointer"
+                >
+                  <Info className="h-4 w-4 text-sky-400 light:text-sky-600" />
+                  <span>About BerryMaster</span>
+                </button>
               </div>
             </div>
           )}

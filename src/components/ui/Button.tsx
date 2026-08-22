@@ -14,11 +14,11 @@ const variants = {
   primary:
     "border border-emerald-400/40 bg-emerald-500 text-slate-950 hover:bg-emerald-400 hover:shadow-lg hover:shadow-emerald-500/25 active:scale-[0.98]",
   secondary:
-    "border border-slate-700 bg-slate-800/80 text-slate-200 hover:border-slate-600 hover:bg-slate-700 hover:text-white active:scale-[0.98]",
+    "border border-slate-700 light:border-slate-300 bg-slate-800/80 light:bg-slate-100 text-slate-200 light:text-slate-700 hover:border-slate-600 light:hover:border-slate-400 hover:bg-slate-700 light:hover:bg-slate-200 hover:text-white light:hover:text-slate-900 active:scale-[0.98]",
   danger:
-    "border border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500 hover:text-white hover:shadow-lg hover:shadow-red-500/20 active:scale-[0.98]",
+    "border border-red-500/30 light:border-red-200 bg-red-500/10 light:bg-red-50 text-red-300 light:text-red-700 hover:bg-red-500 hover:text-white hover:shadow-lg hover:shadow-red-500/20 active:scale-[0.98]",
   info:
-    "border border-sky-500/30 bg-sky-500/10 text-sky-300 hover:bg-sky-500 hover:text-slate-950 hover:shadow-lg hover:shadow-sky-500/20 active:scale-[0.98]",
+    "border border-sky-500/30 light:border-sky-200 bg-sky-500/10 light:bg-sky-50 text-sky-300 light:text-sky-700 hover:bg-sky-500 hover:text-slate-950 light:hover:text-white hover:shadow-lg hover:shadow-sky-500/20 active:scale-[0.98]",
 };
 
 const sizes = {

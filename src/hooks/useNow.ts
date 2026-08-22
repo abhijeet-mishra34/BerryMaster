@@ -21,7 +21,7 @@ function stopGlobalTicker() {
   }
 }
 
-export function useNow(_interval = 1000): Date {
+export function useNow(): Date {
   const [now, setNow] = useState<Date>(() => lastTickDate);
 
   useEffect(() => {

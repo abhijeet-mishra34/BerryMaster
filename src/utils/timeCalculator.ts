@@ -1,4 +1,5 @@
 import type { Berry } from "../types/Berry";
+import { farmingProfiles } from "../data/farmingProfiles";
 
 export interface PlantTimers {
   plantedAt: string;
@@ -12,40 +13,17 @@ export function calculatePlantTimers(
 ): PlantTimers {
   const plantedAt = new Date();
 
-  /**
-   * Watering Strategy
-   *
-   * 16h / 20h Berries
-   * -----------------
-   * Initial watering happens while planting.
-   * One manual watering is required after 10 hours.
-   *
-   * 42h / 44h Berries
-   * -----------------
-   * No watering at planting.
-   * First watering after 4 hours.
-   * Then every 12 hours.
-   */
+  const profile = farmingProfiles.find(
+    (p) => Math.abs(p.growthTime - berry.growthTime) < 0.001
+  );
 
-  let firstWaterHours: number;
-
-  switch (berry.growthTime) {
-    case 16:
-    case 20:
-      firstWaterHours = 10;
-      break;
-
-    case 42:
-    case 44:
-      firstWaterHours = 4;
-      break;
-
-    default:
-      firstWaterHours = Math.floor(
-        berry.growthTime / 2
-      );
-      break;
-  }
+  const firstWaterHours = profile
+    ? profile.autoWaterOnPlant
+      ? profile.repeatWaterEveryHours
+      : profile.firstWaterAfterHours
+    : berry.growthTime >= 1
+    ? Math.floor(berry.growthTime / 2)
+    : berry.growthTime / 2;
 
   const nextWaterAt = new Date(
     plantedAt.getTime() +

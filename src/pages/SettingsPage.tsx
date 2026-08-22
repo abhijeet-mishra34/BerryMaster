@@ -170,14 +170,15 @@ export default function SettingsPage() {
       await importBerryMasterData(file);
       setImportError(false);
       setImportMessage("Data imported successfully. Refreshing application...");
+      addToast("Backup imported successfully! Reloading...", "success");
       setTimeout(() => {
         window.location.reload();
       }, 1000);
     } catch (error) {
       setImportError(true);
-      setImportMessage(
-        error instanceof Error ? error.message : "Import failed."
-      );
+      const errMsg = error instanceof Error ? error.message : "Import failed.";
+      setImportMessage(errMsg);
+      addToast(errMsg, "error");
     }
 
     event.target.value = "";

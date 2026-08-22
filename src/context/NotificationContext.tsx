@@ -13,7 +13,6 @@ import {
   requestNotificationPermission,
   syncBrowserNotifications,
 } from "../services/browserNotificationService";
-import { scheduleFutureCharacterAlerts } from "../services/nativeNotificationService";
 import { useCharacters } from "./CharacterContext";
 import { useSettings } from "./SettingsContext";
 
@@ -46,11 +45,6 @@ export function NotificationProvider({
   useEffect(() => {
     requestNotificationPermission();
   }, []);
-
-  // Pre-schedule future OS alerts whenever characters or settings are updated
-  useEffect(() => {
-    scheduleFutureCharacterAlerts(characters, settings);
-  }, [characters, settings]);
 
   // Refresh notifications efficiently without redundant React re-renders
   useEffect(() => {

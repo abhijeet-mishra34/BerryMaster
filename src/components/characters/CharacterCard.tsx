@@ -188,7 +188,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
       {/* Farming Timers */}
       <div className="mt-8">
         {/* Section Divider */}
-        <div className="mb-6 h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+        <div className="mb-6 h-px w-full bg-gradient-to-r from-transparent via-slate-700/50 light:via-slate-200 to-transparent" />
         <div className="mb-4 flex items-center justify-between">
           <p className={labelClass}>Farming Timers</p>
           <span className="flex items-center gap-1 text-[11px] font-semibold text-emerald-400">
@@ -281,7 +281,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
       {/* Actions Toolbar */}
       <div className="mt-8">
         {/* Section Divider */}
-        <div className="mb-6 h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+        <div className="mb-6 h-px w-full bg-gradient-to-r from-transparent via-slate-700/50 light:via-slate-200 to-transparent" />
       </div>
       <div className="relative z-10 flex flex-wrap items-center justify-end gap-3">
         {!character.plantedBerryId ? (

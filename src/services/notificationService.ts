@@ -84,7 +84,7 @@ export function generateNotifications(
     ) {
       notifications.push(
         createNotification(
-          `${cycleId}-water`,
+          `${cycleId}-water-${character.nextWaterAt}`,
           "water",
           "Water Needed",
           `${character.name} needs watering.`,

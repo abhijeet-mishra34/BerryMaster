@@ -1,4 +1,3 @@
-import type { Character } from "../types/Character";
 import type { Notification } from "../types/Notification";
 import {
   getShownNotifications,
@@ -127,10 +126,15 @@ export type NotificationOptions = {
 };
 
 /**
- * Send an immediate or scheduled native notification
+ * Send an immediate native or browser notification
  */
 export async function sendNativeNotification(options: NotificationOptions): Promise<void> {
   const { title, body, scheduledAt } = options;
+
+  // Never dispatch notifications that are scheduled for a future timestamp immediately
+  if (scheduledAt && scheduledAt > new Date()) {
+    return;
+  }
 
   if (isTauriEnvironment()) {
     try {
@@ -141,10 +145,6 @@ export async function sendNativeNotification(options: NotificationOptions): Prom
         channelId: ANDROID_CHANNEL_ID,
       };
 
-      if (scheduledAt && scheduledAt > new Date()) {
-        payload.schedule = TauriNotification.Schedule.at(scheduledAt, false, true);
-      }
-
       TauriNotification.sendNotification(payload);
     } catch (err) {
       console.warn("Tauri notification failed, falling back to Web Notification:", err);
@@ -154,18 +154,7 @@ export async function sendNativeNotification(options: NotificationOptions): Prom
   }
 
   // Web / PWA Fallback
-  if (typeof window !== "undefined" && "Notification" in window) {
-    if (window.Notification.permission === "granted") {
-      if (scheduledAt && scheduledAt > new Date()) {
-        const delay = scheduledAt.getTime() - Date.now();
-        if (delay < 2147483647) {
-          setTimeout(() => showBrowserFallback(title, body), delay);
-        }
-      } else {
-        showBrowserFallback(title, body);
-      }
-    }
-  }
+  showBrowserFallback(title, body);
 }
 
 function showBrowserFallback(title: string, body: string) {
@@ -214,57 +203,9 @@ export function syncActiveNotifications(notifications: Notification[]) {
 /**
  * Pre-schedule future OS alerts for watering and harvesting on Android / PC background
  */
-export async function scheduleFutureCharacterAlerts(
-  characters: Character[],
-  settings?: { notifyOnWater?: boolean; notifyOnHarvest?: boolean; notifyOnWilt?: boolean }
-): Promise<void> {
-  const now = new Date();
-  const notifyWater = settings?.notifyOnWater ?? true;
-  const notifyHarvest = settings?.notifyOnHarvest ?? true;
-  const notifyWilt = settings?.notifyOnWilt ?? true;
-
-  for (const char of characters) {
-    if (!char.plantedBerryId || !char.plantedAt) continue;
-
-    // 💧 Next Water schedule
-    if (notifyWater && char.nextWaterAt) {
-      const waterDate = new Date(char.nextWaterAt);
-      if (waterDate > now) {
-        sendNativeNotification({
-          title: "💧 Water Needed!",
-          body: `${char.name}'s berry needs watering now.`,
-          scheduledAt: waterDate,
-          id: `${char.id}-water-${char.plantedAt}`,
-        });
-      }
-    }
-
-    // 🌾 Harvest schedule
-    if (notifyHarvest && char.harvestAt) {
-      const harvestDate = new Date(char.harvestAt);
-      if (harvestDate > now) {
-        sendNativeNotification({
-          title: "🌾 Harvest Ready!",
-          body: `${char.name}'s crop is ripe and ready to pick!`,
-          scheduledAt: harvestDate,
-          id: `${char.id}-harvest-${char.plantedAt}`,
-        });
-      }
-    }
-
-    // 🍂 Wilt schedule
-    if (notifyWilt && char.wiltAt) {
-      const wiltDate = new Date(char.wiltAt);
-      if (wiltDate > now) {
-        sendNativeNotification({
-          title: "🍂 Berry Wilted",
-          body: `${char.name}'s crop has wilted.`,
-          scheduledAt: wiltDate,
-          id: `${char.id}-wilt-${char.plantedAt}`,
-        });
-      }
-    }
-  }
+export async function scheduleFutureCharacterAlerts(): Promise<void> {
+  // Desktop OS notifications do not support native client scheduling via Tauri plugin.
+  // Realtime alerts are dynamically checked every 5 seconds by NotificationContext.
 }
 
 /**
