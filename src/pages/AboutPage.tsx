@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Sparkles,
   ShieldAlert,
@@ -8,12 +9,22 @@ import {
   ExternalLink,
   Monitor,
   Smartphone,
+  Scale,
+  Lock,
+  FileText,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import berryMasterIcon from "../assets/brand/berrymaster-icon.png";
 import { CURRENT_APP_VERSION } from "../services/updateService";
 import { openExternalUrl } from "../utils/urlHelper";
 
 export default function AboutPage() {
+  const [activeLegalTab, setActiveLegalTab] = useState<"license" | "privacy" | "disclaimer" | null>(null);
+
+  const toggleLegalTab = (tab: "license" | "privacy" | "disclaimer") => {
+    setActiveLegalTab((prev) => (prev === tab ? null : tab));
+  };
   return (
     <div className="max-w-4xl mx-auto flex flex-col gap-8 pb-16">
       {/* Page Banner Header */}
@@ -204,6 +215,139 @@ export default function AboutPage() {
             Abhi signing off ✌️
           </p>
         </div>
+      </section>
+
+      {/* Legal, Copyright & Privacy Section */}
+      <section className="theme-card rounded-xl border border-slate-800 light:border-slate-200 bg-slate-950/40 light:bg-white/80 p-8 sm:p-10 backdrop-blur-xl shadow-xl flex flex-col gap-6">
+        <div className="flex items-center gap-3.5">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400 light:text-emerald-600">
+            <Scale className="h-6 w-6" />
+          </div>
+          <div>
+            <h2 className="text-xl sm:text-2xl font-extrabold text-white light:text-slate-900">
+              Legal, Copyright & Privacy
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-400 light:text-slate-600">
+              Copyright © 2025–2026 Abhijeet Mishra. Open source under the MIT License.
+            </p>
+          </div>
+        </div>
+
+        {/* Legal Tabs Navigation */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <button
+            type="button"
+            onClick={() => toggleLegalTab("license")}
+            className={`
+              flex items-center justify-between p-4 rounded-xl border text-left transition-all cursor-pointer
+              ${
+                activeLegalTab === "license"
+                  ? "border-emerald-500/50 bg-emerald-500/15 text-white light:text-slate-900 shadow-sm"
+                  : "border-slate-800 light:border-slate-200 bg-slate-900/40 light:bg-slate-50 text-slate-300 light:text-slate-700 hover:border-slate-700 light:hover:border-slate-300"
+              }
+            `}
+          >
+            <div className="flex items-center gap-2.5">
+              <FileText className="h-4 w-4 text-emerald-400 light:text-emerald-600 shrink-0" />
+              <span className="text-xs font-bold">MIT License</span>
+            </div>
+            {activeLegalTab === "license" ? (
+              <ChevronUp className="h-4 w-4 text-slate-400" />
+            ) : (
+              <ChevronDown className="h-4 w-4 text-slate-400" />
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => toggleLegalTab("privacy")}
+            className={`
+              flex items-center justify-between p-4 rounded-xl border text-left transition-all cursor-pointer
+              ${
+                activeLegalTab === "privacy"
+                  ? "border-emerald-500/50 bg-emerald-500/15 text-white light:text-slate-900 shadow-sm"
+                  : "border-slate-800 light:border-slate-200 bg-slate-900/40 light:bg-slate-50 text-slate-300 light:text-slate-700 hover:border-slate-700 light:hover:border-slate-300"
+              }
+            `}
+          >
+            <div className="flex items-center gap-2.5">
+              <Lock className="h-4 w-4 text-emerald-400 light:text-emerald-600 shrink-0" />
+              <span className="text-xs font-bold">Privacy Policy</span>
+            </div>
+            {activeLegalTab === "privacy" ? (
+              <ChevronUp className="h-4 w-4 text-slate-400" />
+            ) : (
+              <ChevronDown className="h-4 w-4 text-slate-400" />
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => toggleLegalTab("disclaimer")}
+            className={`
+              flex items-center justify-between p-4 rounded-xl border text-left transition-all cursor-pointer
+              ${
+                activeLegalTab === "disclaimer"
+                  ? "border-emerald-500/50 bg-emerald-500/15 text-white light:text-slate-900 shadow-sm"
+                  : "border-slate-800 light:border-slate-200 bg-slate-900/40 light:bg-slate-50 text-slate-300 light:text-slate-700 hover:border-slate-700 light:hover:border-slate-300"
+              }
+            `}
+          >
+            <div className="flex items-center gap-2.5">
+              <ShieldAlert className="h-4 w-4 text-emerald-400 light:text-emerald-600 shrink-0" />
+              <span className="text-xs font-bold">IP & Trademarks</span>
+            </div>
+            {activeLegalTab === "disclaimer" ? (
+              <ChevronUp className="h-4 w-4 text-slate-400" />
+            ) : (
+              <ChevronDown className="h-4 w-4 text-slate-400" />
+            )}
+          </button>
+        </div>
+
+        {/* Tab Content Display */}
+        {activeLegalTab === "license" && (
+          <div className="rounded-xl border border-slate-800 light:border-slate-200 bg-slate-950/80 light:bg-slate-50 p-5 text-xs text-slate-300 light:text-slate-700 font-mono leading-relaxed space-y-3">
+            <p className="font-bold text-emerald-400 light:text-emerald-700">MIT License</p>
+            <p>Copyright (c) 2025-2026 Abhijeet Mishra</p>
+            <p>
+              Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+            </p>
+            <p>
+              The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+            </p>
+            <p className="text-slate-400 light:text-slate-600 uppercase text-[10px]">
+              THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+            </p>
+          </div>
+        )}
+
+        {activeLegalTab === "privacy" && (
+          <div className="rounded-xl border border-slate-800 light:border-slate-200 bg-slate-950/80 light:bg-slate-50 p-5 text-xs text-slate-300 light:text-slate-700 leading-relaxed space-y-3">
+            <p className="font-bold text-emerald-400 light:text-emerald-700 text-sm">Offline-First Privacy Philosophy</p>
+            <ul className="list-disc pl-5 space-y-1.5">
+              <li><strong>100% Local Storage:</strong> Character profiles, farming plots, timers, and inventory records are stored strictly on your local device.</li>
+              <li><strong>Zero Credentials:</strong> BerryMaster never asks for, accesses, records, or stores your PokeMMO username, password, or account tokens.</li>
+              <li><strong>No Third-Party Trackers:</strong> Zero advertising SDKs, zero analytics tracking cookies, and zero user profiling.</li>
+              <li><strong>Transparent Network Activity:</strong> Internet access is strictly limited to checking GitHub for newer app releases and transmitting user-submitted feedback if explicitly triggered by you.</li>
+            </ul>
+          </div>
+        )}
+
+        {activeLegalTab === "disclaimer" && (
+          <div className="rounded-xl border border-slate-800 light:border-slate-200 bg-slate-950/80 light:bg-slate-50 p-5 text-xs text-slate-300 light:text-slate-700 leading-relaxed space-y-3">
+            <p className="font-bold text-emerald-400 light:text-emerald-700 text-sm">Intellectual Property & Non-Affiliation Notice</p>
+            <p>
+              <strong>Pokémon</strong>, Pokémon character names, berry names, sprites, and related assets are registered trademarks of <strong>Nintendo</strong>, <strong>Creatures Inc.</strong>, and <strong>GAME FREAK Inc.</strong>
+            </p>
+            <p>
+              <strong>PokeMMO</strong> is an independent game developed by the PokeMMO team. BerryMaster is an independent, non-commercial fan utility and is not affiliated with or endorsed by Nintendo, Game Freak, or PokeMMO.
+            </p>
+            <p>
+              All trademarks and game assets are referenced under <strong>Fair Use</strong> for informational companion purposes.
+            </p>
+          </div>
+        )}
       </section>
 
       {/* App Version Card */}
