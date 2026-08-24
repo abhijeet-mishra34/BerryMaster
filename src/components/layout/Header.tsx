@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Settings, User, ChevronDown, MessageSquareHeart, Info } from "lucide-react";
+import { Settings, User, ChevronDown, MessageSquareHeart, Info, Menu } from "lucide-react";
 
 import NotificationBell from "../notifications/NotificationBell";
 
@@ -49,7 +49,11 @@ const pageInfo: Record<
   },
 };
 
-export default function Header() {
+type HeaderProps = {
+  onOpenMobileMenu?: () => void;
+};
+
+export default function Header({ onOpenMobileMenu }: HeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -89,22 +93,58 @@ export default function Header() {
         light:border-slate-200
         bg-slate-950/80
         light:bg-white/90
-        px-8
+        px-3
+        sm:px-6
+        md:px-8
         backdrop-blur-md
+        gap-2
       "
     >
-      {/* Header Title */}
-      <div className="flex flex-col justify-center">
-        <h2 className="text-lg font-bold text-white light:text-slate-900 tracking-tight">
-          {currentPage.title}
-        </h2>
-        <p className="text-xs text-slate-400 light:text-slate-500">
-          {currentPage.subtitle}
-        </p>
+      {/* Left Area: Mobile Hamburger + Title */}
+      <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+        {/* Mobile Hamburger Button */}
+        <button
+          type="button"
+          onClick={onOpenMobileMenu}
+          className="
+            flex
+            h-9
+            w-9
+            shrink-0
+            items-center
+            justify-center
+            rounded-xl
+            border
+            border-slate-800
+            light:border-slate-200
+            bg-slate-900/60
+            light:bg-slate-100
+            text-slate-300
+            light:text-slate-700
+            hover:bg-slate-800
+            hover:text-emerald-400
+            transition-colors
+            cursor-pointer
+            md:hidden
+          "
+          aria-label="Open navigation menu"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+
+        {/* Header Title */}
+        <div className="flex flex-col justify-center min-w-0">
+          <h2 className="text-base sm:text-lg font-bold text-white light:text-slate-900 tracking-tight truncate">
+            {currentPage.title}
+          </h2>
+          <p className="hidden sm:block text-xs text-slate-400 light:text-slate-500 truncate">
+            {currentPage.subtitle}
+          </p>
+        </div>
       </div>
 
       {/* Header Actions */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
         {/* Notifications Bell */}
         <NotificationBell />
 

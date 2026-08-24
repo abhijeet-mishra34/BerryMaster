@@ -69,6 +69,13 @@ jobs:
       - name: Initialize Tauri Android project
         run: npx tauri android init
 
+      - name: Generate & Apply Platform App Icons
+        run: |
+          npx tauri icon src/assets/brand/berrymaster-icon.png
+          mkdir -p src-tauri/gen/android/app/src/main/res/values
+          cp -r src-tauri/icons/android/mipmap-* src-tauri/gen/android/app/src/main/res/ || true
+          cp -r src-tauri/icons/android/values/* src-tauri/gen/android/app/src/main/res/values/ || true
+
       - name: Build Android APK (Release)
         run: npx tauri android build --apk
 

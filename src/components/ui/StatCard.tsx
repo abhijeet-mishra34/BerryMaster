@@ -70,13 +70,15 @@ export default function StatCard({
         group
         relative
         flex
-        min-h-[180px]
+        min-h-[140px]
+        sm:min-h-[170px]
         flex-col
         items-center
         justify-center
         overflow-hidden
         rounded-2xl
-        p-6
+        p-4
+        sm:p-6
         text-center
         backdrop-blur-3xl
         transition-all
@@ -102,13 +104,17 @@ export default function StatCard({
         className={`
           relative
           z-10
-          mb-4
+          mb-3
+          sm:mb-4
           flex
-          h-14
-          w-14
+          h-11
+          w-11
+          sm:h-13
+          sm:w-13
           items-center
           justify-center
-          rounded-2xl
+          rounded-xl
+          sm:rounded-2xl
           border
           ${style.iconBg}
           ${style.iconColor}
@@ -118,13 +124,13 @@ export default function StatCard({
           shadow-xs
         `}
       >
-        <div className="h-6 w-6">
+        <div className="h-5 w-5 sm:h-6 sm:w-6 flex items-center justify-center">
           {icon}
         </div>
       </div>
 
       {/* Title */}
-      <h3 className="relative z-10 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400 light:text-slate-600">
+      <h3 className="relative z-10 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.16em] sm:tracking-[0.18em] text-slate-400 light:text-slate-600">
         {title}
       </h3>
 
@@ -133,8 +139,11 @@ export default function StatCard({
         className={`
           relative
           z-10
-          mt-2
-          text-4xl
+          mt-1.5
+          sm:mt-2
+          text-2xl
+          sm:text-3xl
+          lg:text-4xl
           font-black
           tracking-tight
           ${style.text}

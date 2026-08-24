@@ -70,17 +70,14 @@ export default function Dashboard() {
     <div className="flex flex-col gap-10">
       {/* Greeting Hero Banner */}
       <div
-        className="theme-hero relative overflow-hidden rounded-xl"
-        style={{
-          padding: "0.875rem 1.25rem",
-        }}
+        className="theme-hero relative overflow-hidden rounded-xl p-3.5 sm:p-5"
       >
         {/* Ambient orb */}
         <div className="pointer-events-none absolute -top-8 -right-8 h-28 w-28 rounded-full bg-emerald-500/10 blur-xl" />
         <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent" />
 
         <div className="relative z-10 space-y-0.5">
-          <h1 className="text-lg sm:text-xl font-bold tracking-tight text-white light:text-slate-900">
+          <h1 className="text-base sm:text-xl font-bold tracking-tight text-white light:text-slate-900">
             {greetingTitle}
           </h1>
           <p className="max-w-xl text-xs text-slate-400 light:text-slate-600 leading-normal">
@@ -91,8 +88,7 @@ export default function Dashboard() {
 
       {characters.length === 0 && (
         <div
-          className="flex items-center justify-between gap-4 rounded-xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-500/[0.05] light:bg-emerald-50/70 shadow-xs"
-          style={{ padding: "1.75rem 2.25rem" }}
+          className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-500/[0.05] light:bg-emerald-50/70 p-4 sm:p-6 md:p-8 shadow-xs"
         >
           <div className="flex items-center gap-4">
             <span className="text-3xl">🌱</span>
@@ -104,7 +100,7 @@ export default function Dashboard() {
           <button
             type="button"
             onClick={() => navigate('/characters')}
-            className="shrink-0 rounded-xl border border-emerald-500/30 bg-emerald-500/20 light:bg-emerald-500 light:text-white px-5 py-2.5 text-sm font-bold text-emerald-400 light:text-white transition-all hover:bg-emerald-500 hover:text-slate-950 light:hover:bg-emerald-600 cursor-pointer shadow-xs"
+            className="w-full sm:w-auto shrink-0 rounded-xl border border-emerald-500/30 bg-emerald-500/20 light:bg-emerald-500 light:text-white px-5 py-2.5 text-sm font-bold text-emerald-400 light:text-white transition-all hover:bg-emerald-500 hover:text-slate-950 light:hover:bg-emerald-600 cursor-pointer shadow-xs text-center"
           >
             Add Character →
           </button>
@@ -116,9 +112,9 @@ export default function Dashboard() {
         title="Farm Overview"
         subtitle="A live summary of your farming progress."
       >
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-6 sm:gap-8">
           {/* Top Row: 3 cards */}
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {topStats.map((stat) => (
               <StatCard
                 key={stat.title}
@@ -131,7 +127,7 @@ export default function Dashboard() {
           </div>
 
           {/* Bottom Row: 2 cards centered */}
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-6">
+          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-6">
             <div className="lg:col-span-2 lg:col-start-2">
               <StatCard
                 title={bottomStats[0].title}

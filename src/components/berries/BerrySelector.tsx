@@ -66,11 +66,11 @@ export default function BerrySelector() {
           theme-card
           relative
           rounded-xl
+          p-4
+          sm:p-6
+          md:p-8
           backdrop-blur-xl
         "
-        style={{
-          padding: "1.75rem 2rem",
-        }}
       >
         {/* Search Header & Input */}
         <div className="space-y-3 pb-7 border-b border-slate-800 light:border-slate-200">

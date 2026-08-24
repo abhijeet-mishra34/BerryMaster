@@ -41,6 +41,9 @@ export default function BerryCard({
         flex-col
         overflow-hidden
         rounded-xl
+        p-4
+        sm:p-6
+        md:p-8
         backdrop-blur-2xl
         transition-all
         duration-300
@@ -49,9 +52,6 @@ export default function BerryCard({
         hover:shadow-xl
         hover:shadow-emerald-500/10
       "
-      style={{
-        padding: "2.25rem",
-      }}
     >
       {/* Header Accent Glow */}
       <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-500 opacity-70" />

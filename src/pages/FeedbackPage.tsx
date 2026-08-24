@@ -133,8 +133,9 @@ export default function FeedbackPage() {
           relative
           overflow-hidden
           rounded-xl
-          p-8
-          sm:p-10
+          p-4
+          sm:p-8
+          md:p-10
           backdrop-blur-xl
           shadow-xl
         "

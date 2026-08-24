@@ -34,8 +34,9 @@ export default function AboutPage() {
           relative
           overflow-hidden
           rounded-xl
-          p-8
-          sm:p-10
+          p-4
+          sm:p-8
+          md:p-10
           backdrop-blur-xl
           shadow-xl
         "
@@ -61,7 +62,7 @@ export default function AboutPage() {
       </div>
 
       {/* Main Intro Card */}
-      <section className="theme-card rounded-xl p-8 sm:p-10 backdrop-blur-xl shadow-xl">
+      <section className="theme-card rounded-xl p-4 sm:p-8 md:p-10 backdrop-blur-xl shadow-xl">
         <div className="flex items-center gap-3.5 mb-5">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400 light:text-emerald-600">
             <Sparkles className="h-6 w-6" />
@@ -105,7 +106,7 @@ export default function AboutPage() {
       </section>
 
       {/* Unofficial App & Safety Notice */}
-      <section className="theme-card rounded-xl border border-amber-500/25 light:border-amber-200 bg-amber-950/15 light:bg-amber-50/50 p-8 sm:p-10 backdrop-blur-xl shadow-xl">
+      <section className="theme-card rounded-xl border border-amber-500/25 light:border-amber-200 bg-amber-950/15 light:bg-amber-50/50 p-4 sm:p-8 md:p-10 backdrop-blur-xl shadow-xl">
         <div className="flex items-center gap-3.5 mb-5">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-500/20 light:bg-amber-100 text-amber-400 light:text-amber-700 border border-amber-500/30 light:border-amber-200">
             <ShieldAlert className="h-6 w-6" />
@@ -154,7 +155,7 @@ export default function AboutPage() {
       </section>
 
       {/* Built With Tech Stack */}
-      <section className="theme-card rounded-xl p-8 sm:p-10 backdrop-blur-xl shadow-xl">
+      <section className="theme-card rounded-xl p-4 sm:p-8 md:p-10 backdrop-blur-xl shadow-xl">
         <div className="flex items-center gap-3.5 mb-6">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400 light:text-emerald-600">
             <Wrench className="h-6 w-6" />
@@ -188,7 +189,7 @@ export default function AboutPage() {
       </section>
 
       {/* Creator Note */}
-      <section className="theme-card rounded-xl p-8 sm:p-10 backdrop-blur-xl shadow-xl">
+      <section className="theme-card rounded-xl p-4 sm:p-8 md:p-10 backdrop-blur-xl shadow-xl">
         <div className="flex items-center gap-3.5 mb-5">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500/20 light:bg-emerald-100 text-emerald-400 light:text-emerald-700 border border-emerald-500/30 light:border-emerald-200">
             <UserCheck className="h-6 w-6" />
@@ -218,7 +219,7 @@ export default function AboutPage() {
       </section>
 
       {/* Legal, Copyright & Privacy Section */}
-      <section className="theme-card rounded-xl border border-slate-800 light:border-slate-200 bg-slate-950/40 light:bg-white/80 p-8 sm:p-10 backdrop-blur-xl shadow-xl flex flex-col gap-6">
+      <section className="theme-card rounded-xl border border-slate-800 light:border-slate-200 bg-slate-950/40 light:bg-white/80 p-4 sm:p-8 md:p-10 backdrop-blur-xl shadow-xl flex flex-col gap-6">
         <div className="flex items-center gap-3.5">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400 light:text-emerald-600">
             <Scale className="h-6 w-6" />

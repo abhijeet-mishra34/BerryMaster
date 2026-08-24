@@ -622,8 +622,10 @@ export default function CharactersPage() {
                 bg-gradient-to-r
                 from-emerald-500
                 to-teal-500
-                px-6
-                py-3.5
+                px-5
+                sm:px-6
+                py-3
+                sm:py-3.5
                 text-sm
                 font-bold
                 text-slate-950
@@ -637,6 +639,8 @@ export default function CharactersPage() {
                 hover:shadow-emerald-500/40
                 active:translate-y-0
                 cursor-pointer
+                w-full
+                sm:w-auto
               "
             >
               <UserPlus className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
@@ -646,8 +650,8 @@ export default function CharactersPage() {
         </div>
 
         {/* Character Count */}
-        <div className="flex items-center gap-3 border-t border-slate-800 light:border-slate-200 bg-white/[0.02] light:bg-slate-50 px-8 py-4">
-          <div className="flex items-center gap-2 rounded-xl border border-emerald-400/20 bg-emerald-500/10 px-3.5 py-2">
+        <div className="flex items-center gap-3 border-t border-slate-800 light:border-slate-200 bg-white/[0.02] light:bg-slate-50 px-4 sm:px-8 py-3 sm:py-4">
+          <div className="flex items-center gap-2 rounded-xl border border-emerald-400/20 bg-emerald-500/10 px-3.5 py-1.5 sm:py-2">
             <span className="text-sm">👥</span>
             <span className="text-sm font-bold text-emerald-400 light:text-emerald-700">
               {characters.length}
@@ -661,9 +665,9 @@ export default function CharactersPage() {
           </span>
         </div>
 
-        {/* Keyboard Shortcut Hints */}
+        {/* Keyboard Shortcut Hints (Desktop only) */}
         {characters.length > 0 && (
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2.5 border-t border-slate-800 light:border-slate-200 bg-slate-950/50 light:bg-slate-100/80 px-6 py-3.5 sm:px-8">
+          <div className="hidden sm:flex flex-wrap items-center gap-x-6 gap-y-2.5 border-t border-slate-800 light:border-slate-200 bg-slate-950/50 light:bg-slate-100/80 px-6 py-3.5 sm:px-8">
             <span className="flex items-center gap-1.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-amber-400 light:text-amber-700 mr-1">
               <span className="text-sm">⌨️</span>
               <span>Shortcuts:</span>

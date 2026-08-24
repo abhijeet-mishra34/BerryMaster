@@ -90,35 +90,36 @@ export default function Modal({
           relative
           w-full
           ${maxWidthClasses[maxWidth]}
-          overflow-hidden
+          max-h-[92vh]
+          overflow-y-auto
           rounded-2xl
+          p-4
+          sm:p-8
+          md:p-10
           backdrop-blur-2xl
         `}
-        style={{
-          padding: "2.5rem",
-        }}
         onClick={(event) => event.stopPropagation()}
       >
         {/* Top Gradient Accent Glow Line */}
         <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-500 opacity-90" />
 
         {/* Modal Header */}
-        <div className="mb-8 flex items-start justify-between gap-4">
-          <div className="flex items-center gap-4">
+        <div className="mb-6 sm:mb-8 flex items-start justify-between gap-3 sm:gap-4">
+          <div className="flex items-center gap-3 sm:gap-4 min-w-0">
             {icon && (
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 font-bold shadow-[0_0_20px_-4px_rgba(16,185,129,0.35)]">
+              <div className="flex h-11 w-11 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 font-bold shadow-[0_0_20px_-4px_rgba(16,185,129,0.35)]">
                 {icon}
               </div>
             )}
-            <div>
+            <div className="min-w-0">
               <h2
                 id="modal-title"
-                className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white light:text-slate-900"
+                className="text-lg sm:text-2xl md:text-3xl font-extrabold tracking-tight text-white light:text-slate-900 truncate sm:whitespace-normal"
               >
                 {title}
               </h2>
               {subtitle && (
-                <p className="mt-1.5 text-sm text-slate-400 light:text-slate-600 leading-relaxed max-w-lg">
+                <p className="mt-1 text-xs sm:text-sm text-slate-400 light:text-slate-600 leading-relaxed max-w-lg">
                   {subtitle}
                 </p>
               )}

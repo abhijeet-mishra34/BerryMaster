@@ -100,6 +100,9 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
         relative
         overflow-hidden
         rounded-xl
+        p-4
+        sm:p-6
+        md:p-8
         backdrop-blur-2xl
         transition-all
         duration-300
@@ -111,33 +114,30 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
             : "hover:border-emerald-400/40"
         }
       `}
-      style={{
-        padding: "2.25rem",
-      }}
     >
       {/* Header Accent Glow */}
       <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-500 opacity-70" />
 
       {/* Header */}
-      <div className="pb-6">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="flex h-13 w-13 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-500 font-bold shadow-sm">
-              <User className="h-6 w-6" />
+      <div className="pb-5 sm:pb-6">
+        <div className="flex items-center justify-between gap-3 sm:gap-4">
+          <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+            <div className="flex h-10 w-10 sm:h-13 sm:w-13 shrink-0 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-500 font-bold shadow-sm">
+              <User className="h-5 w-5 sm:h-6 sm:w-6" />
             </div>
 
-            <div>
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 light:text-slate-500">
+            <div className="min-w-0">
+              <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-widest text-slate-400 light:text-slate-500">
                 Farmer Slot #{characterNumber}
               </span>
-              <h2 className="text-2xl font-bold tracking-tight text-white light:text-slate-900">
+              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white light:text-slate-900 truncate">
                 {character.name}
               </h2>
             </div>
           </div>
 
-          <div className="rounded-xl border border-slate-800 light:border-slate-200 bg-slate-900/60 light:bg-slate-50 px-4 py-2 text-right shadow-xs">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 light:text-slate-500">
+          <div className="shrink-0 rounded-xl border border-slate-800 light:border-slate-200 bg-slate-900/60 light:bg-slate-50 px-3 py-1.5 sm:px-4 sm:py-2 text-right shadow-xs">
+            <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 light:text-slate-500">
               Account ID
             </span>
             <p className="font-mono text-xs font-bold text-emerald-500">

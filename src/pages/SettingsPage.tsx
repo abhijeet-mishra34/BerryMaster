@@ -202,8 +202,9 @@ export default function SettingsPage() {
           relative
           overflow-hidden
           rounded-xl
-          p-8
-          sm:p-10
+          p-4
+          sm:p-8
+          md:p-10
           shadow-xl
           backdrop-blur-xl
         "
@@ -256,8 +257,9 @@ export default function SettingsPage() {
         className="
           theme-card
           rounded-xl
-          p-8
-          sm:p-10
+          p-4
+          sm:p-8
+          md:p-10
           shadow-xl
           backdrop-blur-xl
           flex
@@ -421,8 +423,9 @@ export default function SettingsPage() {
         className="
           theme-card
           rounded-xl
-          p-8
-          sm:p-10
+          p-4
+          sm:p-8
+          md:p-10
           shadow-xl
           backdrop-blur-xl
           flex
@@ -767,8 +770,9 @@ export default function SettingsPage() {
         className="
           theme-card
           rounded-xl
-          p-8
-          sm:p-10
+          p-4
+          sm:p-8
+          md:p-10
           shadow-xl
           backdrop-blur-xl
           flex
@@ -911,8 +915,9 @@ export default function SettingsPage() {
         className="
           theme-card
           rounded-xl
-          p-8
-          sm:p-10
+          p-4
+          sm:p-8
+          md:p-10
           shadow-xl
           backdrop-blur-xl
           flex

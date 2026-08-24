@@ -13,14 +13,14 @@ export default function Section({
 }: SectionProps) {
   return (
     <section
-      style={{
-        padding: "1.75rem 2rem",
-      }}
       className="
         theme-card
         relative
         overflow-hidden
         rounded-xl
+        p-4
+        sm:p-6
+        md:p-8
         backdrop-blur-2xl
         transition-all
         duration-200
