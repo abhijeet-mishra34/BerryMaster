@@ -136,6 +136,10 @@ export default function AboutPage() {
             </li>
           </ul>
         </div>
+
+        <p className="mt-4 text-xs leading-relaxed text-slate-400 light:text-slate-500">
+          Pokémon and Pokémon character names are trademarks of Nintendo, Creatures Inc., and GAME FREAK Inc. BerryMaster is an independent fan project and is not affiliated with or endorsed by Nintendo or PokeMMO.
+        </p>
       </section>
 
       {/* Built With Tech Stack */}

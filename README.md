@@ -42,4 +42,12 @@
 
 ---
 
+## ⚖️ Legal & Privacy
+
+* **License**: Distributed under the [MIT License](LICENSE). See `LICENSE` for more information.
+* **Disclaimers & Fair Use**: BerryMaster is an unofficial, non-commercial fan companion tool and is not affiliated with Nintendo, Game Freak, or PokeMMO. Read our full [Legal Notice & Disclaimers](DISCLAIMER.md).
+* **Privacy**: Offline-first architecture. We do not track, collect, or upload your game credentials or farming data. Read our full [Privacy Policy](PRIVACY.md).
+
+---
+
 Developed with ❤️ by **Abhijeet Mishra**.
