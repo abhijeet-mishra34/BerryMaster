@@ -4,6 +4,7 @@ import { LayoutDashboard, Users, Cherry, Package, Menu } from "lucide-react";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import FloatingLeaves from "../ambient/FloatingLeaves";
+import UFOEasterEgg from "../ambient/UFOEasterEgg";
 import FarmingBackground from "../background/FarmingBackground";
 import ToastContainer from "../ui/Toast";
 
@@ -37,6 +38,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
       {/* Ambient leaves */}
       <FloatingLeaves />
+
+      {/* UFO Easter Egg (occasional ambient visitor that borrows a sample and returns it) */}
+      <UFOEasterEgg />
 
       {/* UI Shell */}
       <div className="relative z-10 flex h-full w-full">

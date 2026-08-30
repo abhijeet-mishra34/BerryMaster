@@ -442,6 +442,34 @@ export default function SettingsPage() {
             <span>Replay Intro Screen</span>
           </button>
         </div>
+
+        {/* UFO Easter Egg Control */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-teal-500/20 bg-teal-500/[0.04] light:bg-teal-50/60 p-4 sm:p-5">
+          <div className="flex items-center gap-3.5">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-teal-500/30 bg-teal-500/10 text-xl">
+              🛸
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-white light:text-slate-900">
+                UFO Abduction Easter Egg
+              </h4>
+              <p className="text-xs text-slate-400 light:text-slate-500">
+                A curious UFO hovers by occasionally to borrow a specimen and return it safely.
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() =>
+              window.dispatchEvent(new CustomEvent("berrymaster:summon-ufo"))
+            }
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-teal-500/30 bg-teal-500/20 px-4 py-2.5 text-xs font-bold text-teal-300 hover:bg-teal-500 hover:text-slate-950 light:bg-teal-600 light:text-white transition-all cursor-pointer shadow-xs shrink-0"
+          >
+            <span>🛸</span>
+            <span>Summon UFO Now</span>
+          </button>
+        </div>
       </section>
 
       {/* =====================================
