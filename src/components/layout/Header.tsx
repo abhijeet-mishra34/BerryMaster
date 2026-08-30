@@ -154,8 +154,10 @@ export default function Header({ onOpenMobileMenu }: HeaderProps) {
           onClick={() => navigate("/settings")}
           className="
             flex
-            h-9
-            w-9
+            h-10
+            w-10
+            sm:h-10.5
+            sm:w-10.5
             items-center
             justify-center
             rounded-xl
@@ -168,13 +170,14 @@ export default function Header({ onOpenMobileMenu }: HeaderProps) {
             light:text-slate-600
             transition-all
             duration-200
-            hover:border-emerald-500/40
+            hover:border-emerald-400/50
             light:hover:border-emerald-400
             hover:bg-slate-800
             light:hover:bg-slate-200
             hover:text-emerald-400
+            hover:scale-105
             hover:-translate-y-0.5
-            active:translate-y-0
+            hover:shadow-[0_0_12px_rgba(16,185,129,0.2)]
             active:scale-95
             cursor-pointer
             shadow-xs
@@ -182,7 +185,7 @@ export default function Header({ onOpenMobileMenu }: HeaderProps) {
           aria-label="Open settings"
           title="Settings"
         >
-          <Settings className="h-4 w-4" />
+          <Settings className="h-4.5 w-4.5 sm:h-5 sm:w-5 transition-transform duration-200 hover:rotate-45" />
         </button>
 
         {/* Profile Dropdown */}
@@ -193,38 +196,40 @@ export default function Header({ onOpenMobileMenu }: HeaderProps) {
             className="
               flex
               items-center
-              gap-2
+              gap-2.5
               rounded-xl
               border
               border-slate-800
               light:border-slate-200
               bg-slate-900/70
               light:bg-slate-100
-              px-3
-              py-1.5
+              px-3.5
+              sm:px-4
+              py-2
               text-slate-300
               light:text-slate-700
               transition-all
               duration-200
-              hover:border-emerald-500/40
+              hover:border-emerald-400/50
               light:hover:border-emerald-400
               hover:bg-slate-800
               light:hover:bg-slate-200
               hover:text-white
               light:hover:text-slate-900
+              hover:scale-105
               hover:-translate-y-0.5
-              active:translate-y-0
+              hover:shadow-[0_0_12px_rgba(16,185,129,0.2)]
               active:scale-95
               cursor-pointer
               shadow-xs
             "
             aria-label="Open profile menu"
           >
-            <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400">
-              <User className="h-3.5 w-3.5" />
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400">
+              <User className="h-4 w-4" />
             </div>
-            <span className="text-xs font-semibold">Farmer</span>
-            <ChevronDown className="h-3.5 w-3.5 text-slate-400 light:text-slate-500" />
+            <span className="text-xs sm:text-sm font-extrabold">Farmer</span>
+            <ChevronDown className="h-4 w-4 text-slate-400 light:text-slate-500" />
           </button>
 
           {/* Profile Menu Dropdown */}

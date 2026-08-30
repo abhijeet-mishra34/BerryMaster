@@ -104,15 +104,15 @@ export default function BerryCard({
           }
           onClick={() => toggleFavorite(berry.id)}
           className={`
-            flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-all duration-200 cursor-pointer shadow-xs active:scale-95
+            flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-xl border transition-all duration-200 cursor-pointer shadow-xs active:scale-90
             ${
               favorite
-                ? "border-rose-500/50 bg-rose-500/15 text-rose-400 shadow-rose-500/20"
-                : "border-slate-800 light:border-slate-200 bg-slate-950/60 light:bg-slate-50 text-slate-400 hover:border-rose-500/40 hover:bg-rose-500/10 hover:text-rose-300 hover:scale-105"
+                ? "border-rose-500/60 bg-rose-500/20 text-rose-400 shadow-md shadow-rose-500/25 hover:scale-115"
+                : "border-slate-800 light:border-slate-200 bg-slate-950/70 light:bg-slate-50 text-slate-400 hover:border-rose-500/50 hover:bg-rose-500/15 hover:text-rose-300 hover:scale-115 hover:shadow-md hover:shadow-rose-500/20"
             }
           `}
         >
-          <span className={`text-lg ${favorite ? "animate-pulse" : "opacity-70 hover:opacity-100"}`}>
+          <span className={`text-xl sm:text-2xl transition-transform duration-200 ${favorite ? "animate-pulse scale-110" : "opacity-75 hover:opacity-100"}`}>
             {favorite ? "❤️" : "🤍"}
           </span>
         </button>
@@ -216,12 +216,12 @@ export default function BerryCard({
               return (
                 <span
                   key={drop.seedType}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-800 light:border-slate-200 bg-slate-950/60 light:bg-slate-50 px-2.5 py-1 text-xs font-medium text-slate-200 light:text-slate-800 shadow-xs transition-all hover:border-emerald-500/40 hover:bg-emerald-500/10"
+                  className="inline-flex items-center gap-2 rounded-xl border border-slate-800 light:border-slate-200 bg-slate-950/70 light:bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-200 light:text-slate-800 shadow-xs transition-all duration-200 hover:border-emerald-400/60 hover:bg-emerald-500/15 hover:scale-108 hover:shadow-md hover:shadow-emerald-500/10 cursor-default"
                 >
                   <img
                     src={seed.image}
                     alt={seed.name}
-                    className="h-4.5 w-4.5 object-contain"
+                    className="h-5 w-5 object-contain transition-transform duration-200 hover:scale-115"
                   />
                   <span>{seed.name}</span>
                 </span>
@@ -238,18 +238,18 @@ export default function BerryCard({
             size="lg"
             variant="primary"
             onClick={() => onAction(berry)}
-            className="w-full"
+            className="w-full font-black tracking-wide"
           >
             {berry.image ? (
               <img
                 src={berry.image}
                 alt=""
-                className="mr-2 h-5 w-5 object-contain drop-shadow"
+                className="mr-2 h-6 w-6 object-contain drop-shadow transition-transform duration-200 group-hover:scale-125 group-hover:rotate-6"
               />
             ) : (
-              <Sprout className="mr-2 h-5 w-5 shrink-0" />
+              <Sprout className="mr-2 h-6 w-6 shrink-0 transition-transform duration-200 group-hover:scale-125 group-hover:rotate-6" />
             )}
-            <span>{actionLabel}</span>
+            <span className="text-base sm:text-lg">{actionLabel}</span>
           </Button>
         </div>
       )}

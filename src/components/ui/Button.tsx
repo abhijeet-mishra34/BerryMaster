@@ -12,22 +12,22 @@ type ButtonProps = {
 
 const variants = {
   primary:
-    "border border-emerald-400/50 bg-gradient-to-r from-emerald-500 via-emerald-400 to-teal-400 text-slate-950 font-extrabold shadow-[0_2px_12px_rgba(16,185,129,0.3)] hover:shadow-[0_4px_22px_rgba(16,185,129,0.5)] hover:brightness-105 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]",
+    "border border-emerald-400/60 bg-gradient-to-r from-emerald-500 via-emerald-400 to-teal-400 text-slate-950 font-black shadow-[0_4px_16px_rgba(16,185,129,0.3)] hover:shadow-[0_8px_30px_rgba(16,185,129,0.55)] hover:border-emerald-300 hover:brightness-105 hover:-translate-y-1 active:translate-y-0.5 active:scale-[0.96]",
   secondary:
-    "border border-slate-700/80 light:border-slate-300 bg-slate-800/90 light:bg-slate-100 text-slate-200 light:text-slate-800 font-bold hover:border-emerald-500/50 hover:bg-slate-700/90 light:hover:bg-slate-200 hover:text-white light:hover:text-slate-950 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]",
+    "border border-slate-700/90 light:border-slate-300 bg-slate-800/95 light:bg-slate-100 text-slate-200 light:text-slate-800 font-extrabold hover:border-emerald-400/60 hover:bg-slate-700 light:hover:bg-slate-200 hover:text-white light:hover:text-slate-950 hover:shadow-[0_6px_22px_rgba(0,0,0,0.4)] hover:-translate-y-1 active:translate-y-0.5 active:scale-[0.96]",
   danger:
-    "border border-rose-500/40 light:border-rose-300 bg-rose-500/15 light:bg-rose-50 text-rose-300 light:text-rose-700 font-bold hover:bg-gradient-to-r hover:from-rose-500 hover:to-red-600 hover:text-white hover:border-rose-400 hover:shadow-[0_4px_20px_rgba(244,63,94,0.45)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]",
+    "border border-rose-500/50 light:border-rose-300 bg-rose-500/20 light:bg-rose-100 text-rose-300 light:text-rose-800 font-extrabold hover:bg-gradient-to-r hover:from-rose-500 hover:to-red-600 hover:text-white hover:border-rose-300 hover:shadow-[0_8px_30px_rgba(244,63,94,0.55)] hover:-translate-y-1 active:translate-y-0.5 active:scale-[0.96]",
   info:
-    "border border-sky-400/40 light:border-sky-300 bg-sky-500/15 light:bg-sky-50 text-sky-300 light:text-sky-700 font-bold hover:bg-gradient-to-r hover:from-sky-500 hover:to-cyan-500 hover:text-slate-950 hover:border-sky-300 hover:shadow-[0_4px_20px_rgba(14,165,233,0.45)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]",
+    "border border-sky-400/50 light:border-sky-300 bg-sky-500/20 light:bg-sky-100 text-sky-300 light:text-sky-800 font-extrabold hover:bg-gradient-to-r hover:from-sky-500 hover:to-cyan-500 hover:text-slate-950 hover:border-sky-300 hover:shadow-[0_8px_30px_rgba(14,165,233,0.55)] hover:-translate-y-1 active:translate-y-0.5 active:scale-[0.96]",
   amber:
-    "border border-amber-400/40 light:border-amber-300 bg-amber-500/15 light:bg-amber-50 text-amber-300 light:text-amber-700 font-bold hover:bg-gradient-to-r hover:from-amber-500 hover:to-yellow-500 hover:text-slate-950 hover:border-amber-300 hover:shadow-[0_4px_20px_rgba(245,158,11,0.45)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]",
+    "border border-amber-400/50 light:border-amber-300 bg-amber-500/20 light:bg-amber-100 text-amber-300 light:text-amber-800 font-extrabold hover:bg-gradient-to-r hover:from-amber-500 hover:to-yellow-500 hover:text-slate-950 hover:border-amber-300 hover:shadow-[0_8px_30px_rgba(245,158,11,0.55)] hover:-translate-y-1 active:translate-y-0.5 active:scale-[0.96]",
 };
 
 const sizes = {
-  sm: "px-3.5 py-1.5 text-xs font-semibold rounded-lg",
-  md: "px-5 py-2.5 text-xs font-bold rounded-xl",
-  lg: "px-6 py-3 text-sm font-extrabold rounded-xl",
-  xl: "px-8 py-3.5 text-base font-black rounded-2xl",
+  sm: "px-4 py-2 text-xs sm:text-sm font-bold rounded-xl gap-2",
+  md: "px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-extrabold rounded-xl gap-2.5",
+  lg: "px-6 sm:px-8 py-3.5 sm:py-4 text-base sm:text-lg font-black rounded-2xl gap-3",
+  xl: "px-8 sm:px-10 py-4.5 sm:py-5 text-lg sm:text-xl font-black rounded-2xl gap-3.5",
 };
 
 export default function Button({
