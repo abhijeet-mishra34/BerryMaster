@@ -43,7 +43,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       <UFOEasterEgg />
 
       {/* UI Shell */}
-      <div className="relative z-10 flex h-full w-full">
+      <div className="relative z-10 flex h-full w-full md:p-3.5 lg:p-4 md:gap-3.5 lg:gap-4 overflow-hidden">
         <Sidebar
           isOpen={sidebarOpen}
           onToggleSidebar={toggleSidebar}
@@ -51,7 +51,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           onCloseMobile={() => setMobileMenuOpen(false)}
         />
 
-        <div className="flex min-w-0 flex-1 flex-col">
+        <div className="flex min-w-0 flex-1 flex-col rounded-none md:rounded-2xl border-0 md:border md:border-slate-800/80 light:md:border-slate-200/90 bg-slate-950/80 light:bg-slate-50/90 backdrop-blur-xl shadow-none md:shadow-2xl md:shadow-black/40 overflow-hidden">
           <Header onOpenMobileMenu={() => setMobileMenuOpen(true)} />
 
           <main className="flex-1 overflow-y-auto">

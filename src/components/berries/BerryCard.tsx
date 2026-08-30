@@ -32,6 +32,7 @@ export default function BerryCard({
   return (
     <div
       className="
+        card-shine
         group
         relative
         flex
@@ -50,20 +51,20 @@ export default function BerryCard({
         shadow-black/20
         transition-all
         duration-300
-        hover:-translate-y-1
-        hover:border-emerald-500/50
+        hover:-translate-y-1.5
+        hover:border-emerald-400/60
         hover:shadow-2xl
-        hover:shadow-emerald-500/10
+        hover:shadow-emerald-500/15
       "
     >
       {/* Top Accent Gradient Line */}
-      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-500 opacity-80" />
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-500 opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
 
       {/* Header */}
       <div className="flex items-start justify-between gap-3.5 pb-4">
         <div className="flex items-center gap-3.5 min-w-0">
           {/* Berry Sprite Badge */}
-          <div className="flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 p-1.5 transition-transform duration-300 group-hover:scale-105 shadow-xs">
+          <div className="flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 p-1.5 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-xs">
             {berry.image ? (
               <img
                 src={berry.image}

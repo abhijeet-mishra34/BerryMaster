@@ -416,34 +416,6 @@ export default function SettingsPage() {
           </button>
         </div>
 
-        {/* Intro Loading Screen Preview */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04] light:bg-emerald-50/60 p-4 sm:p-5">
-          <div className="flex items-center gap-3.5">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
-              <Sparkles className="h-5 w-5" />
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-white light:text-slate-900">
-                Gaming Companion Intro Screen
-              </h4>
-              <p className="text-xs text-slate-400 light:text-slate-500">
-                Holographic diagnostics and system initialization sequence.
-              </p>
-            </div>
-          </div>
-
-          <Button
-            variant="primary"
-            size="md"
-            onClick={() =>
-              window.dispatchEvent(new CustomEvent("berrymaster:preview-splash"))
-            }
-            className="shrink-0"
-          >
-            <Sparkles className="mr-2 h-3.5 w-3.5" />
-            <span>Replay Intro Screen</span>
-          </Button>
-        </div>
 
         {/* UFO Easter Egg Control */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-teal-500/20 bg-teal-500/[0.04] light:bg-teal-50/60 p-4 sm:p-5">

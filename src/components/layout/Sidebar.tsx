@@ -13,6 +13,7 @@ import {
   ChevronRight,
   Sparkles,
   X,
+  Radio,
 } from "lucide-react";
 
 import berryMasterIcon from "../../assets/brand/berrymaster-icon.png";
@@ -25,51 +26,61 @@ type SidebarProps = {
   onCloseMobile?: () => void;
 };
 
-const menuItems = [
+const menuGroups = [
   {
-    label: "Dashboard",
-    icon: LayoutDashboard,
-    path: "/",
+    title: "Farming",
+    items: [
+      {
+        label: "Dashboard",
+        icon: LayoutDashboard,
+        path: "/",
+      },
+      {
+        label: "Characters",
+        icon: Users,
+        path: "/characters",
+      },
+      {
+        label: "Berries",
+        icon: Cherry,
+        path: "/berries",
+      },
+      {
+        label: "Inventory",
+        icon: Package,
+        path: "/inventory",
+      },
+      {
+        label: "Calendar",
+        icon: Calendar,
+        path: "/calendar",
+      },
+    ],
   },
   {
-    label: "Characters",
-    icon: Users,
-    path: "/characters",
-  },
-  {
-    label: "Berries",
-    icon: Cherry,
-    path: "/berries",
-  },
-  {
-    label: "Inventory",
-    icon: Package,
-    path: "/inventory",
-  },
-  {
-    label: "Calendar",
-    icon: Calendar,
-    path: "/calendar",
-  },
-  {
-    label: "Analytics",
-    icon: LineChart,
-    path: "/analytics",
-  },
-  {
-    label: "Settings",
-    icon: Settings,
-    path: "/settings",
-  },
-  {
-    label: "Feedback",
-    icon: MessageSquareHeart,
-    path: "/feedback",
-  },
-  {
-    label: "About Us",
-    icon: Info,
-    path: "/about",
+    title: "System & Tools",
+    items: [
+      {
+        label: "Analytics",
+        icon: LineChart,
+        path: "/analytics",
+      },
+      {
+        label: "Settings",
+        icon: Settings,
+        path: "/settings",
+      },
+      {
+        label: "Feedback",
+        icon: MessageSquareHeart,
+        path: "/feedback",
+      },
+      {
+        label: "About Us",
+        icon: Info,
+        path: "/about",
+      },
+    ],
   },
 ];
 
@@ -132,10 +143,10 @@ export default function Sidebar({
             </div>
 
             <div className="flex flex-col">
-              <h1 className="text-lg font-bold tracking-tight text-white light:text-slate-900 flex items-center gap-1.5">
+              <h1 className="text-lg font-black tracking-tight text-white light:text-slate-900 flex items-center gap-1">
                 Berry<span className="text-emerald-400 light:text-emerald-600">Master</span>
               </h1>
-              <span className="text-[10px] font-medium tracking-wider text-slate-400 light:text-slate-500 uppercase">
+              <span className="text-[9px] font-bold tracking-widest text-slate-400 light:text-slate-500 uppercase">
                 PokeMMO Assistant
               </span>
             </div>
@@ -170,77 +181,86 @@ export default function Sidebar({
         </div>
 
         {/* Mobile Navigation Links */}
-        <nav className="flex flex-1 flex-col gap-1.5 p-3 overflow-y-auto">
-          {menuItems.map((item) => {
-            const IconComponent = item.icon;
-            return (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                onClick={onCloseMobile}
-                className={({ isActive }) =>
-                  `
-                    group
-                    relative
-                    flex
-                    items-center
-                    gap-3.5
-                    rounded-xl
-                    px-4
-                    py-3
-                    text-sm
-                    font-medium
-                    transition-all
-                    duration-200
-                    ${
-                      isActive
-                        ? "bg-emerald-500/15 light:bg-emerald-50 text-emerald-300 light:text-emerald-800 font-semibold shadow-inner border border-emerald-500/20 light:border-emerald-200"
-                        : "text-slate-400 light:text-slate-600 hover:bg-slate-800/60 light:hover:bg-slate-100 hover:text-slate-200 light:hover:text-slate-900"
-                    }
-                  `
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    {isActive && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 rounded-r-full bg-emerald-400 shadow-sm shadow-emerald-400/50" />
-                    )}
+        <nav className="flex flex-1 flex-col gap-5 p-3 overflow-y-auto">
+          {menuGroups.map((group) => (
+            <div key={group.title} className="space-y-1">
+              <p className="px-3 pb-1 text-[10px] font-black uppercase tracking-widest text-slate-500 light:text-slate-400">
+                {group.title}
+              </p>
+              <div className="space-y-1">
+                {group.items.map((item) => {
+                  const IconComponent = item.icon;
+                  return (
+                    <NavLink
+                      key={item.path}
+                      to={item.path}
+                      onClick={onCloseMobile}
+                      className={({ isActive }) =>
+                        `
+                          group
+                          relative
+                          flex
+                          items-center
+                          gap-3.5
+                          rounded-xl
+                          px-3.5
+                          py-2.5
+                          text-xs
+                          font-bold
+                          transition-all
+                          duration-200
+                          ${
+                            isActive
+                              ? "bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-transparent text-emerald-300 light:text-emerald-700 font-extrabold shadow-inner border border-emerald-500/25 light:border-emerald-300"
+                              : "text-slate-400 light:text-slate-600 hover:bg-slate-900/70 light:hover:bg-slate-100 hover:text-slate-200 light:hover:text-slate-950"
+                          }
+                        `
+                      }
+                    >
+                      {({ isActive }) => (
+                        <>
+                          {isActive && (
+                            <span className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-emerald-400 shadow-sm shadow-emerald-400/50" />
+                          )}
 
-                    <IconComponent
-                      className={`
-                        h-5
-                        w-5
-                        shrink-0
-                        transition-transform
-                        duration-200
-                        ${isActive ? "text-emerald-400 light:text-emerald-600" : "text-slate-400 light:text-slate-500"}
-                      `}
-                    />
+                          <IconComponent
+                            className={`
+                              h-4.5
+                              w-4.5
+                              shrink-0
+                              transition-transform
+                              duration-200
+                              ${isActive ? "text-emerald-400 light:text-emerald-600 scale-105" : "text-slate-400 light:text-slate-500 group-hover:text-emerald-400"}
+                            `}
+                          />
 
-                    <span className="truncate">{item.label}</span>
-                  </>
-                )}
-              </NavLink>
-            );
-          })}
+                          <span className="truncate">{item.label}</span>
+                        </>
+                      )}
+                    </NavLink>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </nav>
 
         {/* Mobile Drawer Footer */}
         <div className="p-3 border-t border-slate-800/80 light:border-slate-200">
           <div className="rounded-xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-950/20 light:bg-emerald-50/70 p-3 flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400">
-              <Sparkles className="h-4 w-4" />
+            <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400">
+              <Radio className="h-4 w-4 animate-pulse" />
             </div>
             <div className="flex flex-col">
-              <span className="text-xs font-semibold text-slate-200 light:text-slate-800">v{CURRENT_APP_VERSION} Mobile</span>
-              <span className="text-[10px] text-emerald-400/80 light:text-emerald-700">All systems online</span>
+              <span className="text-xs font-bold text-slate-200 light:text-slate-800">v{CURRENT_APP_VERSION} Mobile</span>
+              <span className="text-[10px] text-emerald-400 light:text-emerald-700 font-semibold">Companion Live</span>
             </div>
           </div>
         </div>
       </aside>
 
       {/* ========================================================= */}
-      {/* DESKTOP SIDEBAR */}
+      {/* DESKTOP SIDEBAR (DETACHED FLOATING ISLAND) */}
       {/* ========================================================= */}
       <aside
         className={`
@@ -250,14 +270,18 @@ export default function Sidebar({
           md:flex
           shrink-0
           flex-col
-          border-r
+          rounded-2xl
+          border
           border-slate-800/80
-          light:border-slate-200
-          bg-slate-950/90
+          light:border-slate-200/90
+          bg-slate-950/85
           light:bg-white/95
-          backdrop-blur-md
+          backdrop-blur-xl
+          shadow-2xl
+          shadow-black/40
           transition-all
           duration-300
+          overflow-hidden
           ${isOpen ? "w-64" : "w-20"}
         `}
       >
@@ -266,6 +290,7 @@ export default function Sidebar({
           className={`
             flex
             h-16
+            shrink-0
             items-center
             border-b
             border-slate-800/80
@@ -275,21 +300,21 @@ export default function Sidebar({
           `}
         >
           {isOpen ? (
-            <div className="flex items-center gap-3">
-              <div className="relative flex items-center justify-center">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="relative flex items-center justify-center shrink-0">
                 <img
                   src={berryMasterIcon}
                   alt="BerryMaster logo"
                   className="h-9 w-9 object-contain drop-shadow-[0_2px_10px_rgba(225,29,72,0.45)] transition-transform duration-200 hover:scale-110"
                 />
-                <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-slate-950 light:ring-white" />
+                <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-slate-950 light:ring-white shadow-[0_0_8px_rgba(16,185,129,0.7)]" />
               </div>
 
-              <div className="flex flex-col">
-                <h1 className="text-lg font-bold tracking-tight text-white light:text-slate-900 flex items-center gap-1.5">
+              <div className="flex flex-col min-w-0">
+                <h1 className="text-base font-black tracking-tight text-white light:text-slate-900 flex items-center gap-1 truncate">
                   Berry<span className="text-emerald-400 light:text-emerald-600">Master</span>
                 </h1>
-                <span className="text-[10px] font-medium tracking-wider text-slate-400 light:text-slate-500 uppercase">
+                <span className="text-[9px] font-bold tracking-widest text-slate-400 light:text-slate-500 uppercase truncate">
                   PokeMMO Assistant
                 </span>
               </div>
@@ -301,113 +326,179 @@ export default function Sidebar({
                 alt="BerryMaster logo"
                 className="h-9 w-9 object-contain drop-shadow-[0_2px_10px_rgba(225,29,72,0.45)] transition-transform duration-200 hover:scale-110"
               />
-              <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-slate-950 light:ring-white" />
+              <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-slate-950 light:ring-white shadow-[0_0_8px_rgba(16,185,129,0.7)]" />
             </div>
           )}
 
-          <button
-            type="button"
-            onClick={onToggleSidebar}
-            className="
-              flex
-              h-8
-              w-8
-              items-center
-              justify-center
-              rounded-lg
-              border
-              border-slate-800
-              light:border-slate-200
-              bg-slate-900/60
-              light:bg-slate-100
-              text-slate-400
-              light:text-slate-600
-              transition-all
-              duration-200
-              hover:border-slate-700
-              light:hover:border-slate-300
-              hover:bg-slate-800
-              light:hover:bg-slate-200
-              hover:text-white
-              light:hover:text-slate-900
-              cursor-pointer
-            "
-            aria-label="Toggle sidebar"
-          >
-            {isOpen ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-          </button>
+          {isOpen && (
+            <button
+              type="button"
+              onClick={onToggleSidebar}
+              className="
+                flex
+                h-8
+                w-8
+                shrink-0
+                items-center
+                justify-center
+                rounded-xl
+                border
+                border-slate-800
+                light:border-slate-200
+                bg-slate-900/70
+                light:bg-slate-100
+                text-slate-400
+                light:text-slate-600
+                transition-all
+                duration-200
+                hover:border-emerald-500/40
+                hover:bg-slate-800
+                hover:text-emerald-400
+                hover:shadow-xs
+                active:scale-95
+                cursor-pointer
+              "
+              aria-label="Collapse sidebar"
+              title="Collapse sidebar"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+          )}
         </div>
 
-        {/* Desktop Navigation Links */}
-        <nav className="flex flex-1 flex-col gap-2 p-3 overflow-y-auto">
-          {menuItems.map((item) => {
-            const IconComponent = item.icon;
-            return (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                title={!isOpen ? item.label : undefined}
-                className={({ isActive }) =>
-                  `
-                    group
-                    relative
-                    flex
-                    items-center
-                    rounded-xl
-                    py-3.5
-                    text-sm
-                    font-medium
-                    transition-all
-                    duration-200
-                    ${isOpen ? "gap-3.5 px-3.5" : "justify-center px-2"}
-                    ${
-                      isActive
-                        ? "bg-emerald-500/15 light:bg-emerald-50 text-emerald-300 light:text-emerald-800 font-semibold shadow-inner border border-emerald-500/20 light:border-emerald-200"
-                        : "text-slate-400 light:text-slate-600 hover:bg-slate-800/60 light:hover:bg-slate-100 hover:text-slate-200 light:hover:text-slate-900"
-                    }
-                  `
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    {isActive && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 rounded-r-full bg-emerald-400 shadow-sm shadow-emerald-400/50" />
-                    )}
+        {/* Collapsed Expand Button */}
+        {!isOpen && (
+          <div className="flex justify-center pt-3 pb-1 border-b border-slate-800/50">
+            <button
+              type="button"
+              onClick={onToggleSidebar}
+              className="
+                flex
+                h-8
+                w-8
+                items-center
+                justify-center
+                rounded-xl
+                border
+                border-slate-800
+                light:border-slate-200
+                bg-slate-900/70
+                light:bg-slate-100
+                text-slate-400
+                light:text-slate-600
+                transition-all
+                duration-200
+                hover:border-emerald-500/40
+                hover:bg-slate-800
+                hover:text-emerald-400
+                hover:shadow-xs
+                active:scale-95
+                cursor-pointer
+              "
+              aria-label="Expand sidebar"
+              title="Expand sidebar"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+        )}
 
-                    <IconComponent
-                      className={`
-                        h-5
-                        w-5
-                        shrink-0
-                        transition-transform
-                        duration-200
-                        group-hover:scale-110
-                        ${isActive ? "text-emerald-400 light:text-emerald-600" : "text-slate-400 light:text-slate-500 group-hover:text-slate-200 light:group-hover:text-slate-900"}
-                      `}
-                    />
+        {/* Desktop Navigation Links (Grouped) */}
+        <nav className="flex flex-1 flex-col gap-4 p-3 overflow-y-auto overflow-x-hidden">
+          {menuGroups.map((group) => (
+            <div key={group.title} className="space-y-1">
+              {isOpen && (
+                <p className="px-3 pb-1 text-[9px] font-black uppercase tracking-widest text-slate-500 light:text-slate-400">
+                  {group.title}
+                </p>
+              )}
+              <div className="space-y-1">
+                {group.items.map((item) => {
+                  const IconComponent = item.icon;
+                  return (
+                    <NavLink
+                      key={item.path}
+                      to={item.path}
+                      title={!isOpen ? item.label : undefined}
+                      className={({ isActive }) =>
+                        `
+                          group
+                          relative
+                          flex
+                          items-center
+                          rounded-xl
+                          py-2.5
+                          text-xs
+                          font-bold
+                          transition-all
+                          duration-200
+                          ${isOpen ? "gap-3.5 px-3.5" : "justify-center px-2"}
+                          ${
+                            isActive
+                              ? "bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-transparent text-emerald-300 light:text-emerald-700 font-extrabold shadow-inner border border-emerald-500/25 light:border-emerald-300"
+                              : "text-slate-400 light:text-slate-600 hover:bg-slate-900/70 light:hover:bg-slate-100 hover:text-slate-200 light:hover:text-slate-950 hover:translate-x-0.5"
+                          }
+                        `
+                      }
+                    >
+                      {({ isActive }) => (
+                        <>
+                          {isActive && (
+                            <span className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                          )}
 
-                    {isOpen && (
-                      <span className="truncate">{item.label}</span>
-                    )}
-                  </>
-                )}
-              </NavLink>
-            );
-          })}
+                          <IconComponent
+                            className={`
+                              h-4.5
+                              w-4.5
+                              shrink-0
+                              transition-all
+                              duration-200
+                              group-hover:scale-110
+                              ${
+                                isActive
+                                  ? "text-emerald-400 light:text-emerald-600 drop-shadow-[0_0_6px_rgba(52,211,153,0.4)]"
+                                  : "text-slate-400 light:text-slate-500 group-hover:text-emerald-400 light:group-hover:text-emerald-600"
+                              }
+                            `}
+                          />
+
+                          {isOpen && (
+                            <span className="truncate">{item.label}</span>
+                          )}
+                        </>
+                      )}
+                    </NavLink>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </nav>
 
         {/* Desktop Sidebar Footer */}
-        {isOpen && (
+        {isOpen ? (
           <div className="p-3 border-t border-slate-800/80 light:border-slate-200">
-            <div className="rounded-xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-950/20 light:bg-emerald-50/70 p-3 flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400">
-                <Sparkles className="h-4 w-4" />
+            <div className="rounded-xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-950/20 light:bg-emerald-50/70 p-3 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                </span>
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold text-slate-200 light:text-slate-800">v{CURRENT_APP_VERSION}</span>
+                  <span className="text-[10px] text-emerald-400/90 light:text-emerald-700 font-semibold">PokéMMO Ready</span>
+                </div>
               </div>
-              <div className="flex flex-col">
-                <span className="text-xs font-semibold text-slate-200 light:text-slate-800">v{CURRENT_APP_VERSION} Ready</span>
-                <span className="text-[10px] text-emerald-400/80 light:text-emerald-700">All systems online</span>
-              </div>
+              <Sparkles className="h-3.5 w-3.5 text-emerald-400/80" />
             </div>
+          </div>
+        ) : (
+          <div className="p-2 border-t border-slate-800/80 light:border-slate-200 flex justify-center">
+            <span className="relative flex h-2 w-2" title="v1.0.0 Online">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+            </span>
           </div>
         )}
       </aside>
