@@ -1,32 +1,34 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
-// Funny objects the UFO can "borrow" for research
+// Funny objects the UFO borrows for research
 const ABDUCTION_TARGETS = [
-  { name: "Leppa Berry", icon: "🍒", label: "Harvest Sample #42" },
-  { name: "Farm Miltank", icon: "🐄", label: "Specimen Cow" },
-  { name: "Golden Magikarp", icon: "🐟", label: "Confused Fish" },
-  { name: "Oran Berry", icon: "🫐", label: "Juicy Specimen" },
-  { name: "Sprout Pot", icon: "🌱", label: "Soil Sample" },
-  { name: "Psyduck", icon: "🦆", label: "Headache Alien" },
+  { name: "Leppa Berry", icon: "🍒" },
+  { name: "Farm Miltank", icon: "🐄" },
+  { name: "Golden Magikarp", icon: "🐟" },
+  { name: "Oran Berry", icon: "🫐" },
+  { name: "Sprout Pot", icon: "🌱" },
+  { name: "Psyduck", icon: "🦆" },
 ];
 
 const ALIEN_MESSAGES = [
   "BEEP BOOP! BORROWING THIS FOR SCIENCE! 🛸",
   "INVESTIGATING POKEMMO SOIL QUALITY! 🌱",
-  "RETURN POLICY: 5 SECONDS OR LESS! ⏳",
+  "RETURNING IN 7 SECONDS! ⏳",
   "DON'T MIND US, MASTER FARMER! 🍒",
   "TASTES LIKE SWEET LEPPA! 😋",
 ];
 
 type UFOState =
-  | "idle" // Waiting off-screen
-  | "flyIn" // Entering from sky
-  | "beamDown" // Shining tractor beam
-  | "abducting" // Object lifting into UFO
-  | "cruising" // Holding object, cruising around
-  | "returnTrip" // Flying back to original spot
-  | "returning" // Lowering object back down
-  | "warpOut"; // Hyper-drive exit
+  | "idle" // Off-screen, waiting
+  | "flyIn" // Flying to target position
+  | "beamDown" // Hovering, tractor beam turns on
+  | "abducting" // Object lifts from ground into UFO
+  | "cruisingOff" // UFO flies across and off the screen
+  | "away" // Completely off-screen for 5-10 seconds
+  | "returnFlyIn" // Flying back into the screen to drop zone
+  | "returning" // Lowering object back down to original place
+  | "landed" // Object lands safely, beam powers down
+  | "warpOut"; // UFO warps into hyperspace
 
 export default function UFOEasterEgg() {
   const [state, setState] = useState<UFOState>("idle");
@@ -34,17 +36,15 @@ export default function UFOEasterEgg() {
   const [speech, setSpeech] = useState<string | null>(null);
   const [clickCount, setClickCount] = useState(0);
 
-  // Random landing coordinates (percent of viewport)
-  const [pos, setPos] = useState({ x: 50, y: 35 });
-  const [cruiseOffset, setCruiseOffset] = useState({ x: 0, y: 0 });
-
+  // Position coordinates (% of viewport)
+  const [pos, setPos] = useState({ x: 50, y: 32 });
   const activeRef = useRef(false);
 
   const startAbductionMission = useCallback(() => {
     if (activeRef.current) return;
     activeRef.current = true;
 
-    // Pick random target & location
+    // Pick random target
     const randomTarget =
       ABDUCTION_TARGETS[
         Math.floor(Math.random() * ABDUCTION_TARGETS.length)
@@ -52,67 +52,70 @@ export default function UFOEasterEgg() {
     setTarget(randomTarget);
     setSpeech(null);
 
-    // Position somewhere visible but not offscreen (between 25% and 75% X, 25% and 55% Y)
-    const targetX = 25 + Math.random() * 50;
-    const targetY = 22 + Math.random() * 32;
+    // Pick a safe visible sky location
+    const targetX = 30 + Math.random() * 40;
+    const targetY = 20 + Math.random() * 25;
     setPos({ x: targetX, y: targetY });
-    setCruiseOffset({ x: 0, y: 0 });
 
-    // Step 1: Fly In (takes ~1.8s)
+    // Step 1: Fly In (takes 1.6s)
     setState("flyIn");
 
-    // Step 2: Beam Down
+    // Step 2: Hover & Beam Down (takes 0.8s)
     setTimeout(() => {
       setState("beamDown");
 
-      // Step 3: Abduct Object
+      // Step 3: Object rises into UFO (takes 1.4s)
       setTimeout(() => {
         setState("abducting");
 
-        // Step 4: UFO absorbs object and cruises around
+        // Step 4: UFO absorbs item, beam shuts off, UFO flies across and OFF screen
         setTimeout(() => {
-          setState("cruising");
-          // Drift around
-          setCruiseOffset({
-            x: (Math.random() - 0.5) * 140,
-            y: (Math.random() - 0.5) * 50,
-          });
+          setState("cruisingOff");
 
-          // Step 5: After 5 seconds, return to drop zone
+          // Step 5: UFO stays away off-screen for 7 seconds (5-10s requirement)
           setTimeout(() => {
-            setState("returnTrip");
-            setCruiseOffset({ x: 0, y: 0 });
+            setState("away");
 
-            // Step 6: Lower object back down
             setTimeout(() => {
-              setState("returning");
+              // Step 6: UFO returns from across the screen back to original spot
+              setState("returnFlyIn");
 
-              // Step 7: Object safe on ground, UFO warps away!
+              // Step 7: Beam turns back on & lowers object to original place
               setTimeout(() => {
-                setState("warpOut");
+                setState("returning");
 
-                // Reset to idle
+                // Step 8: Object lands safely on original place with sparkle
                 setTimeout(() => {
-                  setState("idle");
-                  activeRef.current = false;
-                }, 1200);
-              }, 2200);
-            }, 1200);
-          }, 4500);
-        }, 2200);
-      }, 1000);
-    }, 1800);
+                  setState("landed");
+
+                  // Step 9: UFO warps out into hyperspace
+                  setTimeout(() => {
+                    setState("warpOut");
+
+                    // Step 10: Reset to idle
+                    setTimeout(() => {
+                      setState("idle");
+                      activeRef.current = false;
+                    }, 1200);
+                  }, 1800);
+                }, 1400);
+              }, 1600);
+            }, 7000); // Away for 7 seconds!
+          }, 1800);
+        }, 1400);
+      }, 800);
+    }, 1600);
   }, []);
 
-  // Periodic automatic visitation (every 90 to 180 seconds)
+  // Periodic automatic visitation (every 2 minutes)
   useEffect(() => {
     const interval = setInterval(() => {
-      if (Math.random() > 0.3) {
+      if (Math.random() > 0.25) {
         startAbductionMission();
       }
-    }, 110000);
+    }, 120000);
 
-    // Also trigger on custom event from settings
+    // Also trigger on custom summon event
     const handleSummon = () => {
       startAbductionMission();
     };
@@ -124,37 +127,45 @@ export default function UFOEasterEgg() {
     };
   }, [startAbductionMission]);
 
-  // Click on the UFO to make it spin or talk!
+  // Click on the UFO to make it spin or talk
   const handleUFOClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setClickCount((c) => c + 1);
-    const msg = ALIEN_MESSAGES[Math.floor(Math.random() * ALIEN_MESSAGES.length)];
+    const msg =
+      ALIEN_MESSAGES[Math.floor(Math.random() * ALIEN_MESSAGES.length)];
     setSpeech(msg);
     setTimeout(() => setSpeech(null), 3000);
   };
 
-  if (state === "idle") return null;
+  if (state === "idle" || state === "away") return null;
 
-  // Calculate current coordinates based on state
+  // Determine UFO Position & Animation
   let ufoLeft = `${pos.x}%`;
   let ufoTop = `${pos.y}%`;
   let transform = "translate(-50%, -50%)";
   let transitionDuration = "0.8s";
 
   if (state === "flyIn") {
-    ufoLeft = "110%";
-    ufoTop = "5%";
+    // Coming from off-screen top right
+    ufoLeft = "115%";
+    ufoTop = "8%";
     transform = "translate(0, 0) rotate(-15deg)";
-  } else if (state === "cruising") {
-    transform = `translate(calc(-50% + ${cruiseOffset.x}px), calc(-50% + ${cruiseOffset.y}px)) rotate(${
-      cruiseOffset.x > 0 ? 8 : -8
-    }deg)`;
-    transitionDuration = "4.5s";
-  } else if (state === "returnTrip") {
+    transitionDuration = "1.6s";
+  } else if (state === "cruisingOff") {
+    // Flying completely across and OFF the left screen
+    ufoLeft = "-25%";
+    ufoTop = "15%";
+    transform = "translate(0, 0) rotate(18deg) scale(0.9)";
+    transitionDuration = "1.8s";
+  } else if (state === "returnFlyIn") {
+    // Returning from the left sky back to exact position
+    ufoLeft = `${pos.x}%`;
+    ufoTop = `${pos.y}%`;
     transform = "translate(-50%, -50%) rotate(0deg)";
-    transitionDuration = "1.2s";
+    transitionDuration = "1.6s";
   } else if (state === "warpOut") {
-    ufoLeft = "-30%";
+    // Accelerating off into top-right hyperspace
+    ufoLeft = "120%";
     ufoTop = "-20%";
     transform = "translate(0, 0) scale(0.2) rotate(-35deg)";
     transitionDuration = "0.9s";
@@ -165,55 +176,8 @@ export default function UFOEasterEgg() {
     state === "abducting" ||
     state === "returning";
 
-  const isObjectInFlight =
-    state === "abducting" || state === "returning";
-
   return (
     <div className="fixed inset-0 pointer-events-none z-40 overflow-hidden select-none">
-      {/* Target Ground Area Marker & Object */}
-      {state !== "flyIn" && state !== "warpOut" && (
-        <div
-          className="absolute transition-opacity duration-500"
-          style={{
-            left: `${pos.x}%`,
-            top: `calc(${pos.y}% + 190px)`,
-            transform: "translate(-50%, -50%)",
-          }}
-        >
-          {/* Ground Holo-Reticule */}
-          <div
-            className={`
-              relative flex flex-col items-center justify-center
-              transition-all duration-700
-              ${isBeaming ? "opacity-100 scale-100" : "opacity-0 scale-75"}
-            `}
-          >
-            {/* Pulsing ground ring */}
-            <div className="h-20 w-32 rounded-[50%] border-2 border-emerald-400/60 bg-emerald-500/10 shadow-[0_0_24px_rgba(16,185,129,0.5)] animate-pulse" />
-            <span className="mt-1 text-[9px] font-mono font-bold tracking-widest text-emerald-400 bg-slate-950/80 px-2 py-0.5 rounded border border-emerald-500/40">
-              TARGET: {target.name}
-            </span>
-          </div>
-
-          {/* Abducted Item on ground before pickup or after return */}
-          {(state === "beamDown" || state === "returning") && (
-            <div
-              className={`
-                absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-                text-3xl transition-all duration-700
-                ${
-                  state === "returning"
-                    ? "animate-bounce"
-                    : "scale-100 drop-shadow-[0_0_12px_rgba(16,185,129,0.8)]"
-                }
-              `}
-            >
-              {target.icon}
-            </div>
-          )}
-        </div>
-      )}
-
       {/* UFO SAUCER & TRACTOR BEAM CONTAINER */}
       <div
         className="absolute pointer-events-auto cursor-pointer"
@@ -233,74 +197,71 @@ export default function UFOEasterEgg() {
           </div>
         )}
 
-        {/* TRACTOR BEAM */}
+        {/* TRACTOR BEAM (NON-OVERLAYING CONICAL LIGHT) */}
         {isBeaming && (
           <div
-            className={`
-              absolute left-1/2 top-14 -translate-x-1/2
-              w-44 h-52 pointer-events-none
-              transition-opacity duration-500
-              ${isBeaming ? "opacity-90" : "opacity-0"}
-            `}
+            className="absolute left-1/2 top-12 -translate-x-1/2 w-48 h-56 pointer-events-none transition-opacity duration-300 opacity-90"
           >
-            {/* Conical Light Beam SVG */}
+            {/* Soft Translucent Light Beam */}
             <svg
               viewBox="0 0 160 200"
-              className="w-full h-full drop-shadow-[0_0_20px_rgba(16,185,129,0.7)]"
+              className="w-full h-full drop-shadow-[0_0_24px_rgba(16,185,129,0.7)]"
             >
               <defs>
                 <linearGradient
-                  id="tractorBeamGradient"
+                  id="cleanTractorGradient"
                   x1="50%"
                   y1="0%"
                   x2="50%"
                   y2="100%"
                 >
                   <stop offset="0%" stopColor="#34d399" stopOpacity="0.8" />
-                  <stop offset="60%" stopColor="#10b981" stopOpacity="0.4" />
-                  <stop offset="100%" stopColor="#059669" stopOpacity="0.05" />
+                  <stop offset="60%" stopColor="#10b981" stopOpacity="0.35" />
+                  <stop offset="100%" stopColor="#059669" stopOpacity="0.0" />
                 </linearGradient>
               </defs>
               <polygon
                 points="70,0 90,0 155,200 5,200"
-                fill="url(#tractorBeamGradient)"
+                fill="url(#cleanTractorGradient)"
               />
-              {/* Internal scanning lines */}
-              <line
-                x1="20"
-                y1="100"
-                x2="140"
-                y2="100"
-                stroke="#6ee7b7"
-                strokeWidth="1.5"
-                strokeDasharray="6 6"
-                className="animate-pulse"
-              />
-              <line
-                x1="35"
-                y1="150"
-                x2="125"
-                y2="150"
+              {/* Laser energy rings */}
+              <ellipse
+                cx="80"
+                cy="100"
+                rx="35"
+                ry="8"
+                fill="none"
                 stroke="#6ee7b7"
                 strokeWidth="1"
                 strokeDasharray="4 4"
-                className="animate-pulse"
+                className="animate-pulse opacity-60"
+              />
+              <ellipse
+                cx="80"
+                cy="160"
+                rx="55"
+                ry="12"
+                fill="none"
+                stroke="#6ee7b7"
+                strokeWidth="1"
+                strokeDasharray="6 6"
+                className="animate-pulse opacity-40"
               />
             </svg>
 
-            {/* Levitating / Ascending Object */}
-            {isObjectInFlight && (
+            {/* Object in transit inside the beam */}
+            {(state === "abducting" || state === "returning") && (
               <div
                 className={`
                   absolute left-1/2 -translate-x-1/2 text-3xl
-                  drop-shadow-[0_0_16px_rgba(255,255,255,0.9)]
+                  drop-shadow-[0_0_16px_rgba(255,255,255,0.95)]
                   transition-all duration-1000 ease-in-out
                 `}
                 style={{
-                  top: state === "abducting" ? "15%" : "85%",
-                  transform: `translateX(-50%) rotate(${
-                    clickCount * 180
-                  }deg) scale(1.2)`,
+                  top: state === "abducting" ? "10%" : "82%",
+                  transform: `translateX(-50%) scale(${
+                    state === "abducting" ? 0.9 : 1.2
+                  }) rotate(${clickCount * 180}deg)`,
                 }}
               >
                 {target.icon}
@@ -309,7 +270,21 @@ export default function UFOEasterEgg() {
           </div>
         )}
 
-        {/* UFO SAUCER BODY */}
+        {/* Landed item bounce on ground before fading out */}
+        {state === "landed" && (
+          <div
+            className="absolute left-1/2 -translate-x-1/2 top-[220px] pointer-events-none flex flex-col items-center animate-bounce"
+          >
+            <span className="text-3xl drop-shadow-[0_0_12px_rgba(16,185,129,0.9)]">
+              {target.icon}
+            </span>
+            <span className="text-xs -mt-1 text-emerald-400 font-bold drop-shadow-[0_0_8px_#34d399] animate-ping">
+              ✨
+            </span>
+          </div>
+        )}
+
+        {/* UFO SAUCER CRAFT */}
         <div
           className={`
             relative flex flex-col items-center
