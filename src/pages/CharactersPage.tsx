@@ -22,6 +22,7 @@ import CharacterCard from "../components/characters/CharacterCard";
 import CharacterModal from "../components/characters/CharacterModal";
 import ConfirmDialog from "../components/ui/ConfirmDialog";
 import Modal from "../components/ui/Modal";
+import Button from "../components/ui/Button";
 
 import PlantBerrySelector from "../components/berries/PlantBerrySelector";
 
@@ -539,113 +540,36 @@ export default function CharactersPage() {
           {/* Action Buttons: Bulk actions + Add Character */}
           <div className="flex flex-wrap items-center gap-3">
             {countNeedWater > 1 && (
-              <button
-                type="button"
+              <Button
+                variant="info"
+                size="lg"
                 onClick={handleWaterAll}
-                className="
-                  inline-flex
-                  items-center
-                  justify-center
-                  gap-2
-                  rounded-xl
-                  border
-                  border-sky-500/30
-                  bg-sky-500/15
-                  hover:bg-sky-500
-                  hover:text-slate-950
-                  light:hover:text-white
-                  px-4
-                  py-3.5
-                  text-sm
-                  font-bold
-                  text-sky-400
-                  light:text-sky-700
-                  transition-all
-                  duration-200
-                  cursor-pointer
-                  shadow-sm
-                  active:scale-95
-                "
               >
-                <Droplets className="h-4.5 w-4.5" />
+                <Droplets className="mr-2 h-4.5 w-4.5" />
                 <span>Water All ({countNeedWater})</span>
-              </button>
+              </Button>
             )}
 
             {countHarvestReady > 1 && (
-              <button
-                type="button"
+              <Button
+                variant="amber"
+                size="lg"
                 onClick={handleHarvestAll}
-                className="
-                  inline-flex
-                  items-center
-                  justify-center
-                  gap-2
-                  rounded-xl
-                  border
-                  border-amber-500/30
-                  bg-amber-500/15
-                  hover:bg-amber-500
-                  hover:text-slate-950
-                  light:hover:text-white
-                  px-4
-                  py-3.5
-                  text-sm
-                  font-bold
-                  text-amber-400
-                  light:text-amber-700
-                  transition-all
-                  duration-200
-                  cursor-pointer
-                  shadow-sm
-                  active:scale-95
-                "
               >
-                <Wheat className="h-4.5 w-4.5" />
+                <Wheat className="mr-2 h-4.5 w-4.5" />
                 <span>Harvest All ({countHarvestReady})</span>
-              </button>
+              </Button>
             )}
 
-            <button
-              type="button"
+            <Button
+              variant="primary"
+              size="lg"
               onClick={openAddModal}
-              className="
-                group
-                relative
-                inline-flex
-                items-center
-                justify-center
-                gap-2.5
-                rounded-xl
-                border
-                border-emerald-400/40
-                bg-gradient-to-r
-                from-emerald-500
-                to-teal-500
-                px-5
-                sm:px-6
-                py-3
-                sm:py-3.5
-                text-sm
-                font-bold
-                text-slate-950
-                shadow-lg
-                shadow-emerald-500/25
-                transition-all
-                duration-200
-                hover:-translate-y-0.5
-                hover:from-emerald-400
-                hover:to-teal-400
-                hover:shadow-emerald-500/40
-                active:translate-y-0
-                cursor-pointer
-                w-full
-                sm:w-auto
-              "
+              className="w-full sm:w-auto"
             >
-              <UserPlus className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
+              <UserPlus className="mr-2 h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
               <span>Add Character</span>
-            </button>
+            </Button>
           </div>
         </div>
 

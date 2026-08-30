@@ -162,18 +162,22 @@ export default function Header({ onOpenMobileMenu }: HeaderProps) {
             border
             border-slate-800
             light:border-slate-200
-            bg-slate-900/60
+            bg-slate-900/70
             light:bg-slate-100
             text-slate-400
             light:text-slate-600
             transition-all
             duration-200
-            hover:border-slate-700
-            light:hover:border-slate-300
+            hover:border-emerald-500/40
+            light:hover:border-emerald-400
             hover:bg-slate-800
             light:hover:bg-slate-200
             hover:text-emerald-400
+            hover:-translate-y-0.5
+            active:translate-y-0
+            active:scale-95
             cursor-pointer
+            shadow-xs
           "
           aria-label="Open settings"
           title="Settings"
@@ -194,7 +198,7 @@ export default function Header({ onOpenMobileMenu }: HeaderProps) {
               border
               border-slate-800
               light:border-slate-200
-              bg-slate-900/60
+              bg-slate-900/70
               light:bg-slate-100
               px-3
               py-1.5
@@ -202,13 +206,17 @@ export default function Header({ onOpenMobileMenu }: HeaderProps) {
               light:text-slate-700
               transition-all
               duration-200
-              hover:border-slate-700
-              light:hover:border-slate-300
+              hover:border-emerald-500/40
+              light:hover:border-emerald-400
               hover:bg-slate-800
               light:hover:bg-slate-200
               hover:text-white
               light:hover:text-slate-900
+              hover:-translate-y-0.5
+              active:translate-y-0
+              active:scale-95
               cursor-pointer
+              shadow-xs
             "
             aria-label="Open profile menu"
           >

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { User, UserPlus, Sparkles, Trash2 } from "lucide-react";
 
 import Modal from "../ui/Modal";
+import Button from "../ui/Button";
 
 type CharacterModalProps = {
   isOpen: boolean;
@@ -201,81 +202,28 @@ export default function CharacterModal({
         )}
 
         {/* Action Buttons */}
-        <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3.5 pt-7 border-t border-slate-800 light:border-slate-200">
-          <button
+        <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-6 border-t border-slate-800/80 light:border-slate-200">
+          <Button
             type="button"
-            onClick={handleClose}
-            className="
-              w-full
-              sm:w-auto
-              rounded-xl
-              border
-              border-slate-700
-              light:border-slate-300
-              bg-slate-800/90
-              light:bg-slate-100
-              px-7
-              py-4
-              text-sm
-              font-bold
-              text-slate-200
-              light:text-slate-700
-              transition-all
-              duration-200
-              hover:border-slate-600
-              light:hover:border-slate-400
-              hover:bg-slate-700
-              light:hover:bg-slate-200
-              hover:text-white
-              light:hover:text-slate-900
-              active:scale-[0.98]
-              cursor-pointer
-              text-center
-            "
+            variant="secondary"
+            size="lg"
+            onClick={onClose}
+            className="w-full sm:w-auto"
           >
             Cancel
-          </button>
+          </Button>
 
-          <button
+          <Button
             type="button"
+            variant="primary"
+            size="lg"
             onClick={handleSave}
             disabled={!isValid}
-            className="
-              w-full
-              sm:w-auto
-              inline-flex
-              items-center
-              justify-center
-              gap-3
-              rounded-xl
-              border
-              border-emerald-400/40
-              bg-gradient-to-r
-              from-emerald-500
-              to-teal-500
-              px-9
-              py-4
-              text-sm
-              font-bold
-              text-slate-950
-              shadow-xl
-              shadow-emerald-500/25
-              transition-all
-              duration-200
-              hover:-translate-y-0.5
-              hover:from-emerald-400
-              hover:to-teal-400
-              hover:shadow-emerald-500/45
-              active:translate-y-0
-              disabled:opacity-50
-              disabled:cursor-not-allowed
-              disabled:hover:translate-y-0
-              cursor-pointer
-            "
+            className="w-full sm:w-auto"
           >
-            <UserPlus className="h-5 w-5" />
+            <UserPlus className="mr-2 h-4.5 w-4.5 transition-transform duration-200 group-hover:scale-110" />
             <span>{saveButtonText}</span>
-          </button>
+          </Button>
         </div>
       </div>
     </Modal>

@@ -4,6 +4,7 @@ import { Users, Sprout, Droplets, Wheat, AlertTriangle } from "lucide-react";
 
 import Section from "../ui/Section";
 import StatCard from "../ui/StatCard";
+import Button from "../ui/Button";
 import FarmStatusChart from "./FarmStatusChart";
 import NeedsAttention from "./NeedsAttention";
 import RecentActivity from "./RecentActivity";
@@ -97,13 +98,14 @@ export default function Dashboard() {
               <p className="text-xs sm:text-sm text-slate-400 light:text-slate-600">Add your first character to begin tracking your berry farm.</p>
             </div>
           </div>
-          <button
-            type="button"
+          <Button
+            variant="primary"
+            size="lg"
             onClick={() => navigate('/characters')}
-            className="w-full sm:w-auto shrink-0 rounded-xl border border-emerald-500/30 bg-emerald-500/20 light:bg-emerald-500 light:text-white px-5 py-2.5 text-sm font-bold text-emerald-400 light:text-white transition-all hover:bg-emerald-500 hover:text-slate-950 light:hover:bg-emerald-600 cursor-pointer shadow-xs text-center"
+            className="w-full sm:w-auto shrink-0"
           >
             Add Character →
-          </button>
+          </Button>
         </div>
       )}
 
