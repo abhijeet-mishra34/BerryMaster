@@ -346,6 +346,90 @@ html.light .card-shine::after {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   GAMING COMPANION LOADING & SPLASH SCREEN ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes cyberSpinClockwise {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes cyberSpinCounter {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes holographicPulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 24px rgba(16, 185, 129, 0.45)) drop-shadow(0 0 50px rgba(225, 29, 72, 0.3));
+  }
+  50% {
+    transform: scale(1.035);
+    filter: drop-shadow(0 0 40px rgba(16, 185, 129, 0.75)) drop-shadow(0 0 75px rgba(225, 29, 72, 0.45));
+  }
+}
+
+@keyframes scannerLine {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.8;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes digitalGridMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 40px 40px; }
+}
+
+@keyframes shimmerGleam {
+  0% { transform: translateX(-150%); }
+  100% { transform: translateX(150%); }
+}
+
+.cyber-spin {
+  animation: cyberSpinClockwise 24s linear infinite;
+}
+
+.cyber-spin-fast {
+  animation: cyberSpinClockwise 12s linear infinite;
+}
+
+.cyber-spin-reverse {
+  animation: cyberSpinCounter 18s linear infinite;
+}
+
+.hologram-pulse {
+  animation: holographicPulse 3s ease-in-out infinite;
+}
+
+.scan-line {
+  animation: scannerLine 2.2s ease-in-out infinite;
+}
+
+.shimmer-gleam {
+  animation: shimmerGleam 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.cyber-grid {
+  background-image: 
+    linear-gradient(to right, rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+  background-size: 36px 36px;
+  animation: digitalGridMove 20s linear infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
    LIGHT THEME INTEGRATION
    ═══════════════════════════════════════════════════════════════════════════ */
 

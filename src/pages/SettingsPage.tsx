@@ -414,6 +414,34 @@ export default function SettingsPage() {
             </div>
           </button>
         </div>
+
+        {/* Intro Loading Screen Preview */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04] light:bg-emerald-50/60 p-4 sm:p-5">
+          <div className="flex items-center gap-3.5">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
+              <Sparkles className="h-5 w-5" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-white light:text-slate-900">
+                Gaming Companion Intro Screen
+              </h4>
+              <p className="text-xs text-slate-400 light:text-slate-500">
+                Holographic diagnostics and system initialization sequence.
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() =>
+              window.dispatchEvent(new CustomEvent("berrymaster:preview-splash"))
+            }
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/20 px-4 py-2.5 text-xs font-bold text-emerald-400 hover:bg-emerald-500 hover:text-slate-950 light:bg-emerald-500 light:text-white transition-all cursor-pointer shadow-xs shrink-0"
+          >
+            <Sparkles className="h-3.5 w-3.5" />
+            <span>Replay Intro Screen</span>
+          </button>
+        </div>
       </section>
 
       {/* =====================================
