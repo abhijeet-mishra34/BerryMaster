@@ -2,7 +2,7 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 type ButtonProps = {
   children: ReactNode;
-  variant?: "primary" | "secondary" | "danger" | "info" | "amber";
+  variant?: "primary" | "secondary" | "danger" | "info";
   size?: "sm" | "md" | "lg" | "xl";
   className?: string;
 } & Pick<
@@ -12,22 +12,20 @@ type ButtonProps = {
 
 const variants = {
   primary:
-    "border border-emerald-400/50 bg-gradient-to-r from-emerald-500 via-emerald-400 to-teal-400 text-slate-950 font-black shadow-md shadow-emerald-500/20 hover:shadow-lg hover:shadow-emerald-500/35 hover:brightness-105 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]",
+    "border border-emerald-400/40 bg-emerald-500 text-slate-950 hover:bg-emerald-400 hover:shadow-lg hover:shadow-emerald-500/25 active:scale-[0.98]",
   secondary:
-    "border border-white/[0.1] light:border-slate-300 bg-slate-800/80 light:bg-slate-100/90 backdrop-blur-md text-slate-200 light:text-slate-800 font-bold hover:border-emerald-400/50 hover:bg-slate-700/80 light:hover:bg-slate-200 hover:text-white light:hover:text-slate-950 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]",
+    "border border-slate-700 light:border-slate-300 bg-slate-800/80 light:bg-slate-100 text-slate-200 light:text-slate-700 hover:border-slate-600 light:hover:border-slate-400 hover:bg-slate-700 light:hover:bg-slate-200 hover:text-white light:hover:text-slate-900 active:scale-[0.98]",
   danger:
-    "border border-rose-500/40 light:border-rose-300 bg-rose-500/15 light:bg-rose-100/80 backdrop-blur-md text-rose-300 light:text-rose-800 font-bold hover:bg-gradient-to-r hover:from-rose-500 hover:to-red-600 hover:text-white hover:border-rose-400 hover:shadow-lg hover:shadow-rose-500/35 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]",
+    "border border-red-500/30 light:border-red-200 bg-red-500/10 light:bg-red-50 text-red-300 light:text-red-700 hover:bg-red-500 hover:text-white hover:shadow-lg hover:shadow-red-500/20 active:scale-[0.98]",
   info:
-    "border border-sky-400/40 light:border-sky-300 bg-sky-500/15 light:bg-sky-100/80 backdrop-blur-md text-sky-300 light:text-sky-800 font-bold hover:bg-gradient-to-r hover:from-sky-500 hover:to-cyan-500 hover:text-slate-950 hover:border-sky-300 hover:shadow-lg hover:shadow-sky-500/35 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]",
-  amber:
-    "border border-amber-400/40 light:border-amber-300 bg-amber-500/15 light:bg-amber-100/80 backdrop-blur-md text-amber-300 light:text-amber-800 font-bold hover:bg-gradient-to-r hover:from-amber-500 hover:to-yellow-500 hover:text-slate-950 hover:border-amber-300 hover:shadow-lg hover:shadow-amber-500/35 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]",
+    "border border-sky-500/30 light:border-sky-200 bg-sky-500/10 light:bg-sky-50 text-sky-300 light:text-sky-700 hover:bg-sky-500 hover:text-slate-950 light:hover:text-white hover:shadow-lg hover:shadow-sky-500/20 active:scale-[0.98]",
 };
 
 const sizes = {
-  sm: "px-3.5 py-1.5 text-xs font-bold rounded-lg gap-1.5",
-  md: "px-4.5 py-2 text-xs sm:text-sm font-bold rounded-xl gap-2",
-  lg: "px-5.5 py-2.5 text-sm font-extrabold rounded-xl gap-2.5",
-  xl: "px-7 py-3.5 text-base font-black rounded-2xl gap-3",
+  sm: "px-3 py-1.5 text-xs font-semibold",
+  md: "px-4.5 py-2.5 text-xs font-bold",
+  lg: "px-5 py-3 text-sm font-bold",
+  xl: "px-7 py-3.5 text-base font-bold",
 };
 
 export default function Button({
@@ -45,22 +43,19 @@ export default function Button({
       onClick={onClick}
       disabled={disabled}
       className={`
-        group
-        relative
         inline-flex
         items-center
         justify-center
+        rounded-xl
         tracking-wide
         transition-all
         duration-200
         focus:outline-none
         focus:ring-2
-        focus:ring-emerald-400/40
+        focus:ring-emerald-500/40
         disabled:cursor-not-allowed
         disabled:opacity-50
-        disabled:transform-none
         cursor-pointer
-        select-none
         ${sizes[size]}
         ${variants[variant]}
         ${className}

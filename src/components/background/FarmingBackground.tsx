@@ -1,7 +1,7 @@
 export default function FarmingBackground() {
   return (
     <div
-      className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+      className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
       aria-hidden="true"
     >
       {/* Primary pulsing glow — centre-bottom */}

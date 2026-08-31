@@ -40,7 +40,6 @@ import {
 } from "../services/nativeNotificationService";
 
 import ConfirmDialog from "../components/ui/ConfirmDialog";
-import Button from "../components/ui/Button";
 
 export default function SettingsPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -433,17 +432,16 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <Button
-            variant="secondary"
-            size="md"
+          <button
+            type="button"
             onClick={() =>
               window.dispatchEvent(new CustomEvent("berrymaster:summon-ufo"))
             }
-            className="shrink-0 border-teal-500/40 text-teal-300 hover:text-white hover:border-teal-400"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-teal-500/30 bg-teal-500/20 px-4 py-2.5 text-xs font-bold text-teal-300 hover:bg-teal-500 hover:text-slate-950 light:bg-teal-600 light:text-white transition-all cursor-pointer shadow-xs shrink-0"
           >
-            <span className="mr-2">🛸</span>
+            <span>🛸</span>
             <span>Summon UFO Now</span>
-          </Button>
+          </button>
         </div>
       </section>
 
@@ -752,16 +750,38 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <Button
-            variant="primary"
-            size="md"
+          <button
+            type="button"
             disabled={isSendingTest}
             onClick={handleSendTestNotification}
-            className="shrink-0"
+            className="
+              inline-flex
+              items-center
+              justify-center
+              gap-2
+              rounded-xl
+              border
+              border-emerald-400/40
+              bg-emerald-500
+              px-6
+              py-3
+              text-xs
+              font-bold
+              text-slate-950
+              transition-all
+              hover:bg-emerald-400
+              hover:shadow-lg
+              hover:shadow-emerald-500/20
+              active:scale-95
+              disabled:opacity-60
+              disabled:cursor-not-allowed
+              shrink-0
+              cursor-pointer
+            "
           >
-            <Bell className={`mr-2 h-4 w-4 ${isSendingTest ? "animate-pulse" : ""}`} />
+            <Bell className={`h-4 w-4 ${isSendingTest ? "animate-pulse" : ""}`} />
             <span>{isSendingTest ? "Sending Test..." : "Send Test Notification"}</span>
-          </Button>
+          </button>
         </div>
 
         {testNotificationStatus && (
@@ -972,19 +992,43 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            <Button
-              variant="info"
-              size="lg"
+            <button
+              type="button"
               onClick={() =>
                 openExternalUrl(
                   "https://github.com/abhijeet-mishra34/BerryMaster/releases/latest/download/BerryMaster-Windows-Setup.exe"
                 )
               }
-              className="mt-5 w-full font-black tracking-wide"
+              className="
+                mt-5
+                flex
+                w-full
+                items-center
+                justify-center
+                gap-2.5
+                rounded-xl
+                border
+                border-sky-400/40
+                bg-sky-500
+                px-6
+                py-3.5
+                text-sm
+                font-bold
+                text-slate-950
+                shadow-md
+                shadow-sky-500/20
+                transition-all
+                duration-200
+                hover:bg-sky-400
+                hover:shadow-lg
+                hover:shadow-sky-500/30
+                active:scale-[0.98]
+                cursor-pointer
+              "
             >
-              <Download className="mr-2 h-4.5 w-4.5" />
+              <Download className="h-4.5 w-4.5" />
               <span>Download Windows Setup (.exe)</span>
-            </Button>
+            </button>
           </div>
 
           {/* Android APK */}
@@ -1003,19 +1047,43 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            <Button
-              variant="primary"
-              size="lg"
+            <button
+              type="button"
               onClick={() =>
                 openExternalUrl(
                   "https://github.com/abhijeet-mishra34/BerryMaster/releases/latest/download/BerryMaster-universal.apk"
                 )
               }
-              className="mt-5 w-full font-black tracking-wide"
+              className="
+                mt-5
+                flex
+                w-full
+                items-center
+                justify-center
+                gap-2.5
+                rounded-xl
+                border
+                border-emerald-400/40
+                bg-emerald-500
+                px-6
+                py-3.5
+                text-sm
+                font-bold
+                text-slate-950
+                shadow-md
+                shadow-emerald-500/20
+                transition-all
+                duration-200
+                hover:bg-emerald-400
+                hover:shadow-lg
+                hover:shadow-emerald-500/30
+                active:scale-[0.98]
+                cursor-pointer
+              "
             >
-              <Download className="mr-2 h-4.5 w-4.5" />
+              <Download className="h-4.5 w-4.5" />
               <span>Download Android APK (.apk)</span>
-            </Button>
+            </button>
           </div>
         </div>
 
@@ -1031,27 +1099,27 @@ export default function SettingsPage() {
           </div>
 
           <div className="flex items-center gap-3 flex-wrap shrink-0">
-            <Button
-              variant="secondary"
-              size="lg"
+            <button
+              type="button"
               onClick={() =>
                 openExternalUrl(
                   "https://github.com/abhijeet-mishra34/BerryMaster/releases"
                 )
               }
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-700 light:border-slate-300 bg-slate-800/80 light:bg-white px-6 py-3.5 text-sm font-bold text-slate-200 light:text-slate-800 hover:bg-slate-700 light:hover:bg-slate-100 hover:text-white light:hover:text-slate-900 transition-all cursor-pointer active:scale-95 shadow-xs"
             >
-              <ExternalLink className="mr-2 h-4.5 w-4.5" />
+              <ExternalLink className="h-4.5 w-4.5" />
               <span>All Releases</span>
-            </Button>
-            <Button
-              variant="info"
-              size="lg"
+            </button>
+            <button
+              type="button"
               disabled={isCheckingUpdate}
               onClick={handleCheckUpdate}
+              className="inline-flex items-center gap-2.5 rounded-xl border border-sky-400/30 light:border-sky-300 bg-sky-500/20 light:bg-sky-100 px-6 py-3.5 text-sm font-bold text-sky-300 light:text-sky-800 hover:bg-sky-500 hover:text-slate-950 light:hover:text-slate-950 transition-all active:scale-95 disabled:opacity-50 cursor-pointer shadow-xs"
             >
-              <RefreshCw className={`mr-2 h-4.5 w-4.5 ${isCheckingUpdate ? "animate-spin" : ""}`} />
+              <RefreshCw className={`h-4.5 w-4.5 ${isCheckingUpdate ? "animate-spin" : ""}`} />
               <span>{isCheckingUpdate ? "Checking GitHub..." : "Check for Updates"}</span>
-            </Button>
+            </button>
           </div>
         </div>
 
@@ -1190,15 +1258,14 @@ export default function SettingsPage() {
               </p>
             </div>
 
-            <Button
-              variant="danger"
-              size="md"
+            <button
+              type="button"
               onClick={() => setIsResetOpen(true)}
-              className="shrink-0"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-rose-500/40 bg-rose-500/20 px-6 py-3 text-xs font-bold text-rose-300 hover:bg-rose-500 hover:text-white transition-all shadow-lg hover:shadow-rose-500/25 active:scale-95 shrink-0 cursor-pointer"
             >
-              <ShieldAlert className="mr-2 h-4 w-4" />
+              <ShieldAlert className="h-4 w-4" />
               Reset Everything
-            </Button>
+            </button>
           </div>
         </section>
       </div>

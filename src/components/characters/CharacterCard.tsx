@@ -295,9 +295,9 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
             Clear Wilted
           </Button>
         ) : status.status === "harvestReady" ? (
-          <Button size="lg" variant="amber" onClick={onHarvest}>
+          <Button size="lg" onClick={onHarvest}>
             <Wheat className="mr-2 h-4.5 w-4.5" />
-            Harvest Now
+            Harvest
           </Button>
         ) : (
           <Button size="lg" variant="info" onClick={onWater}>
@@ -314,7 +314,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
             </Button>
           )}
 
-        <Button size="lg" variant="secondary" onClick={onEdit}>
+        <Button size="lg" variant="info" onClick={onEdit}>
           <Pencil className="mr-2 h-4.5 w-4.5" />
           Edit
         </Button>

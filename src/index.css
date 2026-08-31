@@ -11,15 +11,15 @@ html.dark {
   /* Surface backgrounds */
   --bg-app: #080e1a;
   --bg-app-gradient: radial-gradient(ellipse 80% 60% at 10% 0%, rgba(16,185,129,0.07) 0%, transparent 50%), radial-gradient(ellipse 60% 50% at 90% 100%, rgba(14,165,233,0.05) 0%, transparent 50%), #080e1a;
-  --bg-main: rgba(8, 14, 26, 0.4);
-  --bg-card: rgba(15, 23, 42, 0.65);
+  --bg-main: transparent;
+  --bg-card: rgba(15, 23, 42, 0.45);
   --bg-card-solid: #0f172a;
-  --bg-card-elevated: rgba(30, 41, 59, 0.7);
-  --bg-card-subtle: rgba(15, 23, 42, 0.5);
-  --bg-card-hover: rgba(30, 41, 59, 0.85);
+  --bg-card-elevated: rgba(30, 41, 59, 0.55);
+  --bg-card-subtle: rgba(15, 23, 42, 0.35);
+  --bg-card-hover: rgba(30, 41, 59, 0.65);
   --bg-sidebar: rgba(2, 6, 23, 0.95);
-  --bg-header: rgba(2, 6, 23, 0.85);
-  --bg-hero: linear-gradient(135deg, rgba(15,23,42,0.95) 0%, rgba(6,78,59,0.2) 50%, rgba(2,6,23,0.98) 100%);
+  --bg-header: rgba(2, 6, 23, 0.75);
+  --bg-hero: linear-gradient(135deg, rgba(15,23,42,0.60) 0%, rgba(6,78,59,0.22) 50%, rgba(2,6,23,0.65) 100%);
   --bg-modal: linear-gradient(145deg, rgba(15,23,42,0.98) 0%, rgba(2,6,23,0.98) 100%);
   --bg-chip: rgba(2, 6, 23, 0.7);
 
@@ -49,26 +49,26 @@ html.dark {
   --shadow-elevated: 0 12px 28px -6px rgba(0, 0, 0, 0.45);
 
   /* Particle / Glow colors */
-  --glow-primary: rgba(16, 185, 129, 0.18);
-  --glow-secondary: rgba(52, 211, 153, 0.10);
-  --firefly-color: rgba(254, 240, 138, 0.95);
+  --glow-primary: rgba(16, 185, 129, 0.22);
+  --glow-secondary: rgba(52, 211, 153, 0.14);
+  --firefly-color: rgba(254, 240, 138, 0.98);
 }
 
 html.light {
   /* Surface backgrounds */
   --bg-app: #f8fafc;
   --bg-app-gradient: radial-gradient(ellipse 80% 60% at 10% 0%, rgba(16,185,129,0.06) 0%, transparent 50%), radial-gradient(ellipse 60% 50% at 90% 100%, rgba(14,165,233,0.04) 0%, transparent 50%), #f8fafc;
-  --bg-main: rgba(241, 245, 249, 0.7);
-  --bg-card: rgba(255, 255, 255, 0.78);
+  --bg-main: transparent;
+  --bg-card: rgba(255, 255, 255, 0.65);
   --bg-card-solid: #ffffff;
-  --bg-card-elevated: #ffffff;
-  --bg-card-subtle: #f1f5f9;
-  --bg-card-hover: #ffffff;
-  --bg-sidebar: rgba(255, 255, 255, 0.97);
-  --bg-header: rgba(255, 255, 255, 0.92);
-  --bg-hero: linear-gradient(135deg, #ffffff 0%, #f0fdf4 50%, #ecfdf5 100%);
+  --bg-card-elevated: rgba(255, 255, 255, 0.85);
+  --bg-card-subtle: rgba(241, 245, 249, 0.6);
+  --bg-card-hover: rgba(255, 255, 255, 0.9);
+  --bg-sidebar: rgba(255, 255, 255, 0.95);
+  --bg-header: rgba(255, 255, 255, 0.8);
+  --bg-hero: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(240, 253, 244, 0.7) 50%, rgba(236, 253, 245, 0.75) 100%);
   --bg-modal: #ffffff;
-  --bg-chip: #f1f5f9;
+  --bg-chip: rgba(241, 245, 249, 0.8);
 
   /* Typography */
   --text-primary: #0f172a;
@@ -134,8 +134,8 @@ body {
 
 .theme-card {
   background: var(--bg-card);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-primary);
   box-shadow: var(--shadow-card);
   color: var(--text-primary);
@@ -342,7 +342,10 @@ html.light .card-shine::after {
   position: absolute;
   border-radius: 50%;
   background: var(--firefly-color);
-  box-shadow: 0 0 8px 2.5px rgba(250, 204, 21, 0.6), 0 0 14px 4px rgba(234, 179, 8, 0.25);
+  box-shadow:
+    0 0 6px 1.5px rgba(254, 240, 138, 0.95),
+    0 0 14px 4px rgba(250, 204, 21, 0.75),
+    0 0 24px 8px rgba(16, 185, 129, 0.35);
   animation: fireflyFloat ease-in-out infinite;
   pointer-events: none;
 }

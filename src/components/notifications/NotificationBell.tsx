@@ -32,41 +32,34 @@ export default function NotificationBell() {
         className="
           relative
           flex
-          h-10
-          w-10
-          sm:h-10.5
-          sm:w-10.5
+          h-9
+          w-9
           items-center
           justify-center
           rounded-xl
           border
           border-slate-800
           light:border-slate-200
-          bg-slate-900/70
+          bg-slate-900/60
           light:bg-slate-100
           text-slate-400
           light:text-slate-600
           transition-all
           duration-200
-          hover:border-emerald-400/50
-          light:hover:border-emerald-400
+          hover:border-slate-700
+          light:hover:border-slate-300
           hover:bg-slate-800
           light:hover:bg-slate-200
           hover:text-emerald-400
-          hover:scale-105
-          hover:-translate-y-0.5
-          hover:shadow-[0_0_12px_rgba(16,185,129,0.2)]
-          active:scale-95
           cursor-pointer
-          shadow-xs
         "
         aria-label="Open notifications"
         title="Notifications"
       >
-        <Bell className="h-4.5 w-4.5 sm:h-5 sm:w-5 transition-transform duration-200 hover:rotate-12" />
+        <Bell className="h-4 w-4" />
 
         {notificationCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex h-4.5 min-w-4.5 px-1 items-center justify-center rounded-full bg-rose-500 text-[10px] font-black text-white ring-2 ring-slate-950 light:ring-white shadow-sm">
+          <span className="absolute -top-1 -right-1 flex h-4 min-w-4 px-1 items-center justify-center rounded-full bg-rose-500 text-[10px] font-black text-white ring-2 ring-slate-950 light:ring-white">
             {notificationCount > 99 ? "99+" : notificationCount}
           </span>
         )}

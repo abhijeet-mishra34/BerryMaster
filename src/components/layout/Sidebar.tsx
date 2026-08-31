@@ -181,13 +181,13 @@ export default function Sidebar({
         </div>
 
         {/* Mobile Navigation Links */}
-        <nav className="flex flex-1 flex-col gap-4 p-3 overflow-y-auto">
+        <nav className="flex flex-1 flex-col gap-7 p-4 overflow-y-auto">
           {menuGroups.map((group) => (
-            <div key={group.title} className="space-y-1">
-              <p className="px-3 pb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500 light:text-slate-400">
+            <div key={group.title} className="space-y-2.5">
+              <p className="px-3 pb-0.5 text-[10px] font-extrabold uppercase tracking-widest text-slate-500 light:text-slate-400">
                 {group.title}
               </p>
-              <div className="space-y-1">
+              <div className="space-y-2.5">
                 {group.items.map((item) => {
                   const IconComponent = item.icon;
                   return (
@@ -201,12 +201,11 @@ export default function Sidebar({
                           relative
                           flex
                           items-center
-                          gap-3
+                          gap-3.5
                           rounded-xl
-                          px-3.5
-                          py-2.5
-                          text-xs
-                          sm:text-sm
+                          px-4
+                          py-3
+                          text-sm
                           font-bold
                           transition-all
                           duration-200
@@ -221,13 +220,13 @@ export default function Sidebar({
                       {({ isActive }) => (
                         <>
                           {isActive && (
-                            <span className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-emerald-400 shadow-sm shadow-emerald-400/50" />
+                            <span className="absolute left-0 top-2 bottom-2 w-1.5 rounded-r-full bg-emerald-400 shadow-sm shadow-emerald-400/50" />
                           )}
 
                           <IconComponent
                             className={`
-                              h-4.5
-                              w-4.5
+                              h-5
+                              w-5
                               shrink-0
                               transition-all
                               duration-200
@@ -404,15 +403,15 @@ export default function Sidebar({
         )}
 
         {/* Desktop Navigation Links (Grouped, Sleek, Ergonomic) */}
-        <nav className="flex flex-1 flex-col gap-4 p-3 overflow-y-auto overflow-x-hidden">
+        <nav className="flex flex-1 flex-col gap-7 p-3.5 overflow-y-auto overflow-x-hidden">
           {menuGroups.map((group) => (
-            <div key={group.title} className="space-y-1">
+            <div key={group.title} className="space-y-2.5">
               {isOpen && (
-                <p className="px-3 pb-1 text-[9px] font-bold uppercase tracking-widest text-slate-500 light:text-slate-400">
+                <p className="px-3 pb-0.5 text-[10px] font-extrabold uppercase tracking-widest text-slate-500 light:text-slate-400">
                   {group.title}
                 </p>
               )}
-              <div className="space-y-1">
+              <div className="space-y-2.5">
                 {group.items.map((item) => {
                   const IconComponent = item.icon;
                   return (
@@ -432,8 +431,8 @@ export default function Sidebar({
                           cursor-pointer
                           ${
                             isOpen
-                              ? "py-2.5 px-3 gap-3 text-xs sm:text-sm font-semibold"
-                              : "h-10 w-10 mx-auto justify-center"
+                              ? "py-3 px-3.5 gap-3.5 text-sm font-semibold"
+                              : "h-11 w-11 mx-auto justify-center"
                           }
                           ${
                             isActive
@@ -446,13 +445,13 @@ export default function Sidebar({
                       {({ isActive }) => (
                         <>
                           {isActive && (
-                            <span className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                            <span className="absolute left-0 top-2 bottom-2 w-1.5 rounded-r-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
                           )}
 
                           <IconComponent
                             className={`
-                              h-4.5
-                              w-4.5
+                              h-5
+                              w-5
                               shrink-0
                               transition-all
                               duration-200
@@ -466,7 +465,7 @@ export default function Sidebar({
                           />
 
                           {isOpen && (
-                            <span className="truncate">{item.label}</span>
+                            <span className="truncate text-sm">{item.label}</span>
                           )}
                         </>
                       )}
@@ -497,7 +496,7 @@ export default function Sidebar({
           </div>
         ) : (
           <div className="p-2.5 border-t border-white/[0.08] light:border-slate-200 flex justify-center">
-            <span className="relative flex h-2 w-2" title="v1.1.0 Online">
+            <span className="relative flex h-2 w-2" title={`v${CURRENT_APP_VERSION} Online`}>
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
             </span>

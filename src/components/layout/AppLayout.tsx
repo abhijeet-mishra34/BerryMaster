@@ -51,7 +51,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           onCloseMobile={() => setMobileMenuOpen(false)}
         />
 
-        <div className="flex min-w-0 flex-1 flex-col rounded-none md:rounded-2xl border-0 md:border md:border-white/[0.08] light:md:border-slate-200/80 bg-slate-950/50 light:bg-white/70 backdrop-blur-2xl shadow-none md:shadow-2xl md:shadow-black/40 overflow-hidden">
+        <div className="flex min-w-0 flex-1 flex-col rounded-none md:rounded-2xl border-0 md:border md:border-white/[0.08] light:md:border-slate-200/80 bg-slate-950/20 light:bg-white/40 backdrop-blur-md shadow-none md:shadow-2xl md:shadow-black/40 overflow-hidden">
           <Header onOpenMobileMenu={() => setMobileMenuOpen(true)} />
 
           <main className="flex-1 overflow-y-auto">

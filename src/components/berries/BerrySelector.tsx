@@ -204,8 +204,8 @@ export default function BerrySelector() {
                     cursor-pointer
                     ${
                       isSelected
-                        ? "border-emerald-400/60 bg-gradient-to-r from-emerald-500 via-emerald-400 to-teal-400 text-slate-950 font-black shadow-[0_2px_14px_rgba(16,185,129,0.4)] ring-2 ring-emerald-400/40 -translate-y-0.5 scale-[1.02]"
-                        : "border-slate-800 light:border-slate-200 bg-slate-900/80 light:bg-slate-100 text-slate-300 light:text-slate-700 hover:border-emerald-500/40 hover:bg-slate-850 light:hover:bg-slate-200 hover:text-white light:hover:text-slate-950 hover:-translate-y-0.5 shadow-xs"
+                        ? "border-emerald-400/60 bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/25 ring-2 ring-emerald-400/40"
+                        : "border-slate-800 light:border-slate-200 bg-slate-950/80 light:bg-slate-100 text-slate-300 light:text-slate-700 hover:border-emerald-500/40 hover:bg-slate-900 light:hover:bg-slate-200 hover:text-white light:hover:text-slate-900 shadow-xs"
                     }
                   `}
                 >
