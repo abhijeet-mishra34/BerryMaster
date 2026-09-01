@@ -52,8 +52,6 @@ export default function UFOEasterEgg() {
   const [clickCount, setClickCount] = useState(0);
 
   // Position coordinates (% of viewport)
-  const [pickupPos, setPickupPos] = useState<Vec2>({ x: 45, y: 30 });
-  const [dropPos, setDropPos] = useState<Vec2>({ x: 65, y: 35 });
   const [currentPos, setCurrentPos] = useState<Vec2>({ x: 45, y: 30 });
 
   // Entry & Exit directions for variety
@@ -86,8 +84,6 @@ export default function UFOEasterEgg() {
     }
     const drop: Vec2 = { x: dX, y: dY };
 
-    setPickupPos(pickup);
-    setDropPos(drop);
     setCurrentPos(pickup);
 
     // Randomize flight angles
@@ -201,8 +197,8 @@ export default function UFOEasterEgg() {
     transitionDuration = "1.8s";
   } else if (state === "returnFlyIn") {
     // Returning from sky into NEW random drop location
-    ufoLeft = `${dropPos.x}%`;
-    ufoTop = `${dropPos.y}%`;
+    ufoLeft = `${currentPos.x}%`;
+    ufoTop = `${currentPos.y}%`;
     transform = "translate(-50%, -50%) rotate(0deg)";
     transitionDuration = "1.6s";
   } else if (state === "warpOut") {
