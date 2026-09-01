@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "BerryMaster",
-  "version": "1.1.0",
+  "version": "1.0.1",
   "identifier": "com.berrymaster.app",
 
   "build": {
@@ -18,8 +18,8 @@
         "title": "BerryMaster",
         "width": 1200,
         "height": 800,
-        "minWidth": 900,
-        "minHeight": 600,
+        "minWidth": 380,
+        "minHeight": 500,
         "resizable": true,
         "fullscreen": false
       }

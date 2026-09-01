@@ -1537,7 +1537,24 @@ In installed Tauri desktop environments (WebView2 on Windows) and Android APK bu
 ✔ Configured capabilities in `src-tauri/capabilities/default.json` with `opener:default`, `opener:allow-open-url`, and `opener:allow-default-urls`.
 ✔ Implemented 4-tier resilient link resolver in `src/utils/urlHelper.ts` (Native Tauri Command → Tauri Opener Plugin → Direct IPC → Web Fallback).
 ✔ Added direct "Releases Page" button in Settings and About page for instant access to updates and release notes.
-✔ Bumped application version to `v0.1.5` across all project manifests (`package.json`, `tauri.conf.json`, `Cargo.toml`, `updateService.ts`).
+
+Status:
+✅ Complete
+
+---
+
+# 💎 Sprint 14 — v1.0.1 Glassmorphic Standard & PC Split-Screen Multitasking 🌿
+
+**Goals & Focus:**
+1. Codify and strictly enforce the permanent **Glassmorphism Design Standard** demonstrated in `Glass.png`.
+2. Implement **Dynamic Window & Split-Screen Responsiveness** on PC, enabling seamless multitasking side-by-side with PokeMMO or web browsers.
+3. Standardize application release version to **`v1.0.1`** across all project configurations.
+
+**Completed Implementations:**
+✔ Created `GEMINI.md` workspace rules establishing strict Glassmorphic UI specifications (frosted translucent cards `rgba(15, 23, 42, 0.45)`, `backdrop-blur-2xl/3xl`, 1px subtle white borders, top rim highlights, glowing stat metrics, and emerald gradient anchors).
+✔ Lowered Tauri desktop window `minWidth` from `900` to `380` and `minHeight` to `500` in `src-tauri/tauri.conf.json` to allow full Windows Snap and split-screen tiling on all screen resolutions.
+✔ Refined responsive navigation & layout behaviors so when resized to compact / split-screen widths, the app automatically transitions between desktop sidebar and responsive drawer / bottom navigation bar without horizontal clipping.
+✔ Standardized application version `v1.0.1` across `package.json`, `src/services/updateService.ts`, `src-tauri/Cargo.toml`, and `src-tauri/tauri.conf.json`.
 
 Status:
 ✅ Complete

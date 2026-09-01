@@ -181,10 +181,10 @@ export default function Sidebar({
         </div>
 
         {/* Mobile Navigation Links */}
-        <nav className="flex flex-1 flex-col gap-7 p-4 overflow-y-auto">
+        <nav className="flex flex-1 flex-col gap-7 p-3.5 sm:p-4 overflow-y-auto">
           {menuGroups.map((group) => (
             <div key={group.title} className="space-y-2.5">
-              <p className="px-3 pb-0.5 text-[10px] font-extrabold uppercase tracking-widest text-slate-500 light:text-slate-400">
+              <p className="px-3 pb-1 text-[10.5px] font-extrabold uppercase tracking-[0.16em] text-slate-400 light:text-slate-500">
                 {group.title}
               </p>
               <div className="space-y-2.5">
@@ -201,18 +201,18 @@ export default function Sidebar({
                           relative
                           flex
                           items-center
-                          gap-3.5
+                          gap-3
                           rounded-xl
-                          px-4
-                          py-3
-                          text-sm
-                          font-bold
+                          px-3.5
+                          py-2.5
+                          text-[14px]
+                          min-h-[46px]
                           transition-all
                           duration-200
                           ${
                             isActive
-                              ? "bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-transparent text-emerald-300 light:text-emerald-700 shadow-inner border border-emerald-500/25 light:border-emerald-300"
-                              : "text-slate-400 light:text-slate-600 hover:bg-slate-900/60 light:hover:bg-slate-100 hover:text-slate-200 light:hover:text-slate-950"
+                              ? "bg-gradient-to-r from-emerald-500/20 via-teal-500/10 to-transparent text-emerald-300 light:text-emerald-700 shadow-inner border border-emerald-500/30 light:border-emerald-300 font-bold shadow-[0_4px_16px_-4px_rgba(16,185,129,0.25)]"
+                              : "text-slate-400 light:text-slate-600 hover:bg-slate-900/60 light:hover:bg-slate-100 hover:text-slate-200 light:hover:text-slate-950 font-medium"
                           }
                         `
                       }
@@ -220,21 +220,31 @@ export default function Sidebar({
                       {({ isActive }) => (
                         <>
                           {isActive && (
-                            <span className="absolute left-0 top-2 bottom-2 w-1.5 rounded-r-full bg-emerald-400 shadow-sm shadow-emerald-400/50" />
+                            <span className="absolute left-0 top-2.5 bottom-2.5 w-1.5 rounded-r-full bg-gradient-to-b from-emerald-400 to-teal-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
                           )}
 
-                          <IconComponent
+                          <div
                             className={`
-                              h-5
-                              w-5
+                              flex
+                              h-8
+                              w-8
                               shrink-0
+                              items-center
+                              justify-center
+                              rounded-lg
                               transition-all
                               duration-200
-                              ${isActive ? "text-emerald-400 light:text-emerald-600" : "text-slate-400 light:text-slate-500 group-hover:text-emerald-400"}
+                              ${
+                                isActive
+                                  ? "bg-emerald-500/25 border border-emerald-400/40 text-emerald-300 shadow-[0_0_10px_rgba(52,211,153,0.35)]"
+                                  : "bg-white/[0.04] light:bg-slate-200/60 border border-white/[0.06] light:border-slate-300/40 text-slate-400 light:text-slate-600 group-hover:bg-emerald-500/15 group-hover:text-emerald-400 group-hover:border-emerald-400/30"
+                              }
                             `}
-                          />
+                          >
+                            <IconComponent className="h-4.5 w-4.5 shrink-0" />
+                          </div>
 
-                          <span className="truncate">{item.label}</span>
+                          <span className="truncate tracking-wide">{item.label}</span>
                         </>
                       )}
                     </NavLink>
@@ -282,7 +292,7 @@ export default function Sidebar({
           transition-all
           duration-300
           overflow-hidden
-          ${isOpen ? "w-64" : "w-20"}
+          ${isOpen ? "w-68" : "w-20"}
         `}
       >
         {/* Desktop Sidebar Header */}
@@ -403,11 +413,11 @@ export default function Sidebar({
         )}
 
         {/* Desktop Navigation Links (Grouped, Sleek, Ergonomic) */}
-        <nav className="flex flex-1 flex-col gap-7 p-3.5 overflow-y-auto overflow-x-hidden">
+        <nav className="flex flex-1 flex-col gap-7 p-3.5 sm:p-4 overflow-y-auto overflow-x-hidden">
           {menuGroups.map((group) => (
             <div key={group.title} className="space-y-2.5">
               {isOpen && (
-                <p className="px-3 pb-0.5 text-[10px] font-extrabold uppercase tracking-widest text-slate-500 light:text-slate-400">
+                <p className="px-3 pb-1 text-[10.5px] font-extrabold uppercase tracking-[0.16em] text-slate-400 light:text-slate-500">
                   {group.title}
                 </p>
               )}
@@ -431,13 +441,13 @@ export default function Sidebar({
                           cursor-pointer
                           ${
                             isOpen
-                              ? "py-3 px-3.5 gap-3.5 text-sm font-semibold"
+                              ? "min-h-[46px] py-2.5 px-3.5 gap-3 text-[14px]"
                               : "h-11 w-11 mx-auto justify-center"
                           }
                           ${
                             isActive
-                              ? "bg-gradient-to-r from-emerald-500/15 via-teal-500/10 to-transparent text-emerald-300 light:text-emerald-700 shadow-inner border border-emerald-500/25 light:border-emerald-300 font-bold"
-                              : "border border-transparent text-slate-400 light:text-slate-600 hover:bg-slate-900/50 light:hover:bg-slate-100 hover:text-slate-200 light:hover:text-slate-950 hover:translate-x-1"
+                              ? "bg-gradient-to-r from-emerald-500/20 via-teal-500/10 to-transparent text-emerald-300 light:text-emerald-700 shadow-inner border border-emerald-500/30 light:border-emerald-300 font-bold shadow-[0_4px_16px_-4px_rgba(16,185,129,0.25)]"
+                              : "border border-transparent text-slate-400 light:text-slate-600 hover:bg-slate-900/50 light:hover:bg-slate-100 hover:text-slate-200 light:hover:text-slate-950 hover:translate-x-1 font-medium"
                           }
                         `
                       }
@@ -445,27 +455,50 @@ export default function Sidebar({
                       {({ isActive }) => (
                         <>
                           {isActive && (
-                            <span className="absolute left-0 top-2 bottom-2 w-1.5 rounded-r-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                            <span className="absolute left-0 top-2.5 bottom-2.5 w-1.5 rounded-r-full bg-gradient-to-b from-emerald-400 to-teal-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
                           )}
 
-                          <IconComponent
-                            className={`
-                              h-5
-                              w-5
-                              shrink-0
-                              transition-all
-                              duration-200
-                              group-hover:scale-115
-                              ${
-                                isActive
-                                  ? "text-emerald-400 light:text-emerald-600 drop-shadow-[0_0_6px_rgba(52,211,153,0.5)] scale-105"
-                                  : "text-slate-400 light:text-slate-500 group-hover:text-emerald-400 light:group-hover:text-emerald-600"
-                              }
-                            `}
-                          />
+                          {isOpen ? (
+                            <div
+                              className={`
+                                flex
+                                h-8
+                                w-8
+                                shrink-0
+                                items-center
+                                justify-center
+                                rounded-lg
+                                transition-all
+                                duration-200
+                                ${
+                                  isActive
+                                    ? "bg-emerald-500/25 border border-emerald-400/40 text-emerald-300 shadow-[0_0_10px_rgba(52,211,153,0.35)] scale-105"
+                                    : "bg-white/[0.04] light:bg-slate-200/60 border border-white/[0.06] light:border-slate-300/40 text-slate-400 light:text-slate-600 group-hover:bg-emerald-500/15 group-hover:text-emerald-400 group-hover:border-emerald-400/30 group-hover:scale-105"
+                                }
+                              `}
+                            >
+                              <IconComponent className="h-4.5 w-4.5 shrink-0" />
+                            </div>
+                          ) : (
+                            <IconComponent
+                              className={`
+                                h-5.5
+                                w-5.5
+                                shrink-0
+                                transition-all
+                                duration-200
+                                group-hover:scale-115
+                                ${
+                                  isActive
+                                    ? "text-emerald-400 light:text-emerald-600 drop-shadow-[0_0_8px_rgba(52,211,153,0.6)] scale-110"
+                                    : "text-slate-400 light:text-slate-500 group-hover:text-emerald-400 light:group-hover:text-emerald-600"
+                                }
+                              `}
+                            />
+                          )}
 
                           {isOpen && (
-                            <span className="truncate text-sm">{item.label}</span>
+                            <span className="truncate tracking-wide">{item.label}</span>
                           )}
                         </>
                       )}

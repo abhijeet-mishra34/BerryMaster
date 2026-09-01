@@ -472,27 +472,73 @@ html.light .fixed .bg-slate-900 {
   box-shadow: var(--shadow-modal) !important;
 }
 
-/* Sleek custom scrollbar */
+/* ═══════════════════════════════════════════════════════════════════════════
+   UNIVERSAL WIDE ACCESSIBLE SCROLLBAR (ACROSS ALL ELEMENTS)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+* {
+  scrollbar-width: auto;
+  scrollbar-color: rgba(100, 116, 139, 0.7) rgba(15, 23, 42, 0.4);
+}
+
+html.light * {
+  scrollbar-color: rgba(148, 163, 184, 0.8) rgba(241, 245, 249, 0.6);
+}
+
+*::-webkit-scrollbar,
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 14px;
+  height: 14px;
 }
 
+*::-webkit-scrollbar-track,
 ::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(51, 65, 85, 0.6);
+  background: rgba(15, 23, 42, 0.45);
   border-radius: 9999px;
+  margin: 3px;
 }
 
-html.light ::-webkit-scrollbar-thumb {
-  background: rgba(203, 213, 225, 0.8);
+html.light *::-webkit-scrollbar-track,
+html.light ::-webkit-scrollbar-track {
+  background: rgba(241, 245, 249, 0.7);
 }
 
+*::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.7);
+  border-radius: 9999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  transition: all 0.2s ease;
+}
+
+*::-webkit-scrollbar-thumb:hover,
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(16, 185, 129, 0.6);
+  background: rgba(52, 211, 153, 0.95);
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.5);
+}
+
+*::-webkit-scrollbar-thumb:active,
+::-webkit-scrollbar-thumb:active {
+  background: rgba(16, 185, 129, 1);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+html.light *::-webkit-scrollbar-thumb,
+html.light ::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.85);
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+html.light *::-webkit-scrollbar-thumb:hover,
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: rgba(16, 185, 129, 0.95);
+  border: 3px solid transparent;
+  background-clip: padding-box;
 }
 
 /* ── Hardware Acceleration & Smooth Compositing ── */
