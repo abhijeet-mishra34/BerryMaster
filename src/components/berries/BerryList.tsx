@@ -152,7 +152,7 @@ export default function BerryList({
     <div
       className="
         flex
-        h-[300px]
+        h-[420px]
         sm:h-[480px]
         lg:h-[580px]
         flex-col

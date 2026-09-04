@@ -273,7 +273,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
                   <p className={`flex items-center gap-1.5 ${labelClass} ${timerStyles.watering.label}`}>
                     <Droplets className="h-3.5 w-3.5" />
                     Watering Schedule
-                    {profile && (
+                    {character.plantedBerryId && profile && (
                       <span className="ml-1 text-[10px] font-semibold opacity-70">
                         ({character.wateringCount ?? 0}/{profile.totalWaterings} done)
                       </span>
@@ -333,7 +333,9 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
                   </div>
                 )}
 
-                {character.nextWaterAt ? (
+                {!character.plantedBerryId ? (
+                  <p className="mt-3 text-xs font-semibold text-slate-500">—</p>
+                ) : character.nextWaterAt ? (
                   <p className={`mt-3 text-lg font-extrabold flex items-center gap-2 ${timerStyles.watering.value}`}>
                     <Clock className="h-4 w-4 opacity-70" />
                     {formatRemainingTime(character.nextWaterAt, now)}

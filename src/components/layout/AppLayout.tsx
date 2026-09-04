@@ -62,7 +62,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
           <main className="flex-1 overflow-y-auto">
             <div
               key={location.pathname}
-              className="app-main min-h-full p-3.5 sm:p-6 md:p-8 pb-28 md:pb-8 page-enter"
+              className="app-main min-h-full p-3.5 sm:p-6 md:p-8 md:pb-8 page-enter"
+              style={{
+                paddingBottom: "calc(6.5rem + env(safe-area-inset-bottom, 0px))",
+              }}
             >
               {children}
             </div>
