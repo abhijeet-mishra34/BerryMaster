@@ -28,7 +28,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
   return (
     <div
-      className="app-root relative flex h-screen overflow-hidden"
+      className="app-root relative flex h-[100dvh] overflow-hidden"
       style={{
         background: "var(--bg-app-gradient)",
       }}
@@ -43,7 +43,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
       <UFOEasterEgg />
 
       {/* UI Shell */}
-      <div className="relative z-10 flex h-full w-full md:p-3.5 lg:p-4 md:gap-3.5 lg:gap-4 overflow-hidden">
+      <div
+        className="relative z-10 flex h-full w-full md:p-3.5 lg:p-4 md:gap-3.5 lg:gap-4 overflow-hidden"
+        style={{
+          paddingTop: "env(safe-area-inset-top, 0px)",
+        }}
+      >
         <Sidebar
           isOpen={sidebarOpen}
           onToggleSidebar={toggleSidebar}
@@ -57,7 +62,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           <main className="flex-1 overflow-y-auto">
             <div
               key={location.pathname}
-              className="app-main min-h-full p-3.5 sm:p-6 md:p-8 pb-24 md:pb-8 page-enter"
+              className="app-main min-h-full p-3.5 sm:p-6 md:p-8 pb-28 md:pb-8 page-enter"
             >
               {children}
             </div>
@@ -76,7 +81,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
           right-0
           z-30
           flex
-          h-16
           items-center
           justify-around
           border-t
@@ -89,6 +93,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
           shadow-lg
           md:hidden
         "
+        style={{
+          paddingBottom: "env(safe-area-inset-bottom, 0px)",
+          height: "calc(4rem + env(safe-area-inset-bottom, 0px))",
+        }}
       >
         <NavLink
           to="/"

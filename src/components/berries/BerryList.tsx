@@ -152,7 +152,9 @@ export default function BerryList({
     <div
       className="
         flex
-        h-[580px]
+        h-[300px]
+        sm:h-[480px]
+        lg:h-[580px]
         flex-col
         overflow-hidden
         rounded-2xl

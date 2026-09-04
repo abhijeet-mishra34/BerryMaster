@@ -221,7 +221,9 @@ export default function PlantBerrySelector({
         <div
           className="
             flex
-            h-[580px]
+            h-[360px]
+            sm:h-[480px]
+            lg:h-[580px]
             flex-col
             overflow-hidden
             rounded-2xl

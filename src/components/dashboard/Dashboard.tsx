@@ -112,23 +112,20 @@ export default function Dashboard() {
         title="Farm Overview"
         subtitle="A live summary of your farming progress."
       >
-        <div className="flex flex-col gap-6 sm:gap-8">
-          {/* Top Row: 3 cards */}
-          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-            {topStats.map((stat) => (
-              <StatCard
-                key={stat.title}
-                title={stat.title}
-                value={stat.value}
-                icon={stat.icon}
-                color={stat.color}
-              />
+        <div className="flex flex-col gap-4 sm:gap-6 lg:gap-8">
+          {/* Mobile: All 5 cards in a unified responsive grid; Desktop: 3 top + 2 centered bottom */}
+          <div className="grid gap-3 sm:gap-4 md:gap-6 grid-cols-2 lg:grid-cols-3">
+            {topStats.map((stat, idx) => (
+              <div key={stat.title} className={idx === 2 ? "col-span-2 sm:col-span-1 lg:col-span-1" : ""}>
+                <StatCard
+                  title={stat.title}
+                  value={stat.value}
+                  icon={stat.icon}
+                  color={stat.color}
+                />
+              </div>
             ))}
-          </div>
-
-          {/* Bottom Row: 2 cards centered */}
-          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-6">
-            <div className="lg:col-span-2 lg:col-start-2">
+            <div className="lg:hidden">
               <StatCard
                 title={bottomStats[0].title}
                 value={bottomStats[0].value}
@@ -136,7 +133,27 @@ export default function Dashboard() {
                 color={bottomStats[0].color}
               />
             </div>
-            <div className="lg:col-span-2">
+            <div className="lg:hidden">
+              <StatCard
+                title={bottomStats[1].title}
+                value={bottomStats[1].value}
+                icon={bottomStats[1].icon}
+                color={bottomStats[1].color}
+              />
+            </div>
+          </div>
+
+          {/* Desktop Only: Bottom Row with 2 cards centered */}
+          <div className="hidden lg:grid gap-6 grid-cols-6">
+            <div className="col-span-2 col-start-2">
+              <StatCard
+                title={bottomStats[0].title}
+                value={bottomStats[0].value}
+                icon={bottomStats[0].icon}
+                color={bottomStats[0].color}
+              />
+            </div>
+            <div className="col-span-2">
               <StatCard
                 title={bottomStats[1].title}
                 value={bottomStats[1].value}

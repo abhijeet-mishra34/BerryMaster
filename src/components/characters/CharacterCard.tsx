@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { forwardRef, useState, useEffect, useRef } from "react";
 import {
   User,
   Sprout,
@@ -10,11 +10,13 @@ import {
   Trash2,
   RefreshCw,
   CheckCircle2,
+  Info,
 } from "lucide-react";
 
 import Button from "../ui/Button";
 import type { Character } from "../../types/Character";
 import { berryDatabase } from "../../data/berryDatabase";
+import { farmingProfiles } from "../../data/farmingProfiles";
 import { getCharacterStatus } from "../../utils/characterStatus";
 import { formatDate } from "../../utils/date";
 import { formatRemainingTime } from "../../utils/countdown";
@@ -70,6 +72,9 @@ const TimerTimestamp = ({ label, value }: { label: string; value: string }) => {
   );
 };
 
+// Session-level set of berry profile growth times shown during this app session (resets when app is restarted)
+const shownAutoWaterProfilesThisSession = new Set<number>();
+
 const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function CharacterCard(
   {
     character,
@@ -90,6 +95,37 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
   const berry = berryDatabase.find((b) => b.id === character.plantedBerryId);
   const status = getCharacterStatus(character);
   const characterNumber = String(index + 1).padStart(3, "0");
+
+  // Profile lookup
+  const profile = berry
+    ? farmingProfiles.find((p) => Math.abs(p.growthTime - berry.growthTime) < 0.001)
+    : null;
+
+  const isAutoWaterBerry = Boolean(
+    profile?.autoWaterOnPlant && (character.wateringCount ?? 0) === 1 && character.nextWaterAt
+  );
+
+  // State for the popup banner
+  const [showAutoWaterBanner, setShowAutoWaterBanner] = useState(false);
+  const [isManualInfoOpen, setIsManualInfoOpen] = useState(false);
+  const lastPlantedAtRef = useRef<string | undefined>(character.plantedAt);
+
+  useEffect(() => {
+    if (isAutoWaterBerry && profile) {
+      // Check if this card just had a fresh plant or this profile hasn't popped up this session
+      const isFreshPlant = character.plantedAt && character.plantedAt !== lastPlantedAtRef.current;
+      lastPlantedAtRef.current = character.plantedAt;
+
+      if (!shownAutoWaterProfilesThisSession.has(profile.growthTime) || isFreshPlant) {
+        shownAutoWaterProfilesThisSession.add(profile.growthTime);
+        setShowAutoWaterBanner(true);
+        const timer = setTimeout(() => {
+          setShowAutoWaterBanner(false);
+        }, 6000); // Pops up and pops back down after 6s
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [character.plantedAt, isAutoWaterBerry, profile]);
 
   return (
     <div
@@ -136,13 +172,42 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
             </div>
           </div>
 
-          <div className="shrink-0 rounded-xl border border-slate-800 light:border-slate-200 bg-slate-900/60 light:bg-slate-50 px-3 py-1.5 sm:px-4 sm:py-2 text-right shadow-xs">
-            <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-400 light:text-slate-500">
-              Account ID
-            </span>
-            <p className="font-mono text-xs font-bold text-emerald-500">
-              #{characterNumber}
-            </p>
+          <div className="flex items-center gap-1.5 shrink-0">
+            {/* Quick Action Buttons (especially helpful on mobile to avoid scrolling ~800px) */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit();
+              }}
+              className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl border border-sky-500/30 bg-sky-500/10 text-sky-400 light:text-sky-600 hover:bg-sky-500/20 active:scale-95 transition-all cursor-pointer shadow-xs"
+              aria-label={`Edit ${character.name}`}
+              title="Edit Character"
+            >
+              <Pencil className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            </button>
+
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(character.id);
+              }}
+              className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl border border-red-500/30 bg-red-500/10 text-red-400 light:text-red-600 hover:bg-red-500/20 active:scale-95 transition-all cursor-pointer shadow-xs"
+              aria-label={`Delete ${character.name}`}
+              title="Delete Character"
+            >
+              <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            </button>
+
+            <div className="shrink-0 rounded-xl border border-slate-800 light:border-slate-200 bg-slate-900/60 light:bg-slate-50 px-2.5 py-1.5 sm:px-3 sm:py-2 text-right shadow-xs">
+              <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider text-slate-400 light:text-slate-500">
+                Slot
+              </span>
+              <p className="font-mono text-[11px] sm:text-xs font-bold text-emerald-500">
+                #{characterNumber}
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -199,15 +264,75 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
 
         <div className="flex flex-col gap-3">
           {/* Water Timer */}
-          <div className={`relative overflow-hidden rounded-xl border p-6 transition-all ${timerStyles.watering.wrapper}`}>
+          <div className={`relative overflow-hidden rounded-xl border p-4 sm:p-6 transition-all ${timerStyles.watering.wrapper}`}>
             {/* Left accent bar */}
             <div className={`absolute left-0 top-4 bottom-4 w-[3px] rounded-full ${timerStyles.watering.accent} opacity-70`} />
             <div className="flex flex-col gap-4 pl-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className={`flex items-center gap-1.5 ${labelClass} ${timerStyles.watering.label}`}>
-                  <Droplets className="h-3.5 w-3.5" />
-                  Watering Schedule
-                </p>
+                <div className="flex items-center gap-2">
+                  <p className={`flex items-center gap-1.5 ${labelClass} ${timerStyles.watering.label}`}>
+                    <Droplets className="h-3.5 w-3.5" />
+                    Watering Schedule
+                    {profile && (
+                      <span className="ml-1 text-[10px] font-semibold opacity-70">
+                        ({character.wateringCount ?? 0}/{profile.totalWaterings} done)
+                      </span>
+                    )}
+                  </p>
+
+                  {/* Little (i) Info Button for auto-watered berries */}
+                  {isAutoWaterBerry && (
+                    <button
+                      type="button"
+                      onClick={() => setIsManualInfoOpen((prev) => !prev)}
+                      className={`
+                        inline-flex h-5 w-5 items-center justify-center rounded-full
+                        border transition-all duration-200 cursor-pointer
+                        ${
+                          isManualInfoOpen || showAutoWaterBanner
+                            ? "border-sky-400 bg-sky-500/20 text-sky-300 shadow-[0_0_8px_rgba(56,189,248,0.4)]"
+                            : "border-sky-500/30 bg-sky-500/10 text-sky-400/80 hover:border-sky-400 hover:text-sky-200"
+                        }
+                      `}
+                      aria-label="Watering information"
+                      title="Watering schedule details"
+                    >
+                      <Info className="h-3 w-3" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Pop-up and Pop-down Toast / Info Panel */}
+                {isAutoWaterBerry && (showAutoWaterBanner || isManualInfoOpen) && (
+                  <div
+                    className="
+                      mt-2.5 flex items-start gap-2 rounded-xl border border-sky-500/30
+                      bg-sky-950/70 light:bg-sky-100/90 p-2.5 text-xs text-sky-200 light:text-sky-900
+                      backdrop-blur-md shadow-lg transition-all duration-300 animate-in fade-in slide-in-from-top-1
+                    "
+                  >
+                    <Info className="h-4 w-4 shrink-0 text-sky-400 light:text-sky-600 mt-0.5" />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-[11px] leading-tight text-white light:text-slate-900">
+                        Auto-watered on planting
+                      </p>
+                      <p className="mt-0.5 text-[10px] text-sky-300/80 light:text-sky-700 leading-snug">
+                        First watering was applied automatically. This timer is for the final scheduled watering.
+                      </p>
+                    </div>
+                    {isManualInfoOpen && (
+                      <button
+                        type="button"
+                        onClick={() => setIsManualInfoOpen(false)}
+                        className="text-sky-400/70 hover:text-white p-0.5 text-[10px] font-bold"
+                        aria-label="Dismiss info"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                )}
+
                 {character.nextWaterAt ? (
                   <p className={`mt-3 text-lg font-extrabold flex items-center gap-2 ${timerStyles.watering.value}`}>
                     <Clock className="h-4 w-4 opacity-70" />
@@ -216,7 +341,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
                 ) : (
                   <p className="mt-3 text-sm font-bold text-emerald-400 flex items-center gap-1.5">
                     <CheckCircle2 className="h-4 w-4" />
-                    Watering Complete
+                    Watering Complete — All waterings done
                   </p>
                 )}
               </div>
@@ -227,7 +352,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
           </div>
 
           {/* Harvest Timer */}
-          <div className={`relative overflow-hidden rounded-xl border p-6 transition-all ${timerStyles.harvest.wrapper}`}>
+          <div className={`relative overflow-hidden rounded-xl border p-4 sm:p-6 transition-all ${timerStyles.harvest.wrapper}`}>
             {/* Left accent bar */}
             <div className={`absolute left-0 top-4 bottom-4 w-[3px] rounded-full ${timerStyles.harvest.accent} opacity-70`} />
             <div className="flex flex-col gap-4 pl-4 sm:flex-row sm:items-center sm:justify-between">
@@ -252,7 +377,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
           </div>
 
           {/* Wilt Timer */}
-          <div className={`relative overflow-hidden rounded-xl border p-6 transition-all ${timerStyles.wilt.wrapper}`}>
+          <div className={`relative overflow-hidden rounded-xl border p-4 sm:p-6 transition-all ${timerStyles.wilt.wrapper}`}>
             {/* Left accent bar */}
             <div className={`absolute left-0 top-4 bottom-4 w-[3px] rounded-full ${timerStyles.wilt.accent} opacity-70`} />
             <div className="flex flex-col gap-4 pl-4 sm:flex-row sm:items-center sm:justify-between">
@@ -279,28 +404,28 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
       </div>
 
       {/* Actions Toolbar */}
-      <div className="mt-8">
+      <div className="mt-6 sm:mt-8">
         {/* Section Divider */}
-        <div className="mb-6 h-px w-full bg-gradient-to-r from-transparent via-slate-700/50 light:via-slate-200 to-transparent" />
+        <div className="mb-4 sm:mb-6 h-px w-full bg-gradient-to-r from-transparent via-slate-700/50 light:via-slate-200 to-transparent" />
       </div>
-      <div className="relative z-10 flex flex-wrap items-center justify-end gap-3">
+      <div className="relative z-10 grid grid-cols-2 sm:flex sm:flex-wrap sm:items-center sm:justify-end gap-2 sm:gap-3">
         {!character.plantedBerryId ? (
-          <Button size="lg" onClick={onPlant}>
+          <Button size="lg" onClick={onPlant} className="col-span-2">
             <Sprout className="mr-2 h-4.5 w-4.5" />
             Plant Berry
           </Button>
         ) : status.status === "wilted" ? (
-          <Button size="lg" variant="danger" onClick={onHarvest}>
+          <Button size="lg" variant="danger" onClick={onHarvest} className="col-span-2">
             <Trash2 className="mr-2 h-4.5 w-4.5" />
             Clear Wilted
           </Button>
         ) : status.status === "harvestReady" ? (
-          <Button size="lg" onClick={onHarvest}>
+          <Button size="lg" onClick={onHarvest} className="col-span-2">
             <Wheat className="mr-2 h-4.5 w-4.5" />
             Harvest
           </Button>
         ) : (
-          <Button size="lg" variant="info" onClick={onWater}>
+          <Button size="lg" variant="info" onClick={onWater} className="col-span-2">
             <Droplets className="mr-2 h-4.5 w-4.5" />
             Water
           </Button>
@@ -308,7 +433,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
 
         {character.plantedBerryId &&
           (status.status === "growing" || status.status === "needWater") && (
-            <Button size="lg" variant="secondary" onClick={onChangeBerry}>
+            <Button size="lg" variant="secondary" onClick={onChangeBerry} className="col-span-2">
               <RefreshCw className="mr-2 h-4.5 w-4.5" />
               Change Berry
             </Button>

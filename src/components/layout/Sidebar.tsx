@@ -129,6 +129,10 @@ export default function Sidebar({
           md:hidden
           ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
         `}
+        style={{
+          paddingTop: "env(safe-area-inset-top, 0px)",
+          paddingBottom: "env(safe-area-inset-bottom, 0px)",
+        }}
       >
         {/* Mobile Drawer Header */}
         <div className="flex h-16 items-center justify-between border-b border-white/[0.08] light:border-slate-200 px-4">
