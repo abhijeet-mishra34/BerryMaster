@@ -30,4 +30,5 @@ dist-windows/
 dist-apk/
 *.exe
 *.apk
-release.keystore
+/release.keystore
+!.github/keystores/release.keystore

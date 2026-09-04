@@ -104,7 +104,7 @@ jobs:
             # Commit the keystore back to repo so all future builds are signed with this exact key
             git config --global user.name "github-actions[bot]"
             git config --global user.email "github-actions[bot]@users.noreply.github.com"
-            git add .github/keystores/release.keystore
+            git add -f .github/keystores/release.keystore || true
             git commit -m "chore: persist Android release signing keystore [skip ci]" || true
             git push origin HEAD:main || true
           fi
