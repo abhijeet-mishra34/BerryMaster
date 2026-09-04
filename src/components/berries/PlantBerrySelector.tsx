@@ -263,8 +263,8 @@ export default function PlantBerrySelector({
         <div
           className={`
             ${activeTab === "list" ? "hidden lg:flex" : "flex"}
-            h-[450px]
-            sm:h-[500px]
+            flex-1
+            min-h-0
             lg:h-[580px]
             flex-col
             overflow-hidden
@@ -327,7 +327,7 @@ export default function PlantBerrySelector({
           </div>
 
           {/* Details Content */}
-          <div className="flex-1 overflow-y-auto p-4 sm:p-5">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-5 pb-24 lg:pb-5">
             {selectedBerry ? (
               <BerryCard
                 berry={selectedBerry}
@@ -361,6 +361,51 @@ export default function PlantBerrySelector({
               </div>
             )}
           </div>
+
+          {/* Mobile Sticky Bottom Plant Bar (Always visible on mobile!) */}
+          {selectedBerry && (
+            <div className="lg:hidden shrink-0 border-t border-slate-800/80 light:border-slate-200 bg-slate-950/95 light:bg-white/95 p-3 backdrop-blur-xl">
+              <button
+                type="button"
+                onClick={() => handlePlant(selectedBerry)}
+                className="
+                  w-full
+                  flex
+                  items-center
+                  justify-center
+                  gap-2.5
+                  rounded-xl
+                  border
+                  border-emerald-400/50
+                  bg-gradient-to-r
+                  from-emerald-500
+                  via-emerald-400
+                  to-teal-400
+                  py-3.5
+                  px-4
+                  text-sm
+                  font-black
+                  tracking-wide
+                  text-slate-950
+                  shadow-lg
+                  shadow-emerald-500/25
+                  active:scale-[0.98]
+                  cursor-pointer
+                "
+              >
+                {selectedBerry.image ? (
+                  <img
+                    src={selectedBerry.image}
+                    alt=""
+                    className="h-5 w-5 object-contain"
+                  />
+                ) : (
+                  <span className="text-base">🌱</span>
+                )}
+                <span>Plant {selectedBerry.name}</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
