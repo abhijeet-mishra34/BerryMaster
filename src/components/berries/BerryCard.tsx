@@ -13,6 +13,7 @@ interface BerryCardProps {
   berry: Berry;
   actionLabel?: string;
   onAction?: (berry: Berry) => void;
+  hideActionOnMobile?: boolean;
 }
 
 const labelClass = "text-[11px] font-bold uppercase tracking-wider text-slate-400 light:text-slate-500 whitespace-nowrap";
@@ -21,6 +22,7 @@ export default function BerryCard({
   berry,
   actionLabel,
   onAction,
+  hideActionOnMobile,
 }: BerryCardProps) {
   const {
     isFavorite,
@@ -240,7 +242,7 @@ export default function BerryCard({
 
       {/* Optional Action Button */}
       {actionLabel && onAction && (
-        <div className="mt-8">
+        <div className={`mt-8 ${hideActionOnMobile ? "hidden lg:block" : ""}`}>
           {/* Section Divider */}
           <div className="mb-6 h-px w-full bg-gradient-to-r from-transparent via-slate-700/50 light:via-slate-200 to-transparent" />
 

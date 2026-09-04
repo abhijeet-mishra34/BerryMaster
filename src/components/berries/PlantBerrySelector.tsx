@@ -221,14 +221,14 @@ export default function PlantBerrySelector({
         <button
           type="button"
           onClick={() => setActiveTab("details")}
-          className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg text-xs font-bold transition-all cursor-pointer min-w-0 ${
             activeTab === "details"
               ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-xs"
               : "text-slate-400 hover:text-white"
           }`}
         >
-          <Info className="h-3.5 w-3.5" />
-          <span>Details & Plant {selectedBerry ? `(${selectedBerry.name})` : ""}</span>
+          <Info className="h-3.5 w-3.5 shrink-0" />
+          <span className="truncate">Details & Plant {selectedBerry ? `(${selectedBerry.name})` : ""}</span>
         </button>
       </div>
 
@@ -333,6 +333,7 @@ export default function PlantBerrySelector({
                 berry={selectedBerry}
                 actionLabel="Plant This Berry"
                 onAction={handlePlant}
+                hideActionOnMobile
               />
             ) : (
               <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-slate-800 light:border-slate-300 bg-slate-900/20 light:bg-slate-50/50">
@@ -364,7 +365,10 @@ export default function PlantBerrySelector({
 
           {/* Mobile Sticky Bottom Plant Bar (Always visible on mobile!) */}
           {selectedBerry && (
-            <div className="lg:hidden shrink-0 border-t border-slate-800/80 light:border-slate-200 bg-slate-950/95 light:bg-white/95 p-3 backdrop-blur-xl">
+            <div
+              className="lg:hidden shrink-0 border-t border-slate-800/80 light:border-slate-200 bg-slate-950/95 light:bg-white/95 p-3 backdrop-blur-xl"
+              style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom, 0px))" }}
+            >
               <button
                 type="button"
                 onClick={() => handlePlant(selectedBerry)}
