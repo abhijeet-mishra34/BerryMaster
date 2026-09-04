@@ -217,7 +217,7 @@ export default function FeedbackPage() {
             ) : (
               <form
                 onSubmit={handleSubmit}
-                className="theme-card rounded-xl p-8 sm:p-10 backdrop-blur-xl shadow-xl flex flex-col gap-7"
+                className="theme-card rounded-xl p-4 sm:p-8 md:p-10 backdrop-blur-xl shadow-xl flex flex-col gap-6 sm:gap-7"
               >
                 {/* Category Selection */}
                 <div className="space-y-3">
@@ -321,6 +321,7 @@ export default function FeedbackPage() {
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                     placeholder="e.g. Watering schedule timer suggestion, or bug in harvest count"
+                    style={{ padding: "0.875rem 1.25rem" }}
                     className="
                       w-full
                       rounded-xl
@@ -330,7 +331,7 @@ export default function FeedbackPage() {
                       bg-slate-950/80
                       light:bg-white
                       px-5
-                      py-4
+                      py-3.5
                       text-base
                       font-semibold
                       text-white
@@ -365,6 +366,7 @@ export default function FeedbackPage() {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Share what happened, what felt confusing, or what feature would make your PokeMMO farming better..."
+                    style={{ padding: "0.875rem 1.25rem" }}
                     className="
                       w-full
                       rounded-xl
@@ -374,7 +376,7 @@ export default function FeedbackPage() {
                       bg-slate-950/80
                       light:bg-white
                       px-5
-                      py-4
+                      py-3.5
                       text-base
                       text-white
                       light:text-slate-900
@@ -407,6 +409,7 @@ export default function FeedbackPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="yourname@domain.com"
+                    style={{ padding: "0.875rem 1.25rem" }}
                     className="
                       w-full
                       rounded-xl
@@ -416,7 +419,7 @@ export default function FeedbackPage() {
                       bg-slate-950/80
                       light:bg-white
                       px-5
-                      py-4
+                      py-3.5
                       text-base
                       font-semibold
                       text-white
@@ -473,7 +476,7 @@ export default function FeedbackPage() {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="h-5 w-5 animate-spin" />
-                      <span>Sending to Discord...</span>
+                      <span>Submitting your feedback...</span>
                     </>
                   ) : (
                     <>

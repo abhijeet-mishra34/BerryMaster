@@ -79,26 +79,46 @@ jobs:
       - name: Build Android APK (Release)
         run: npx tauri android build --apk
 
+      - name: Setup Signing Keystore
+        run: |
+          mkdir -p .github/keystores
+          if [ -f ".github/keystores/release.keystore" ]; then
+            echo "Using existing persistent keystore..."
+            cp .github/keystores/release.keystore release.keystore
+          elif [ -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
+            echo "Restoring keystore from GitHub secrets..."
+            echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > release.keystore
+            cp release.keystore .github/keystores/release.keystore
+          else
+            echo "Creating permanent release keystore..."
+            keytool -genkey -v -keystore .github/keystores/release.keystore \
+              -alias berrymaster \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 10000 \
+              -storepass berrymaster123 \
+              -keypass berrymaster123 \
+              -dname "CN=BerryMaster, OU=App, O=BerryMaster, C=US"
+            cp .github/keystores/release.keystore release.keystore
+
+            # Commit the keystore back to repo so all future builds are signed with this exact key
+            git config --global user.name "github-actions[bot]"
+            git config --global user.email "github-actions[bot]@users.noreply.github.com"
+            git add .github/keystores/release.keystore
+            git commit -m "chore: persist Android release signing keystore [skip ci]" || true
+            git push origin HEAD:main || true
+          fi
+
       - name: Sign & Align Android APKs
         run: |
-          # 1. Create a release signing keystore
-          keytool -genkey -v -keystore release.keystore \
-            -alias berrymaster \
-            -keyalg RSA \
-            -keysize 2048 \
-            -validity 10000 \
-            -storepass berrymaster123 \
-            -keypass berrymaster123 \
-            -dname "CN=BerryMaster, OU=App, O=BerryMaster, C=US"
-
           mkdir -p dist-apk
           BUILD_TOOLS="$ANDROID_HOME/build-tools/34.0.0"
 
-          # 2. Extract tag name
+          # Extract tag name
           TAG="${{ github.event.inputs.release_tag || github.ref_name || 'latest' }}"
           TAG="${TAG#refs/tags/}"
 
-          # 3. Find and sign all APKs
+          # Find and sign all APKs
           find src-tauri/gen/android/app/build/outputs/apk/ -type f -name "*.apk" | while read -r apk_path; do
             echo "Processing $apk_path..."
             filename=$(basename "$apk_path")
@@ -163,7 +183,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.event.inputs.release_tag || github.ref_name }}
-          files: dist-apk/BerryMaster-universal.apk
+          files: |
+            dist-apk/BerryMaster-universal.apk
+            dist-apk/BerryMaster-arm64-v8a.apk
           draft: false
           prerelease: false
         env:

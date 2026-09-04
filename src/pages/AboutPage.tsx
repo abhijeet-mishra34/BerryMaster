@@ -196,7 +196,7 @@ export default function AboutPage() {
           </div>
           <div>
             <h2 className="text-xl sm:text-2xl font-extrabold text-white light:text-slate-900">
-              Created By Abhijeet Mishra
+              Created By Abhi
             </h2>
             <p className="text-xs sm:text-sm text-emerald-400 light:text-emerald-700 font-semibold">
               IGN: MastAbhi
@@ -229,7 +229,7 @@ export default function AboutPage() {
               Legal, Copyright & Privacy
             </h2>
             <p className="text-xs sm:text-sm text-slate-400 light:text-slate-600">
-              Copyright © 2025–2026 Abhijeet Mishra. Open source under the MIT License.
+              Copyright © 2025–2026 Abhi. Open source under the MIT License.
             </p>
           </div>
         </div>
@@ -310,7 +310,7 @@ export default function AboutPage() {
         {activeLegalTab === "license" && (
           <div className="rounded-xl border border-slate-800 light:border-slate-200 bg-slate-950/80 light:bg-slate-50 p-5 text-xs text-slate-300 light:text-slate-700 font-mono leading-relaxed space-y-3">
             <p className="font-bold text-emerald-400 light:text-emerald-700">MIT License</p>
-            <p>Copyright (c) 2025-2026 Abhijeet Mishra</p>
+            <p>Copyright (c) 2025-2026 Abhi</p>
             <p>
               Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
             </p>

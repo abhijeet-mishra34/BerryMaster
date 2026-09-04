@@ -65,9 +65,9 @@ const timestampValueClass = "mt-0.5 text-xs font-bold text-slate-200 light:text-
 
 const TimerTimestamp = ({ label, value }: { label: string; value: string }) => {
   return (
-    <div className="min-w-[130px] rounded-xl border border-slate-800 light:border-slate-200 bg-slate-900/60 light:bg-white px-4 py-2.5 text-right shadow-xs">
+    <div className="min-w-0 sm:min-w-[120px] rounded-lg sm:rounded-xl border border-slate-800/80 light:border-slate-200 bg-slate-900/60 light:bg-white px-2 sm:px-3 py-1 sm:py-2 text-left sm:text-right shadow-xs">
       <p className={timestampLabelClass}>{label}</p>
-      <p className={timestampValueClass}>{value}</p>
+      <p className={`${timestampValueClass} truncate`}>{value}</p>
     </div>
   );
 };
@@ -262,12 +262,12 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
           </span>
         </div>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2.5 sm:gap-3">
           {/* Water Timer */}
-          <div className={`relative overflow-hidden rounded-xl border p-4 sm:p-6 transition-all ${timerStyles.watering.wrapper}`}>
+          <div className={`relative overflow-hidden rounded-xl border p-3 sm:p-5 transition-all ${timerStyles.watering.wrapper}`}>
             {/* Left accent bar */}
-            <div className={`absolute left-0 top-4 bottom-4 w-[3px] rounded-full ${timerStyles.watering.accent} opacity-70`} />
-            <div className="flex flex-col gap-4 pl-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className={`absolute left-0 top-3 bottom-3 w-[3px] rounded-full ${timerStyles.watering.accent} opacity-70`} />
+            <div className="flex flex-col gap-2.5 pl-2.5 sm:pl-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <div className="flex items-center gap-2">
                   <p className={`flex items-center gap-1.5 ${labelClass} ${timerStyles.watering.label}`}>
@@ -306,7 +306,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
                 {isAutoWaterBerry && (showAutoWaterBanner || isManualInfoOpen) && (
                   <div
                     className="
-                      mt-2.5 flex items-start gap-2 rounded-xl border border-sky-500/30
+                      mt-2 flex items-start gap-2 rounded-xl border border-sky-500/30
                       bg-sky-950/70 light:bg-sky-100/90 p-2.5 text-xs text-sky-200 light:text-sky-900
                       backdrop-blur-md shadow-lg transition-all duration-300 animate-in fade-in slide-in-from-top-1
                     "
@@ -324,7 +324,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
                       <button
                         type="button"
                         onClick={() => setIsManualInfoOpen(false)}
-                        className="text-sky-400/70 hover:text-white p-0.5 text-[10px] font-bold"
+                        className="text-sky-400/70 hover:text-white p-0.5 text-[10px] font-bold cursor-pointer"
                         aria-label="Dismiss info"
                       >
                         ✕
@@ -334,14 +334,14 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
                 )}
 
                 {!character.plantedBerryId ? (
-                  <p className="mt-3 text-xs font-semibold text-slate-500">—</p>
+                  <p className="mt-2 text-xs font-semibold text-slate-500">—</p>
                 ) : character.nextWaterAt ? (
-                  <p className={`mt-3 text-lg font-extrabold flex items-center gap-2 ${timerStyles.watering.value}`}>
+                  <p className={`mt-2 text-base sm:text-lg font-extrabold flex items-center gap-2 ${timerStyles.watering.value}`}>
                     <Clock className="h-4 w-4 opacity-70" />
                     {formatRemainingTime(character.nextWaterAt, now)}
                   </p>
                 ) : (
-                  <p className="mt-3 text-sm font-bold text-emerald-400 flex items-center gap-1.5">
+                  <p className="mt-2 text-xs sm:text-sm font-bold text-emerald-400 flex items-center gap-1.5">
                     <CheckCircle2 className="h-4 w-4" />
                     Watering Complete — All waterings done
                   </p>
@@ -353,53 +353,56 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(function Ch
             </div>
           </div>
 
-          {/* Harvest Timer */}
-          <div className={`relative overflow-hidden rounded-xl border p-4 sm:p-6 transition-all ${timerStyles.harvest.wrapper}`}>
-            {/* Left accent bar */}
-            <div className={`absolute left-0 top-4 bottom-4 w-[3px] rounded-full ${timerStyles.harvest.accent} opacity-70`} />
-            <div className="flex flex-col gap-4 pl-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className={`flex items-center gap-1.5 ${labelClass} ${timerStyles.harvest.label}`}>
-                  <Wheat className="h-3.5 w-3.5" />
-                  Harvest Timer
-                </p>
-                {character.plantedBerryId ? (
-                  <p className={`mt-3 text-lg font-extrabold flex items-center gap-2 ${timerStyles.harvest.value}`}>
-                    <Clock className="h-4 w-4 opacity-70" />
-                    {status.status === "wilted" ? "Cycle Expired" : formatRemainingTime(character.harvestAt, now)}
+          {/* Compact 2-column Grid for Harvest & Wilt Timers */}
+          <div className="grid grid-cols-2 gap-2 sm:gap-3">
+            {/* Harvest Timer */}
+            <div className={`relative overflow-hidden rounded-xl border p-2.5 sm:p-4 transition-all ${timerStyles.harvest.wrapper}`}>
+              {/* Left accent bar */}
+              <div className={`absolute left-0 top-2.5 bottom-2.5 w-[3px] rounded-full ${timerStyles.harvest.accent} opacity-70`} />
+              <div className="flex flex-col justify-between h-full pl-2 sm:pl-3 gap-2">
+                <div>
+                  <p className={`flex items-center gap-1 sm:gap-1.5 ${labelClass} ${timerStyles.harvest.label}`}>
+                    <Wheat className="h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0" />
+                    <span className="truncate">Harvest</span>
                   </p>
-                ) : (
-                  <p className="mt-3 text-xs font-semibold text-slate-500">—</p>
+                  {character.plantedBerryId ? (
+                    <p className={`mt-1 sm:mt-1.5 text-sm sm:text-base md:text-lg font-extrabold flex items-center gap-1 sm:gap-1.5 ${timerStyles.harvest.value}`}>
+                      <Clock className="h-3.5 w-3.5 opacity-70 shrink-0" />
+                      <span className="truncate">{status.status === "wilted" ? "Expired" : formatRemainingTime(character.harvestAt, now)}</span>
+                    </p>
+                  ) : (
+                    <p className="mt-1 sm:mt-1.5 text-xs font-semibold text-slate-500">—</p>
+                  )}
+                </div>
+                {character.plantedBerryId && (
+                  <TimerTimestamp label="Harvest At" value={formatDate(character.harvestAt)} />
                 )}
               </div>
-              {character.plantedBerryId && (
-                <TimerTimestamp label="Harvest At" value={formatDate(character.harvestAt)} />
-              )}
             </div>
-          </div>
 
-          {/* Wilt Timer */}
-          <div className={`relative overflow-hidden rounded-xl border p-4 sm:p-6 transition-all ${timerStyles.wilt.wrapper}`}>
-            {/* Left accent bar */}
-            <div className={`absolute left-0 top-4 bottom-4 w-[3px] rounded-full ${timerStyles.wilt.accent} opacity-70`} />
-            <div className="flex flex-col gap-4 pl-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className={`flex items-center gap-1.5 ${labelClass} ${timerStyles.wilt.label}`}>
-                  <AlertTriangle className="h-3.5 w-3.5" />
-                  Wilt Threshold
-                </p>
-                {character.plantedBerryId ? (
-                  <p className={`mt-3 text-lg font-extrabold flex items-center gap-2 ${timerStyles.wilt.value}`}>
-                    <Clock className="h-4 w-4 opacity-70" />
-                    {status.status === "wilted" ? "Plot Wilted" : formatRemainingTime(character.wiltAt, now)}
+            {/* Wilt Timer */}
+            <div className={`relative overflow-hidden rounded-xl border p-2.5 sm:p-4 transition-all ${timerStyles.wilt.wrapper}`}>
+              {/* Left accent bar */}
+              <div className={`absolute left-0 top-2.5 bottom-2.5 w-[3px] rounded-full ${timerStyles.wilt.accent} opacity-70`} />
+              <div className="flex flex-col justify-between h-full pl-2 sm:pl-3 gap-2">
+                <div>
+                  <p className={`flex items-center gap-1 sm:gap-1.5 ${labelClass} ${timerStyles.wilt.label}`}>
+                    <AlertTriangle className="h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0" />
+                    <span className="truncate">Wilt Threshold</span>
                   </p>
-                ) : (
-                  <p className="mt-3 text-xs font-semibold text-slate-500">—</p>
+                  {character.plantedBerryId ? (
+                    <p className={`mt-1 sm:mt-1.5 text-sm sm:text-base md:text-lg font-extrabold flex items-center gap-1 sm:gap-1.5 ${timerStyles.wilt.value}`}>
+                      <Clock className="h-3.5 w-3.5 opacity-70 shrink-0" />
+                      <span className="truncate">{status.status === "wilted" ? "Wilted" : formatRemainingTime(character.wiltAt, now)}</span>
+                    </p>
+                  ) : (
+                    <p className="mt-1 sm:mt-1.5 text-xs font-semibold text-slate-500">—</p>
+                  )}
+                </div>
+                {character.plantedBerryId && (
+                  <TimerTimestamp label="Wilts At" value={formatDate(character.wiltAt)} />
                 )}
               </div>
-              {character.plantedBerryId && (
-                <TimerTimestamp label="Wilts At" value={formatDate(character.wiltAt)} />
-              )}
             </div>
           </div>
         </div>
