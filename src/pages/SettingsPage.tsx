@@ -116,7 +116,7 @@ export default function SettingsPage() {
       const success = await sendTestNotification();
       if (success) {
         setTestNotificationStatus(
-          "Test alert dispatched! Check your Windows taskbar or notification center."
+          "Test alert dispatched! Check your notification shade, taskbar, or notification center."
         );
         setPermissionState("granted");
       } else {

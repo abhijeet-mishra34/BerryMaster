@@ -32,6 +32,40 @@ export function isMobileDevice(): boolean {
   return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 }
 
+/**
+ * Polyfill window.Notification for Android WebView where the Web Notification API
+ * is not natively implemented. This prevents @tauri-apps/plugin-notification from
+ * throwing "Cannot read properties of undefined (reading 'permission')" errors.
+ */
+if (typeof window !== "undefined" && typeof (window as unknown as { Notification?: unknown }).Notification === "undefined") {
+  class AndroidNotificationShim {
+    static permission: PermissionState = "default";
+
+    static async requestPermission(): Promise<string> {
+      try {
+        if (isTauriEnvironment()) {
+          const { invoke } = await import("@tauri-apps/api/core");
+          const res = await invoke<string | boolean>("plugin:notification|request_permission");
+          AndroidNotificationShim.permission = (res === true || res === "granted") ? "granted" : "denied";
+          return AndroidNotificationShim.permission;
+        }
+      } catch (e) {
+        console.debug("AndroidNotificationShim requestPermission error:", e);
+      }
+      return "granted";
+    }
+
+    constructor(title: string, options?: { body?: string }) {
+      sendNativeNotification({
+        title,
+        body: options?.body || "",
+      }).catch(console.error);
+    }
+  }
+
+  (window as unknown as { Notification: unknown }).Notification = AndroidNotificationShim;
+}
+
 let isChannelInitialized = false;
 
 /**
@@ -41,8 +75,13 @@ export async function initializeNotificationChannels(): Promise<void> {
   if (isChannelInitialized || !isTauriEnvironment()) return;
 
   try {
-    const channels = await TauriNotification.channels();
-    const existing = channels.find((c) => c.id === ANDROID_CHANNEL_ID);
+    let existing = false;
+    try {
+      const channels = await TauriNotification.channels();
+      existing = Boolean(channels && channels.some((c) => c.id === ANDROID_CHANNEL_ID));
+    } catch {
+      // Channels listing may be unsupported on non-Android platforms
+    }
 
     if (!existing) {
       await TauriNotification.createChannel({
@@ -59,7 +98,9 @@ export async function initializeNotificationChannels(): Promise<void> {
     }
     isChannelInitialized = true;
   } catch (err) {
-    console.debug("Notification channel initialization skipped or not supported on this platform:", err);
+    console.debug("Notification channel initialization skipped or handled by OS:", err);
+    // Mark as initialized so we do not block subsequent notifications
+    isChannelInitialized = true;
   }
 }
 
@@ -72,12 +113,18 @@ export async function getNotificationPermissionStatus(): Promise<PermissionState
       const granted = await TauriNotification.isPermissionGranted();
       return granted ? "granted" : "default";
     } catch {
-      return "default";
+      try {
+        const { invoke } = await import("@tauri-apps/api/core");
+        const granted = await invoke<boolean>("plugin:notification|is_permission_granted");
+        return granted ? "granted" : "default";
+      } catch {
+        return "default";
+      }
     }
   }
 
-  if (typeof window !== "undefined" && "Notification" in window) {
-    return window.Notification.permission as PermissionState;
+  if (typeof window !== "undefined" && "Notification" in window && window.Notification) {
+    return (window.Notification.permission || "default") as PermissionState;
   }
 
   return "denied";
@@ -89,11 +136,33 @@ export async function getNotificationPermissionStatus(): Promise<PermissionState
 export async function requestNotificationPermission(): Promise<boolean> {
   if (isTauriEnvironment()) {
     try {
-      let granted = await TauriNotification.isPermissionGranted();
-      if (!granted) {
-        const status = await TauriNotification.requestPermission();
-        granted = status === "granted";
+      let granted = false;
+      try {
+        granted = await TauriNotification.isPermissionGranted();
+      } catch {
+        // Continue to prompt request
       }
+
+      if (!granted) {
+        try {
+          const { invoke } = await import("@tauri-apps/api/core");
+          const status = await invoke<string | boolean>("plugin:notification|request_permission");
+          if (typeof status === "boolean") {
+            granted = status;
+          } else if (typeof status === "string") {
+            granted = status === "granted";
+          }
+        } catch {
+          // Fallback to JS plugin API
+          try {
+            const status = await TauriNotification.requestPermission();
+            granted = status === "granted";
+          } catch {
+            granted = true; // Assume granted if prompt was dismissed/allowed
+          }
+        }
+      }
+
       if (granted) {
         await initializeNotificationChannels();
       }
@@ -104,7 +173,7 @@ export async function requestNotificationPermission(): Promise<boolean> {
     }
   }
 
-  if (typeof window !== "undefined" && "Notification" in window) {
+  if (typeof window !== "undefined" && "Notification" in window && window.Notification) {
     try {
       const result = await window.Notification.requestPermission();
       return result === "granted";
@@ -137,29 +206,40 @@ export async function sendNativeNotification(options: NotificationOptions): Prom
   }
 
   if (isTauriEnvironment()) {
+    // 1. Direct Tauri Rust command (most robust on both Windows & Android)
+    try {
+      const { invoke } = await import("@tauri-apps/api/core");
+      await invoke("send_native_notification", { title, body });
+      return;
+    } catch (rustErr) {
+      console.debug("Rust send_native_notification fallback:", rustErr);
+    }
+
+    // 2. Tauri official notification plugin with Android channel & icons
     try {
       await initializeNotificationChannels();
       const payload: TauriNotification.Options = {
         title,
         body,
         channelId: ANDROID_CHANNEL_ID,
+        icon: "ic_notification",
+        largeIcon: "ic_launcher",
       };
 
       TauriNotification.sendNotification(payload);
-    } catch (err) {
-      console.warn("Tauri notification failed, falling back to Web Notification:", err);
-      showBrowserFallback(title, body);
+      return;
+    } catch (pluginErr) {
+      console.warn("TauriNotification.sendNotification fallback:", pluginErr);
     }
-    return;
   }
 
-  // Web / PWA Fallback
+  // 3. Web / PWA Fallback
   showBrowserFallback(title, body);
 }
 
 function showBrowserFallback(title: string, body: string) {
   try {
-    if (typeof window !== "undefined" && "Notification" in window && window.Notification.permission === "granted") {
+    if (typeof window !== "undefined" && "Notification" in window && window.Notification && window.Notification.permission === "granted") {
       new window.Notification(title, {
         body,
         icon: "/favicon.png",
@@ -204,8 +284,7 @@ export function syncActiveNotifications(notifications: Notification[]) {
  * Pre-schedule future OS alerts for watering and harvesting on Android / PC background
  */
 export async function scheduleFutureCharacterAlerts(): Promise<void> {
-  // Desktop OS notifications do not support native client scheduling via Tauri plugin.
-  // Realtime alerts are dynamically checked every 5 seconds by NotificationContext.
+  // Realtime alerts are dynamically evaluated every 5 seconds by NotificationContext.
 }
 
 /**

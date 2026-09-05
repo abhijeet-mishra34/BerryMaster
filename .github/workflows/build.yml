@@ -69,12 +69,23 @@ jobs:
       - name: Initialize Tauri Android project
         run: npx tauri android init
 
-      - name: Generate & Apply Platform App Icons
+      - name: Generate & Apply Platform App Icons & Notification Assets
         run: |
           npx tauri icon src/assets/brand/berrymaster-icon.png
           mkdir -p src-tauri/gen/android/app/src/main/res/values
+          mkdir -p src-tauri/gen/android/app/src/main/res/drawable
           cp -r src-tauri/icons/android/mipmap-* src-tauri/gen/android/app/src/main/res/ || true
           cp -r src-tauri/icons/android/values/* src-tauri/gen/android/app/src/main/res/values/ || true
+          # Notification icons for Android NotificationManager
+          cp src-tauri/icons/android/mipmap-hdpi/ic_launcher.png src-tauri/gen/android/app/src/main/res/drawable/ic_notification.png || true
+          cp src-tauri/icons/android/mipmap-hdpi/ic_launcher.png src-tauri/gen/android/app/src/main/res/drawable/ic_launcher.png || true
+          # Ensure Android POST_NOTIFICATIONS and VIBRATE permissions in AndroidManifest.xml
+          MANIFEST="src-tauri/gen/android/app/src/main/AndroidManifest.xml"
+          if [ -f "$MANIFEST" ]; then
+            if ! grep -q "POST_NOTIFICATIONS" "$MANIFEST"; then
+              sed -i '/<application/i \    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n    <uses-permission android:name="android.permission.VIBRATE" />' "$MANIFEST"
+            fi
+          fi
 
       - name: Build Android APK (Release)
         run: npx tauri android build --apk

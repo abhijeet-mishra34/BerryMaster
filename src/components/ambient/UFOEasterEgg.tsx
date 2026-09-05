@@ -145,13 +145,22 @@ export default function UFOEasterEgg() {
     }, 1600);
   }, []);
 
-  // Periodic automatic visitation (every 2 minutes)
+  // Organic randomized visitation schedule (first visit in 15-30s, subsequent visits every 45-90s)
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (Math.random() > 0.2) {
+    let timerId: ReturnType<typeof setTimeout>;
+
+    const scheduleNextMission = (isFirst = false) => {
+      const minDelay = isFirst ? 15000 : 45000;
+      const maxDelay = isFirst ? 30000 : 90000;
+      const randomDelay = Math.floor(minDelay + Math.random() * (maxDelay - minDelay));
+
+      timerId = setTimeout(() => {
         startAbductionMission();
-      }
-    }, 120000);
+        scheduleNextMission(false);
+      }, randomDelay);
+    };
+
+    scheduleNextMission(true);
 
     // Also trigger on custom summon event
     const handleSummon = () => {
@@ -160,7 +169,7 @@ export default function UFOEasterEgg() {
     window.addEventListener("berrymaster:summon-ufo", handleSummon);
 
     return () => {
-      clearInterval(interval);
+      clearTimeout(timerId);
       window.removeEventListener("berrymaster:summon-ufo", handleSummon);
     };
   }, [startAbductionMission]);

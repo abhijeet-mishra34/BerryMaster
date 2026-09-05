@@ -3,11 +3,20 @@
   "identifier": "default",
   "description": "enables the default permissions",
   "windows": [
-    "main"
+    "*"
+  ],
+  "webviews": [
+    "*"
   ],
   "permissions": [
     "core:default",
     "notification:default",
+    "notification:allow-notify",
+    "notification:allow-request-permission",
+    "notification:allow-is-permission-granted",
+    "notification:allow-create-channel",
+    "notification:allow-remove-channel",
+    "notification:allow-channels",
     "opener:default",
     "opener:allow-open-url",
     "opener:allow-default-urls"
