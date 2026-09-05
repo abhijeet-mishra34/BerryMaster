@@ -288,21 +288,23 @@ export default function UFOEasterEgg() {
             </svg>
 
             {/* Farm Item in Transit inside Tractor Beam */}
-            {(state === "abducting" || state === "returning") && (
+            {(state === "beamDown" || state === "abducting" || state === "returning") && (
               <div
-                className={`
-                  absolute left-1/2 -translate-x-1/2 text-3xl
-                  drop-shadow-[0_0_16px_rgba(255,255,255,0.95)]
-                  transition-all duration-1000 ease-in-out
-                `}
+                className="absolute left-1/2 w-16 h-16 flex items-center justify-center text-3xl select-none drop-shadow-[0_0_16px_rgba(255,255,255,0.95)] pointer-events-none"
                 style={{
-                  top: state === "abducting" ? "10%" : "82%",
+                  top: state === "abducting" ? "8%" : "72%",
                   transform: `translateX(-50%) scale(${
-                    state === "abducting" ? 0.9 : 1.2
+                    state === "abducting" ? 0.85 : 1.15
                   }) rotate(${clickCount * 180}deg)`,
+                  transition:
+                    state === "abducting" || state === "returning"
+                      ? "all 1.3s cubic-bezier(0.4, 0, 0.2, 1)"
+                      : "none",
                 }}
               >
-                {target.icon}
+                <span className="inline-flex items-center justify-center leading-none text-center">
+                  {target.icon}
+                </span>
               </div>
             )}
           </div>
@@ -311,12 +313,14 @@ export default function UFOEasterEgg() {
         {/* Landed item bounce at new random drop coordinate */}
         {state === "landed" && (
           <div
-            className="absolute left-1/2 -translate-x-1/2 top-[220px] pointer-events-none flex flex-col items-center animate-bounce"
+            className="absolute left-1/2 -translate-x-1/2 top-[210px] pointer-events-none flex flex-col items-center justify-center animate-bounce"
           >
-            <span className="text-3xl drop-shadow-[0_0_12px_rgba(16,185,129,0.9)]">
-              {target.icon}
-            </span>
-            <span className="text-xs -mt-1 text-emerald-400 font-bold drop-shadow-[0_0_8px_#34d399] animate-ping">
+            <div className="w-16 h-16 flex items-center justify-center">
+              <span className="inline-flex items-center justify-center text-3xl leading-none drop-shadow-[0_0_12px_rgba(16,185,129,0.9)]">
+                {target.icon}
+              </span>
+            </div>
+            <span className="text-xs -mt-2 text-emerald-400 font-bold drop-shadow-[0_0_8px_#34d399] animate-ping">
               ✨
             </span>
           </div>
