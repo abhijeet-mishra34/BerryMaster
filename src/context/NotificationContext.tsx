@@ -13,6 +13,7 @@ import {
   requestNotificationPermission,
   syncBrowserNotifications,
 } from "../services/browserNotificationService";
+import { scheduleFutureCharacterAlerts } from "../services/nativeNotificationService";
 import { useCharacters } from "./CharacterContext";
 import { useSettings } from "./SettingsContext";
 
@@ -46,7 +47,7 @@ export function NotificationProvider({
     requestNotificationPermission();
   }, []);
 
-  // Refresh notifications efficiently without redundant React re-renders
+  // Refresh notifications efficiently and pre-schedule OS background alarms
   useEffect(() => {
     const updateNotifications = () => {
       const latestNotifications = generateNotifications(characters, settings);
@@ -59,6 +60,8 @@ export function NotificationProvider({
       }
 
       syncBrowserNotifications(latestNotifications);
+      // Pre-schedule future OS alarms for closed-app execution
+      scheduleFutureCharacterAlerts(characters, settings);
     };
 
     // Run immediately
@@ -67,7 +70,29 @@ export function NotificationProvider({
     // Refresh every 5 seconds for efficiency
     const interval = setInterval(updateNotifications, 5000);
 
-    return () => clearInterval(interval);
+    // Also register lifecycle listeners so alarms are always synced when user switches or closes the app
+    const handleVisibilityOrUnload = () => {
+      scheduleFutureCharacterAlerts(characters, settings);
+    };
+
+    if (typeof document !== "undefined") {
+      document.addEventListener("visibilitychange", handleVisibilityOrUnload);
+    }
+    if (typeof window !== "undefined") {
+      window.addEventListener("pagehide", handleVisibilityOrUnload);
+      window.addEventListener("beforeunload", handleVisibilityOrUnload);
+    }
+
+    return () => {
+      clearInterval(interval);
+      if (typeof document !== "undefined") {
+        document.removeEventListener("visibilitychange", handleVisibilityOrUnload);
+      }
+      if (typeof window !== "undefined") {
+        window.removeEventListener("pagehide", handleVisibilityOrUnload);
+        window.removeEventListener("beforeunload", handleVisibilityOrUnload);
+      }
+    };
   }, [characters, settings]);
 
   const notificationCount = useMemo(

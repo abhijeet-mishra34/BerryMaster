@@ -19,6 +19,11 @@
     "notification:allow-create-channel",
     "notification:allow-delete-channel",
     "notification:allow-list-channels",
+    "notification:allow-cancel",
+    "notification:allow-get-pending",
+    "notification:allow-remove-active",
+    "notification:allow-get-active",
+    "notification:allow-batch",
     "opener:default",
     "opener:allow-open-url",
     "opener:allow-default-urls"

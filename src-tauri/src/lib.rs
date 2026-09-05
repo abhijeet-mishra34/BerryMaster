@@ -130,8 +130,13 @@ fn send_native_notification(app: tauri::AppHandle, title: String, body: String) 
     use tauri_plugin_notification::NotificationExt;
     app.notification()
         .builder()
+        .channel_id("berrymaster_alerts_v3")
         .title(title)
         .body(body)
+        .icon("ic_notification")
+        .large_icon("ic_launcher")
+        .sound("default")
+        .auto_cancel()
         .show()
         .map_err(|e| e.to_string())
 }

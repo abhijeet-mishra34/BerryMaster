@@ -9,7 +9,7 @@ import {
 // Tauri plugin notification
 import * as TauriNotification from "@tauri-apps/plugin-notification";
 
-export const ANDROID_CHANNEL_ID = "berrymaster_farming_alerts";
+export const ANDROID_CHANNEL_ID = "berrymaster_alerts_v3";
 
 export type PermissionState = "granted" | "denied" | "default" | "prompt";
 
@@ -69,7 +69,8 @@ if (typeof window !== "undefined" && typeof (window as unknown as { Notification
 let isChannelInitialized = false;
 
 /**
- * Initialize high-priority notification channels for Android
+ * Initialize high-priority notification channels for Android.
+ * Sets Importance.High (4) to guarantee heads-up pop-up banner, sound, and vibration.
  */
 export async function initializeNotificationChannels(): Promise<void> {
   if (isChannelInitialized || !isTauriEnvironment()) return;
@@ -86,9 +87,9 @@ export async function initializeNotificationChannels(): Promise<void> {
     if (!existing) {
       await TauriNotification.createChannel({
         id: ANDROID_CHANNEL_ID,
-        name: "Berry Farming Reminders",
-        description: "High-priority notifications for watering, harvesting, and wilt timers",
-        importance: TauriNotification.Importance.High,
+        name: "BerryMaster Alerts",
+        description: "Heads-up notifications for watering, harvesting, and wilt timers",
+        importance: TauriNotification.Importance.High, // 4 = Heads-up banner + sound + vibration
         visibility: TauriNotification.Visibility.Public,
         sound: "default",
         vibration: true,
@@ -195,10 +196,23 @@ export type NotificationOptions = {
 };
 
 /**
- * Send an immediate native or browser notification
+ * Simple 32-bit positive integer hash for notification IDs (required by Android AlarmManager/NotificationManager)
+ */
+function toPositiveInt32(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash |= 0;
+  }
+  return Math.abs(hash) % 2147483647 || Math.floor(Math.random() * 1000000) + 1;
+}
+
+/**
+ * Send an immediate native or browser notification with heads-up display, sound, vibration, and custom icons.
  */
 export async function sendNativeNotification(options: NotificationOptions): Promise<void> {
-  const { title, body, scheduledAt } = options;
+  const { title, body, scheduledAt, id } = options;
 
   // Never dispatch notifications that are scheduled for a future timestamp immediately
   if (scheduledAt && scheduledAt > new Date()) {
@@ -206,7 +220,37 @@ export async function sendNativeNotification(options: NotificationOptions): Prom
   }
 
   if (isTauriEnvironment()) {
-    // 1. Direct Tauri Rust command (most robust on both Windows & Android)
+    await initializeNotificationChannels();
+
+    const numericId = typeof id === "number"
+      ? id
+      : typeof id === "string"
+      ? toPositiveInt32(id)
+      : Math.floor(Math.random() * 1000000) + 1;
+
+    // 1. Invoke Tauri official notification plugin with full parameters (heads up, sound, vibration, monochrome icon, large launcher icon)
+    try {
+      const { invoke } = await import("@tauri-apps/api/core");
+      await invoke("plugin:notification|notify", {
+        options: {
+          id: numericId,
+          channelId: ANDROID_CHANNEL_ID,
+          title,
+          body,
+          sound: "default",
+          icon: "ic_notification",
+          largeIcon: "ic_launcher",
+          iconColor: "#10b981",
+          autoCancel: true,
+          visibility: TauriNotification.Visibility.Public,
+        },
+      });
+      return;
+    } catch (pluginErr) {
+      console.debug("plugin:notification|notify invocation fallback:", pluginErr);
+    }
+
+    // 2. Direct Tauri Rust command fallback
     try {
       const { invoke } = await import("@tauri-apps/api/core");
       await invoke("send_native_notification", { title, body });
@@ -215,25 +259,22 @@ export async function sendNativeNotification(options: NotificationOptions): Prom
       console.debug("Rust send_native_notification fallback:", rustErr);
     }
 
-    // 2. Tauri official notification plugin with Android channel & icons
+    // 3. Fallback to JS plugin API sendNotification
     try {
-      await initializeNotificationChannels();
-      const payload: TauriNotification.Options = {
+      TauriNotification.sendNotification({
         title,
         body,
         channelId: ANDROID_CHANNEL_ID,
         icon: "ic_notification",
         largeIcon: "ic_launcher",
-      };
-
-      TauriNotification.sendNotification(payload);
+      });
       return;
-    } catch (pluginErr) {
-      console.warn("TauriNotification.sendNotification fallback:", pluginErr);
+    } catch (err) {
+      console.warn("Tauri sendNotification fallback error:", err);
     }
   }
 
-  // 3. Web / PWA Fallback
+  // 4. Web / PWA Fallback
   showBrowserFallback(title, body);
 }
 
@@ -281,14 +322,123 @@ export function syncActiveNotifications(notifications: Notification[]) {
 }
 
 /**
- * Pre-schedule future OS alerts for watering and harvesting on Android / PC background
+ * Pre-schedule future OS alarms for watering, harvesting, and wilting on Android's AlarmManager.
+ * This guarantees notifications pop up even when the BerryMaster app is completely closed / killed!
  */
-export async function scheduleFutureCharacterAlerts(): Promise<void> {
-  // Realtime alerts are dynamically evaluated every 5 seconds by NotificationContext.
+export async function scheduleFutureCharacterAlerts(
+  characters: Array<{
+    id: string;
+    name: string;
+    plantedBerryId?: string;
+    nextWaterAt?: string;
+    harvestAt?: string;
+    wiltAt?: string;
+  }>,
+  settings?: {
+    notifyOnWater?: boolean;
+    notifyOnHarvest?: boolean;
+    notifyOnWilt?: boolean;
+  }
+): Promise<void> {
+  if (!isTauriEnvironment()) return;
+
+  try {
+    await initializeNotificationChannels();
+
+    // 1. Cancel existing scheduled pending alarms first to avoid duplicate ringing
+    try {
+      await TauriNotification.cancelAll();
+    } catch (cancelErr) {
+      console.debug("Could not cancelAll pending alarms:", cancelErr);
+    }
+
+    const now = new Date();
+    const notifyWater = settings?.notifyOnWater ?? true;
+    const notifyHarvest = settings?.notifyOnHarvest ?? true;
+    const notifyWilt = settings?.notifyOnWilt ?? true;
+
+    const futureAlerts: Array<{
+      id: number;
+      title: string;
+      body: string;
+      targetDate: Date;
+    }> = [];
+
+    characters.forEach((character) => {
+      if (!character.plantedBerryId) return;
+
+      // 💧 Water alert
+      if (notifyWater && character.nextWaterAt) {
+        const waterDate = new Date(character.nextWaterAt);
+        if (waterDate > now) {
+          futureAlerts.push({
+            id: toPositiveInt32(`${character.id}-water-${character.nextWaterAt}`),
+            title: "💧 Water Needed",
+            body: `${character.name} needs watering!`,
+            targetDate: waterDate,
+          });
+        }
+      }
+
+      // 🌾 Harvest alert
+      if (notifyHarvest && character.harvestAt) {
+        const harvestDate = new Date(character.harvestAt);
+        if (harvestDate > now) {
+          futureAlerts.push({
+            id: toPositiveInt32(`${character.id}-harvest-${character.harvestAt}`),
+            title: "🌾 Harvest Ready",
+            body: `${character.name}'s berry is ready to harvest!`,
+            targetDate: harvestDate,
+          });
+        }
+      }
+
+      // 🍂 Wilt alert
+      if (notifyWilt && character.wiltAt) {
+        const wiltDate = new Date(character.wiltAt);
+        if (wiltDate > now) {
+          futureAlerts.push({
+            id: toPositiveInt32(`${character.id}-wilt-${character.wiltAt}`),
+            title: "🍂 Berry Wilted",
+            body: `${character.name}'s berry has wilted!`,
+            targetDate: wiltDate,
+          });
+        }
+      }
+    });
+
+    const { invoke } = await import("@tauri-apps/api/core");
+
+    // Register each alarm with Android's AlarmManager via plugin:notification|notify
+    for (const alert of futureAlerts) {
+      try {
+        await invoke("plugin:notification|notify", {
+          options: {
+            id: alert.id,
+            channelId: ANDROID_CHANNEL_ID,
+            title: alert.title,
+            body: alert.body,
+            sound: "default",
+            icon: "ic_notification",
+            largeIcon: "ic_launcher",
+            iconColor: "#10b981",
+            autoCancel: true,
+            visibility: TauriNotification.Visibility.Public,
+            // allowWhileIdle: true allows waking up device in Doze mode when app is closed
+            schedule: TauriNotification.Schedule.at(alert.targetDate, false, true),
+          },
+        });
+      } catch (scheduleErr) {
+        console.warn(`Failed to schedule alarm for ${alert.title}:`, scheduleErr);
+      }
+    }
+  } catch (err) {
+    console.warn("scheduleFutureCharacterAlerts error:", err);
+  }
 }
 
 /**
- * Send an interactive test notification
+ * Send an interactive test notification with heads-up pop-up banner, sound, vibration, and Berry icon
  */
 export async function sendTestNotification(): Promise<boolean> {
   const permission = await requestNotificationPermission();
@@ -296,7 +446,7 @@ export async function sendTestNotification(): Promise<boolean> {
 
   await sendNativeNotification({
     title: "🍓 BerryMaster Test Notification",
-    body: "Notifications are working seamlessly on your device!",
+    body: "Notifications are working with pop-up banner, sound & vibration!",
   });
 
   return true;

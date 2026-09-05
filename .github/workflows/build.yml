@@ -76,14 +76,14 @@ jobs:
           mkdir -p src-tauri/gen/android/app/src/main/res/drawable
           cp -r src-tauri/icons/android/mipmap-* src-tauri/gen/android/app/src/main/res/ || true
           cp -r src-tauri/icons/android/values/* src-tauri/gen/android/app/src/main/res/values/ || true
-          # Notification icons for Android NotificationManager
-          cp src-tauri/icons/android/mipmap-hdpi/ic_launcher.png src-tauri/gen/android/app/src/main/res/drawable/ic_notification.png || true
+          # Notification drawables for Android NotificationManager
+          cp -r src-tauri/icons/android/drawable/* src-tauri/gen/android/app/src/main/res/drawable/ || true
           cp src-tauri/icons/android/mipmap-hdpi/ic_launcher.png src-tauri/gen/android/app/src/main/res/drawable/ic_launcher.png || true
-          # Ensure Android POST_NOTIFICATIONS and VIBRATE permissions in AndroidManifest.xml
+          # Ensure Android POST_NOTIFICATIONS, VIBRATE, EXACT_ALARM, and WAKE_LOCK permissions in AndroidManifest.xml
           MANIFEST="src-tauri/gen/android/app/src/main/AndroidManifest.xml"
           if [ -f "$MANIFEST" ]; then
             if ! grep -q "POST_NOTIFICATIONS" "$MANIFEST"; then
-              sed -i '/<application/i \    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n    <uses-permission android:name="android.permission.VIBRATE" />' "$MANIFEST"
+              sed -i '/<application/i \    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n    <uses-permission android:name="android.permission.VIBRATE" />\n    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />\n    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />\n    <uses-permission android:name="android.permission.WAKE_LOCK" />\n    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />' "$MANIFEST"
             fi
           fi
 
