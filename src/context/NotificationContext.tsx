@@ -47,7 +47,7 @@ export function NotificationProvider({
     requestNotificationPermission();
   }, []);
 
-  // Refresh notifications efficiently and pre-schedule OS background alarms
+  // 1. Live notification badge & toast polling for active app view (every 5 seconds)
   useEffect(() => {
     const updateNotifications = () => {
       const latestNotifications = generateNotifications(characters, settings);
@@ -60,37 +60,67 @@ export function NotificationProvider({
       }
 
       syncBrowserNotifications(latestNotifications);
-      // Pre-schedule future OS alarms for closed-app execution
-      scheduleFutureCharacterAlerts(characters, settings);
     };
 
     // Run immediately
     updateNotifications();
 
-    // Refresh every 5 seconds for efficiency
     const interval = setInterval(updateNotifications, 5000);
 
-    // Also register lifecycle listeners so alarms are always synced when user switches or closes the app
-    const handleVisibilityOrUnload = () => {
+    return () => {
+      clearInterval(interval);
+    };
+  }, [characters, settings]);
+
+  // 2. Pre-schedule future OS alarms ONLY when farming timers or settings actually change
+  const farmingFingerprint = useMemo(() => {
+    return (
+      characters
+        .map(
+          (c) =>
+            `${c.id}:${c.plantedBerryId || ""}:${c.nextWaterAt || ""}:${c.harvestAt || ""}:${c.wiltAt || ""}`
+        )
+        .join("|") +
+      `_s_${settings.notifyOnWater}_${settings.notifyOnHarvest}_${settings.notifyOnWilt}`
+    );
+  }, [characters, settings]);
+
+  const prevFingerprintRef = useRef<string>("");
+
+  useEffect(() => {
+    if (farmingFingerprint !== prevFingerprintRef.current) {
+      prevFingerprintRef.current = farmingFingerprint;
+      scheduleFutureCharacterAlerts(characters, settings);
+    }
+  }, [farmingFingerprint, characters, settings]);
+
+  // 3. Lifecycle listeners: guarantee alarms are scheduled before app is suspended or closed
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (document.visibilityState === "hidden") {
+        scheduleFutureCharacterAlerts(characters, settings);
+      }
+    };
+
+    const handlePageHide = () => {
       scheduleFutureCharacterAlerts(characters, settings);
     };
 
     if (typeof document !== "undefined") {
-      document.addEventListener("visibilitychange", handleVisibilityOrUnload);
+      document.addEventListener("visibilitychange", handleVisibility);
     }
     if (typeof window !== "undefined") {
-      window.addEventListener("pagehide", handleVisibilityOrUnload);
-      window.addEventListener("beforeunload", handleVisibilityOrUnload);
+      window.addEventListener("pagehide", handlePageHide);
+      window.addEventListener("beforeunload", handlePageHide);
     }
 
     return () => {
-      clearInterval(interval);
       if (typeof document !== "undefined") {
-        document.removeEventListener("visibilitychange", handleVisibilityOrUnload);
+        document.removeEventListener("visibilitychange", handleVisibility);
       }
       if (typeof window !== "undefined") {
-        window.removeEventListener("pagehide", handleVisibilityOrUnload);
-        window.removeEventListener("beforeunload", handleVisibilityOrUnload);
+        window.removeEventListener("pagehide", handlePageHide);
+        window.removeEventListener("beforeunload", handlePageHide);
       }
     };
   }, [characters, settings]);
