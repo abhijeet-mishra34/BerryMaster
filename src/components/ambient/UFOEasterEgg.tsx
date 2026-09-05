@@ -77,7 +77,7 @@ export default function UFOEasterEgg() {
 
     // Randomize completely distinct drop position for the return
     let dX = Math.round(15 + Math.random() * 65);
-    let dY = Math.round(15 + Math.random() * 32);
+    const dY = Math.round(15 + Math.random() * 32);
     // Ensure drop position is noticeably different from pickup
     if (Math.abs(dX - pX) < 20) {
       dX = pX > 50 ? pX - 30 : pX + 30;
@@ -336,7 +336,7 @@ export default function UFOEasterEgg() {
         >
           {/* Glass Cockpit Dome with Little Alien */}
           <div className="relative -mb-3 h-10 w-16 rounded-t-full border border-teal-300/40 bg-gradient-to-b from-teal-200/40 via-emerald-400/20 to-transparent backdrop-blur-xs flex items-center justify-center shadow-[0_0_15px_rgba(45,212,191,0.5)]">
-            <span className="text-sm select-none animate-pulse">👽</span>
+            <span className="inline-flex items-center justify-center text-sm leading-none select-none animate-pulse">👽</span>
           </div>
 
           {/* Saucer Hull Metallic Ring */}

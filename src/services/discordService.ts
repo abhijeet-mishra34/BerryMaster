@@ -44,6 +44,7 @@ export interface DiscordFeedbackPayload {
   rating: number;
   subject: string;
   message: string;
+  ign?: string;
   email?: string;
 }
 
@@ -71,7 +72,8 @@ export async function sendFeedbackToDiscord(
   // Truncate fields to safe Discord limits
   const safeSubject = payload.subject.slice(0, 250);
   const safeMessage = payload.message.slice(0, 1900);
-  const safeEmail = payload.email ? payload.email.slice(0, 200) : "*Anonymous*";
+  const safeIgn = payload.ign && payload.ign.trim() ? payload.ign.trim().slice(0, 50) : "*Not provided*";
+  const safeEmail = payload.email && payload.email.trim() ? payload.email.trim().slice(0, 200) : "*Not provided*";
 
   const body = {
     username: "BerryMaster Feedback",
@@ -92,6 +94,11 @@ export async function sendFeedbackToDiscord(
           {
             name: "⭐ Rating",
             value: `${stars}  —  ${ratingLabel}`,
+            inline: true,
+          },
+          {
+            name: "🎮 Trainer (IGN)",
+            value: safeIgn,
             inline: true,
           },
           {

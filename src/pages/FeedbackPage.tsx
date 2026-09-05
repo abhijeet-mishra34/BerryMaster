@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   MessageSquare,
   Bug,
@@ -19,6 +19,9 @@ import {
   submitFeedback,
   getFeedbackHistory,
   clearFeedbackHistory,
+  getFeedbackDraft,
+  saveFeedbackDraft,
+  clearFeedbackDraft,
   type FeedbackCategory,
   type FeedbackItem,
 } from "../services/feedbackService";
@@ -31,13 +34,64 @@ export default function FeedbackPage() {
   const [hoverRating, setHoverRating] = useState<number>(0);
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+  const [ign, setIgn] = useState("");
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [activeTab, setActiveTab] = useState<"submit" | "history">("submit");
   const [copiedLink, setCopiedLink] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const [draftLoaded, setDraftLoaded] = useState(false);
+  const [hasDraft, setHasDraft] = useState(false);
+
   const [history, setHistory] = useState<FeedbackItem[]>(getFeedbackHistory());
+
+  // Restore draft on mount
+  useEffect(() => {
+    const draft = getFeedbackDraft();
+    if (draft) {
+      if (draft.category) setCategory(draft.category);
+      if (draft.rating) setRating(draft.rating);
+      if (draft.subject) setSubject(draft.subject);
+      if (draft.message) setMessage(draft.message);
+      if (draft.ign) setIgn(draft.ign);
+      if (draft.email) setEmail(draft.email);
+      if (draft.subject || draft.message || draft.ign || draft.email) {
+        setHasDraft(true);
+      }
+    }
+    setDraftLoaded(true);
+  }, []);
+
+  // Auto-save draft on changes
+  useEffect(() => {
+    if (!draftLoaded) return;
+    if (subject.trim() || message.trim() || ign.trim() || email.trim()) {
+      saveFeedbackDraft({
+        category,
+        rating,
+        subject,
+        message,
+        ign,
+        email,
+      });
+      setHasDraft(true);
+    } else {
+      clearFeedbackDraft();
+      setHasDraft(false);
+    }
+  }, [category, rating, subject, message, ign, email, draftLoaded]);
+
+  function handleDiscardDraft() {
+    clearFeedbackDraft();
+    setSubject("");
+    setMessage("");
+    setIgn("");
+    setEmail("");
+    setRating(5);
+    setCategory("general");
+    setHasDraft(false);
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -51,6 +105,7 @@ export default function FeedbackPage() {
       rating,
       subject: subject.trim(),
       message: message.trim(),
+      ign: ign.trim() || undefined,
       email: email.trim() || undefined,
     });
 
@@ -61,12 +116,15 @@ export default function FeedbackPage() {
         rating,
         subject: subject.trim(),
         message: message.trim(),
+        ign: ign.trim() || undefined,
         email: email.trim() || undefined,
       });
     } catch (err) {
       console.warn("[BerryMaster] Discord webhook failed:", err);
     }
 
+    clearFeedbackDraft();
+    setHasDraft(false);
     setIsSubmitting(false);
     setSubmitted(true);
     setHistory(getFeedbackHistory());
@@ -74,6 +132,7 @@ export default function FeedbackPage() {
     // Reset fields
     setSubject("");
     setMessage("");
+    setIgn("");
     setEmail("");
   }
 
@@ -219,6 +278,23 @@ export default function FeedbackPage() {
                 onSubmit={handleSubmit}
                 className="theme-card rounded-xl p-4 sm:p-8 md:p-10 backdrop-blur-xl shadow-xl flex flex-col gap-6 sm:gap-7"
               >
+                {/* Draft auto-save status pill */}
+                {hasDraft && (
+                  <div className="flex items-center justify-between rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-2.5 text-xs text-emerald-300">
+                    <div className="flex items-center gap-2">
+                      <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="font-semibold">Draft auto-saved locally</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleDiscardDraft}
+                      className="text-[11px] font-bold text-slate-400 hover:text-rose-400 transition-colors cursor-pointer"
+                    >
+                      Discard Draft
+                    </button>
+                  </div>
+                )}
+
                 {/* Category Selection */}
                 <div className="space-y-3">
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 light:text-slate-700">
@@ -392,6 +468,48 @@ export default function FeedbackPage() {
                       focus:ring-emerald-500/15
                       resize-none
                       leading-relaxed
+                    "
+                  />
+                </div>
+
+                {/* In-Game Name (IGN) (Optional) */}
+                <div className="space-y-2">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 light:text-slate-700">
+                    Trainer / In-Game Name (IGN){" "}
+                    <span className="text-slate-500 font-normal">
+                      (Optional PokeMMO character name)
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    value={ign}
+                    onChange={(e) => setIgn(e.target.value)}
+                    placeholder="e.g. Red, Ash, BerryFarmer99"
+                    style={{ padding: "0.875rem 1.25rem" }}
+                    className="
+                      w-full
+                      rounded-xl
+                      border
+                      border-slate-800
+                      light:border-slate-300
+                      bg-slate-950/80
+                      light:bg-white
+                      px-5
+                      py-3.5
+                      text-base
+                      font-semibold
+                      text-white
+                      light:text-slate-900
+                      placeholder:text-slate-500
+                      light:placeholder:text-slate-400
+                      outline-none
+                      transition-all
+                      duration-200
+                      focus:border-emerald-400/80
+                      focus:bg-slate-950
+                      light:focus:bg-white
+                      focus:ring-4
+                      focus:ring-emerald-500/15
                     "
                   />
                 </div>
@@ -627,18 +745,25 @@ export default function FeedbackPage() {
                   <p className="text-sm text-slate-300 light:text-slate-700 whitespace-pre-wrap leading-relaxed">
                     {item.message}
                   </p>
-                  <div className="flex items-center justify-between text-xs text-slate-400 light:text-slate-500 pt-2 border-t border-slate-800 light:border-slate-200">
+                  <div className="flex flex-wrap items-center justify-between text-xs text-slate-400 light:text-slate-500 pt-2 border-t border-slate-800 light:border-slate-200 gap-2">
                     <div className="flex items-center gap-1.5">
                       <span>Rating:</span>
                       <span className="text-amber-400 font-semibold">
                         {"★".repeat(item.rating)}
                       </span>
                     </div>
-                    {item.email && (
-                      <span className="text-slate-400 light:text-slate-500 font-mono">
-                        Contact: {item.email}
-                      </span>
-                    )}
+                    <div className="flex items-center gap-3 flex-wrap">
+                      {item.ign && (
+                        <span className="text-emerald-400 light:text-emerald-600 font-medium">
+                          Trainer: <span className="text-white light:text-slate-900 font-semibold">{item.ign}</span>
+                        </span>
+                      )}
+                      {item.email && (
+                        <span className="text-slate-400 light:text-slate-500 font-mono">
+                          Contact: {item.email}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}

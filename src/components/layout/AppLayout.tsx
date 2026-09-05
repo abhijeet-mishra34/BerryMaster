@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation, NavLink } from "react-router-dom";
 import { LayoutDashboard, Users, Cherry, Package, Menu } from "lucide-react";
 import Sidebar from "./Sidebar";
@@ -17,10 +17,33 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  // Close mobile drawer on route navigation
+  const mainRef = useRef<HTMLElement>(null);
+  const scrollPositionsRef = useRef<Record<string, number>>({});
+  const currentPathRef = useRef(location.pathname);
+
+  // Close mobile drawer and restore independent page scroll position on route navigation
   useEffect(() => {
     setMobileMenuOpen(false);
+
+    // Save scroll position for previous path
+    if (mainRef.current && currentPathRef.current !== location.pathname) {
+      scrollPositionsRef.current[currentPathRef.current] = mainRef.current.scrollTop;
+    }
+
+    currentPathRef.current = location.pathname;
+
+    // Restore scroll position for current path (defaulting cleanly to 0 for fresh pages)
+    const savedTop = scrollPositionsRef.current[location.pathname] ?? 0;
+    if (mainRef.current) {
+      mainRef.current.scrollTop = savedTop;
+    }
   }, [location.pathname]);
+
+  const handleMainScroll = () => {
+    if (mainRef.current) {
+      scrollPositionsRef.current[location.pathname] = mainRef.current.scrollTop;
+    }
+  };
 
   function toggleSidebar() {
     setSidebarOpen((current) => !current);
@@ -59,7 +82,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <div className="flex min-w-0 flex-1 flex-col rounded-none md:rounded-2xl border-0 md:border md:border-white/[0.08] light:md:border-slate-200/80 bg-slate-950/20 light:bg-white/40 backdrop-blur-md shadow-none md:shadow-2xl md:shadow-black/40 overflow-hidden">
           <Header onOpenMobileMenu={() => setMobileMenuOpen(true)} />
 
-          <main className="flex-1 overflow-y-auto">
+          <main
+            ref={mainRef}
+            onScroll={handleMainScroll}
+            className="flex-1 overflow-y-auto overscroll-y-contain"
+            style={{
+              WebkitOverflowScrolling: "touch",
+            }}
+          >
             <div
               key={location.pathname}
               className="app-main min-h-full p-3.5 sm:p-6 md:p-8 md:pb-8 page-enter"

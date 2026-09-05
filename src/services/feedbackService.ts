@@ -6,12 +6,49 @@ export interface FeedbackItem {
   rating: number; // 1 - 5
   subject: string;
   message: string;
+  ign?: string;
   email?: string;
   createdAt: string;
   status: 'submitted' | 'reviewed';
 }
 
+export interface FeedbackDraft {
+  category: FeedbackCategory;
+  rating: number;
+  subject: string;
+  message: string;
+  ign?: string;
+  email?: string;
+}
+
 const STORAGE_KEY = 'berrymaster_feedback_history';
+const DRAFT_STORAGE_KEY = 'berrymaster_feedback_draft';
+
+export function getFeedbackDraft(): FeedbackDraft | null {
+  try {
+    const raw = localStorage.getItem(DRAFT_STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw) as FeedbackDraft;
+  } catch {
+    return null;
+  }
+}
+
+export function saveFeedbackDraft(draft: FeedbackDraft): void {
+  try {
+    localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draft));
+  } catch (error) {
+    console.error('Failed to save feedback draft:', error);
+  }
+}
+
+export function clearFeedbackDraft(): void {
+  try {
+    localStorage.removeItem(DRAFT_STORAGE_KEY);
+  } catch (error) {
+    console.error('Failed to clear feedback draft:', error);
+  }
+}
 
 export function getFeedbackHistory(): FeedbackItem[] {
   try {
