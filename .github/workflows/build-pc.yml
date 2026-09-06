@@ -1,0 +1,74 @@
+name: Build & Release Windows Desktop (PC)
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Optional Release Tag (e.g. pc-v1.0.1 or v1.0.1-pc) to publish to GitHub Releases'
+        required: false
+        default: ''
+  push:
+    branches:
+      - pc
+    tags:
+      - 'pc-v*'
+      - 'v*-pc'
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    name: Build Windows Desktop
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install Node dependencies
+        run: npm install
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> src-tauri/target
+
+      - name: Build Windows Desktop Bundle
+        run: npx tauri build
+
+      - name: Stage Windows Installers
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist-windows
+          Get-ChildItem -Recurse "src-tauri\target\release\bundle" -Include *.exe | Copy-Item -Destination dist-windows
+          $exe = Get-ChildItem "dist-windows\*.exe" | Select-Object -First 1
+          if ($exe) { Copy-Item $exe.FullName "dist-windows\BerryMaster-Windows-Setup.exe" -Force }
+          Get-ChildItem dist-windows
+
+      - name: Upload Windows Installer Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BerryMaster-Windows-Installer
+          path: dist-windows/*.exe
+          retention-days: 14
+
+      - name: Publish Windows Installer to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/') || github.event.inputs.release_tag != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.release_tag || github.ref_name }}
+          files: dist-windows/BerryMaster-Windows-Setup.exe
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
