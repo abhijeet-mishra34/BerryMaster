@@ -20,7 +20,7 @@ html.dark {
   --bg-sidebar: rgba(2, 6, 23, 0.95);
   --bg-header: rgba(2, 6, 23, 0.75);
   --bg-hero: linear-gradient(135deg, rgba(15,23,42,0.60) 0%, rgba(6,78,59,0.22) 50%, rgba(2,6,23,0.65) 100%);
-  --bg-modal: linear-gradient(145deg, rgba(15,23,42,0.98) 0%, rgba(2,6,23,0.98) 100%);
+  --bg-modal: linear-gradient(180deg, #25283c 0%, #1a1d2e 50%, #121422 100%);
   --bg-chip: rgba(2, 6, 23, 0.7);
 
   /* Typography */
@@ -238,6 +238,34 @@ html.light .card-shine::after {
   animation: cardShine 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
+/* Page / Nav Icon Sway & Pop Tilt Effect on Hover */
+@keyframes iconSwayTilt {
+  0% {
+    transform: scale(1) rotate(0deg) translateY(0);
+  }
+  30% {
+    transform: scale(1.22) rotate(14deg) translateY(-3px);
+  }
+  65% {
+    transform: scale(1.15) rotate(7deg) translateY(-1.5px);
+  }
+  100% {
+    transform: scale(1.18) rotate(11deg) translateY(-2px);
+  }
+}
+
+.icon-sway-pop {
+  display: inline-block;
+  transform-origin: center bottom;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
+}
+
+.group:hover .icon-sway-pop,
+.icon-sway-pop:hover {
+  animation: iconSwayTilt 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
 @keyframes leafFall {
   0% {
     transform: translate3d(0, -10vh, 0) rotate(0deg);
@@ -405,35 +433,35 @@ html.light .card-shine::after {
 /* UFO Abduction Ground-to-Saucer Liftoff & Return */
 @keyframes ufoAbductLift {
   0% {
-    top: 85%;
-    transform: translateX(-50%) scale(1.15) rotate(0deg);
+    top: 180px;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
     opacity: 1;
   }
-  60% {
-    top: 35%;
-    transform: translateX(-50%) scale(1.0) rotate(180deg);
+  55% {
+    top: 80px;
+    transform: translate(-50%, -50%) scale(0.85) rotate(180deg);
     opacity: 0.95;
   }
   100% {
-    top: 5%;
-    transform: translateX(-50%) scale(0.35) rotate(360deg);
+    top: 4px;
+    transform: translate(-50%, -50%) scale(0.3) rotate(360deg);
     opacity: 0;
   }
 }
 
 @keyframes ufoDropLower {
   0% {
-    top: 5%;
-    transform: translateX(-50%) scale(0.35) rotate(0deg);
+    top: 4px;
+    transform: translate(-50%, -50%) scale(0.3) rotate(0deg);
     opacity: 0;
   }
   25% {
     opacity: 0.95;
-    transform: translateX(-50%) scale(0.9) rotate(90deg);
+    transform: translate(-50%, -50%) scale(0.85) rotate(90deg);
   }
   100% {
-    top: 85%;
-    transform: translateX(-50%) scale(1.15) rotate(0deg);
+    top: 180px;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
     opacity: 1;
   }
 }

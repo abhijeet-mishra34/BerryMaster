@@ -20,6 +20,7 @@ import {
 
 import CharacterCard from "../components/characters/CharacterCard";
 import CharacterModal from "../components/characters/CharacterModal";
+import TimerPickerModal from "../components/characters/TimerPickerModal";
 import ConfirmDialog from "../components/ui/ConfirmDialog";
 import Modal from "../components/ui/Modal";
 
@@ -46,6 +47,7 @@ export default function CharactersPage() {
     harvestBerry,
     waterAllReady,
     harvestAllReady,
+    updateCharacterTimers,
   } = useCharacters();
 
   // =====================================
@@ -60,6 +62,9 @@ export default function CharactersPage() {
   // =====================================
   // Modal State
   // =====================================
+
+  const [timerPickerCharacter, setTimerPickerCharacter] = useState<Character | null>(null);
+  const [timerPickerTarget, setTimerPickerTarget] = useState<"planted" | "water">("planted");
 
   const [
     isCharacterModalOpen,
@@ -343,6 +348,8 @@ export default function CharactersPage() {
   }
 
 
+
+
   function openEditModal(
     character: Character
   ) {
@@ -538,68 +545,62 @@ export default function CharactersPage() {
 
           {/* Action Buttons: Bulk actions + Add Character */}
           <div className="flex flex-wrap items-center gap-3">
-            {countNeedWater > 1 && (
+            {characters.length > 0 && (
               <button
                 type="button"
                 onClick={handleWaterAll}
-                className="
+                disabled={countNeedWater === 0}
+                title={countNeedWater > 0 ? `Water all ${countNeedWater} plots needing water` : "No plots need watering"}
+                className={`
                   inline-flex
                   items-center
                   justify-center
                   gap-2
                   rounded-xl
                   border
-                  border-sky-500/30
-                  bg-sky-500/15
-                  hover:bg-sky-500
-                  hover:text-slate-950
-                  light:hover:text-white
                   px-4
                   py-3.5
                   text-sm
                   font-bold
-                  text-sky-400
-                  light:text-sky-700
                   transition-all
                   duration-200
-                  cursor-pointer
-                  shadow-sm
-                  active:scale-95
-                "
+                  ${
+                    countNeedWater > 0
+                      ? "border-sky-500/30 bg-sky-500/15 hover:bg-sky-500 hover:text-white text-sky-400 light:text-sky-700 hover:-translate-y-1 hover:shadow-lg hover:shadow-sky-500/25 cursor-pointer active:scale-95 shadow-sm"
+                      : "border-white/[0.08] bg-slate-900/40 text-slate-500 cursor-not-allowed opacity-50"
+                  }
+                `}
               >
                 <Droplets className="h-4.5 w-4.5" />
                 <span>Water All ({countNeedWater})</span>
               </button>
             )}
 
-            {countHarvestReady > 1 && (
+            {characters.length > 0 && (
               <button
                 type="button"
                 onClick={handleHarvestAll}
-                className="
+                disabled={countHarvestReady === 0}
+                title={countHarvestReady > 0 ? `Harvest all ${countHarvestReady} ripe crops` : "No crops ready to harvest"}
+                className={`
                   inline-flex
                   items-center
                   justify-center
                   gap-2
                   rounded-xl
                   border
-                  border-amber-500/30
-                  bg-amber-500/15
-                  hover:bg-amber-500
-                  hover:text-slate-950
-                  light:hover:text-white
                   px-4
                   py-3.5
                   text-sm
                   font-bold
-                  text-amber-400
-                  light:text-amber-700
                   transition-all
                   duration-200
-                  cursor-pointer
-                  shadow-sm
-                  active:scale-95
-                "
+                  ${
+                    countHarvestReady > 0
+                      ? "border-amber-500/30 bg-amber-500/15 hover:bg-amber-500 hover:text-slate-950 light:hover:text-white text-amber-400 light:text-amber-700 hover:-translate-y-1 hover:shadow-lg hover:shadow-amber-500/25 cursor-pointer active:scale-95 shadow-sm"
+                      : "border-white/[0.08] bg-slate-900/40 text-slate-500 cursor-not-allowed opacity-50"
+                  }
+                `}
               >
                 <Wheat className="h-4.5 w-4.5" />
                 <span>Harvest All ({countHarvestReady})</span>
@@ -633,11 +634,13 @@ export default function CharactersPage() {
                 shadow-emerald-500/25
                 transition-all
                 duration-200
-                hover:-translate-y-0.5
+                hover:-translate-y-1
                 hover:from-emerald-400
                 hover:to-teal-400
-                hover:shadow-emerald-500/40
+                hover:shadow-xl
+                hover:shadow-emerald-500/45
                 active:translate-y-0
+                active:scale-95
                 cursor-pointer
                 w-full
                 sm:w-auto
@@ -691,44 +694,30 @@ export default function CharactersPage() {
         )}
       </div>
 
-      {/* Search & Filter Bar */}
+      {/* Search & Filter Bar with generous spacing from cards */}
       {characters.length > 0 && (
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div
+          className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between mt-8 mb-8 sm:mt-10 sm:mb-10"
+          style={{ marginTop: "32px", marginBottom: "32px" }}
+        >
           {/* Search Input */}
           <div className="relative flex-1 max-w-md">
-            <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+              <Search className="h-4.5 w-4.5" />
+            </div>
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search characters or planted berries..."
-              className="
-                w-full
-                rounded-xl
-                border
-                border-slate-800
-                light:border-slate-300
-                bg-slate-900/60
-                light:bg-white
-                py-2.5
-                pl-10
-                pr-9
-                text-sm
-                text-white
-                light:text-slate-900
-                placeholder-slate-500
-                transition-all
-                focus:border-emerald-500
-                focus:outline-none
-                focus:ring-1
-                focus:ring-emerald-500
-              "
+              style={{ paddingLeft: "46px" }}
+              className="w-full h-12 rounded-2xl border border-white/10 light:border-slate-300 bg-[#141728] light:bg-white pl-12 pr-10 text-sm text-white light:text-slate-900 placeholder-slate-500 transition-all focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white light:hover:text-slate-900 cursor-pointer"
+                className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 hover:text-white light:hover:text-slate-900 cursor-pointer"
                 aria-label="Clear search"
               >
                 <X className="h-4 w-4" />
@@ -798,6 +787,7 @@ export default function CharactersPage() {
           </div>
         </div>
       )}
+
 
       {/* =====================================
           Character Content
@@ -944,7 +934,8 @@ export default function CharactersPage() {
         <div
           className="
             grid
-            gap-8
+            gap-5
+            sm:gap-6
             xl:grid-cols-2
           "
         >
@@ -1009,12 +1000,16 @@ export default function CharactersPage() {
                 }
 
                 onDelete={() =>
-  openDeleteDialog(
-    character,
-    index
-  )
-}
+                  openDeleteDialog(
+                    character,
+                    index
+                  )
+                }
 
+                onOpenTimerPicker={(target) => {
+                  setTimerPickerCharacter(character);
+                  setTimerPickerTarget(target);
+                }}
               />
 
             )
@@ -1264,6 +1259,22 @@ export default function CharactersPage() {
         }}
 
       />
+
+      {/* =====================================
+          Date & Time Picker Modal
+      ===================================== */}
+      {timerPickerCharacter && (
+        <TimerPickerModal
+          isOpen={Boolean(timerPickerCharacter)}
+          onClose={() => setTimerPickerCharacter(null)}
+          character={timerPickerCharacter}
+          target={timerPickerTarget}
+          onSave={(updates) => {
+            updateCharacterTimers(timerPickerCharacter.id, updates);
+            addToast("Farming timers updated successfully!", "success");
+          }}
+        />
+      )}
 
     </div>
   );

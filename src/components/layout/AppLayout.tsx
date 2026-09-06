@@ -7,6 +7,8 @@ import FloatingLeaves from "../ambient/FloatingLeaves";
 import UFOEasterEgg from "../ambient/UFOEasterEgg";
 import FarmingBackground from "../background/FarmingBackground";
 import ToastContainer from "../ui/Toast";
+import FeedbackPromptBot from "../feedback/FeedbackPromptBot";
+import MiniHUDOverlay from "../overlay/MiniHUDOverlay";
 
 type AppLayoutProps = {
   children: React.ReactNode;
@@ -15,12 +17,27 @@ type AppLayoutProps = {
 export default function AppLayout({ children }: AppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isHUDMode, setIsHUDMode] = useState(false);
   const location = useLocation();
 
   // Close mobile drawer on route navigation
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
+
+  // Ctrl/Cmd + H to toggle HUD Mode
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "h") {
+        const tag = (document.activeElement?.tagName ?? "").toLowerCase();
+        if (["input", "textarea", "select"].includes(tag)) return;
+        e.preventDefault();
+        setIsHUDMode((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   function toggleSidebar() {
     setSidebarOpen((current) => !current);
@@ -33,6 +50,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
         background: "var(--bg-app-gradient)",
       }}
     >
+      {/* Mini HUD Overlay Mode for PokeMMO */}
+      {isHUDMode && <MiniHUDOverlay onClose={() => setIsHUDMode(false)} />}
+
       {/* Farm background — sparkles and gentle ambient glow */}
       <FarmingBackground />
 
@@ -52,7 +72,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
         />
 
         <div className="flex min-w-0 flex-1 flex-col rounded-none md:rounded-2xl border-0 md:border md:border-white/[0.08] light:md:border-slate-200/80 bg-slate-950/20 light:bg-white/40 backdrop-blur-md shadow-none md:shadow-2xl md:shadow-black/40 overflow-hidden">
-          <Header onOpenMobileMenu={() => setMobileMenuOpen(true)} />
+          <Header
+            onOpenMobileMenu={() => setMobileMenuOpen(true)}
+            onToggleHUD={() => setIsHUDMode((prev) => !prev)}
+            isHUDActive={isHUDMode}
+          />
 
           <main className="flex-1 overflow-y-auto">
             <div
@@ -93,68 +117,71 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <NavLink
           to="/"
           className={({ isActive }) =>
-            `flex flex-col items-center justify-center gap-1 flex-1 py-1 text-[10px] font-bold transition-colors ${
+            `group flex flex-col items-center justify-center gap-1 flex-1 py-1 text-[10px] font-bold transition-colors ${
               isActive
                 ? "text-emerald-400 light:text-emerald-600"
                 : "text-slate-400 light:text-slate-500 hover:text-slate-200"
             }`
           }
         >
-          <LayoutDashboard className="h-5 w-5" />
+          <LayoutDashboard className="h-5 w-5 icon-sway-pop" />
           <span>Dashboard</span>
         </NavLink>
 
         <NavLink
           to="/characters"
           className={({ isActive }) =>
-            `flex flex-col items-center justify-center gap-1 flex-1 py-1 text-[10px] font-bold transition-colors ${
+            `group flex flex-col items-center justify-center gap-1 flex-1 py-1 text-[10px] font-bold transition-colors ${
               isActive
                 ? "text-emerald-400 light:text-emerald-600"
                 : "text-slate-400 light:text-slate-500 hover:text-slate-200"
             }`
           }
         >
-          <Users className="h-5 w-5" />
+          <Users className="h-5 w-5 icon-sway-pop" />
           <span>Farmers</span>
         </NavLink>
 
         <NavLink
           to="/berries"
           className={({ isActive }) =>
-            `flex flex-col items-center justify-center gap-1 flex-1 py-1 text-[10px] font-bold transition-colors ${
+            `group flex flex-col items-center justify-center gap-1 flex-1 py-1 text-[10px] font-bold transition-colors ${
               isActive
                 ? "text-emerald-400 light:text-emerald-600"
                 : "text-slate-400 light:text-slate-500 hover:text-slate-200"
             }`
           }
         >
-          <Cherry className="h-5 w-5" />
+          <Cherry className="h-5 w-5 icon-sway-pop" />
           <span>Berries</span>
         </NavLink>
 
         <NavLink
           to="/inventory"
           className={({ isActive }) =>
-            `flex flex-col items-center justify-center gap-1 flex-1 py-1 text-[10px] font-bold transition-colors ${
+            `group flex flex-col items-center justify-center gap-1 flex-1 py-1 text-[10px] font-bold transition-colors ${
               isActive
                 ? "text-emerald-400 light:text-emerald-600"
                 : "text-slate-400 light:text-slate-500 hover:text-slate-200"
             }`
           }
         >
-          <Package className="h-5 w-5" />
+          <Package className="h-5 w-5 icon-sway-pop" />
           <span>Inventory</span>
         </NavLink>
 
         <button
           type="button"
           onClick={() => setMobileMenuOpen(true)}
-          className="flex flex-col items-center justify-center gap-1 flex-1 py-1 text-[10px] font-bold text-slate-400 light:text-slate-500 hover:text-slate-200 cursor-pointer"
+          className="group flex flex-col items-center justify-center gap-1 flex-1 py-1 text-[10px] font-bold text-slate-400 light:text-slate-500 hover:text-slate-200 cursor-pointer"
         >
-          <Menu className="h-5 w-5" />
+          <Menu className="h-5 w-5 icon-sway-pop" />
           <span>More</span>
         </button>
       </nav>
+
+      {/* 6-Hour Feedback Prompt Bot */}
+      <FeedbackPromptBot />
 
       {/* Toast notifications */}
       <ToastContainer />

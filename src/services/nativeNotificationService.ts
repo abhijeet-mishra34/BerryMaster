@@ -143,6 +143,7 @@ export async function sendNativeNotification(options: NotificationOptions): Prom
         title,
         body,
         channelId: ANDROID_CHANNEL_ID,
+        icon: "icon",
       };
 
       TauriNotification.sendNotification(payload);

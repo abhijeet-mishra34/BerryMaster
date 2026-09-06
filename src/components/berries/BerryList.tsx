@@ -155,14 +155,14 @@ export default function BerryList({
         h-[580px]
         flex-col
         overflow-hidden
-        rounded-2xl
+        rounded-3xl
         border
-        border-slate-800
+        border-white/10
         light:border-slate-200
-        bg-slate-900/60
+        bg-[#151829]/70
         light:bg-white
         shadow-xl
-        shadow-black/10
+        shadow-black/20
         backdrop-blur-xl
       "
     >
@@ -173,9 +173,9 @@ export default function BerryList({
         className="
           shrink-0
           border-b
-          border-slate-800
+          border-white/10
           light:border-slate-200
-          bg-slate-900/40
+          bg-white/[0.02]
           light:bg-slate-50
           px-5
           py-4

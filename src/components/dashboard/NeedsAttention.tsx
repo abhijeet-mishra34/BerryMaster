@@ -89,9 +89,9 @@ export default function NeedsAttention() {
   return (
     <div className="space-y-3">
       {/* Quick Bulk Actions */}
-      {(charactersNeedingWater.length > 1 || charactersReadyToHarvest.length > 1) && (
+      {(charactersNeedingWater.length > 0 || charactersReadyToHarvest.length > 0) && (
         <div className="flex flex-wrap items-center justify-end gap-2.5 pb-1">
-          {charactersNeedingWater.length > 1 && (
+          {charactersNeedingWater.length > 0 && (
             <button
               type="button"
               onClick={handleWaterAll}
@@ -101,7 +101,7 @@ export default function NeedsAttention() {
               <span>Water All ({charactersNeedingWater.length})</span>
             </button>
           )}
-          {charactersReadyToHarvest.length > 1 && (
+          {charactersReadyToHarvest.length > 0 && (
             <button
               type="button"
               onClick={handleHarvestAll}

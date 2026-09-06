@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Settings, User, ChevronDown, MessageSquareHeart, Info, Menu, Pin } from "lucide-react";
+import { Settings, User, ChevronDown, MessageSquareHeart, Info, Menu, Pin, Layers } from "lucide-react";
 
 import NotificationBell from "../notifications/NotificationBell";
+
 
 const pageInfo: Record<
   string,
@@ -51,9 +52,11 @@ const pageInfo: Record<
 
 type HeaderProps = {
   onOpenMobileMenu?: () => void;
+  onToggleHUD?: () => void;
+  isHUDActive?: boolean;
 };
 
-export default function Header({ onOpenMobileMenu }: HeaderProps) {
+export default function Header({ onOpenMobileMenu, onToggleHUD, isHUDActive }: HeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -102,6 +105,7 @@ export default function Header({ onOpenMobileMenu }: HeaderProps) {
   }, [isProfileMenuOpen]);
 
   const currentPage = pageInfo[location.pathname] ?? pageInfo["/"];
+
 
   return (
     <header
@@ -168,7 +172,24 @@ export default function Header({ onOpenMobileMenu }: HeaderProps) {
       </div>
 
       {/* Header Actions */}
-      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+      <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+        {/* PokéMMO HUD Mode Button */}
+        {onToggleHUD && (
+          <button
+            type="button"
+            onClick={onToggleHUD}
+            title="Open Compact PokéMMO HUD Overlay"
+            className={`flex h-9 w-9 items-center justify-center rounded-xl border transition-all cursor-pointer ${
+              isHUDActive
+                ? "border-emerald-400/60 bg-emerald-500/20 text-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.35)]"
+                : "border-slate-800 light:border-slate-200 bg-slate-900/60 light:bg-slate-100 text-slate-400 light:text-slate-600 hover:border-emerald-500/50 hover:bg-emerald-500/10 hover:text-emerald-400"
+            }`}
+            aria-label="Toggle PokéMMO HUD Mode"
+          >
+            <Layers className="h-4 w-4" />
+          </button>
+        )}
+
         {/* Notifications Bell */}
         <NotificationBell />
 

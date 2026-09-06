@@ -241,7 +241,7 @@ export default function Sidebar({
                               }
                             `}
                           >
-                            <IconComponent className="h-4.5 w-4.5 shrink-0" />
+                            <IconComponent className="h-4.5 w-4.5 shrink-0 icon-sway-pop" />
                           </div>
 
                           <span className="truncate tracking-wide">{item.label}</span>
@@ -477,7 +477,7 @@ export default function Sidebar({
                                 }
                               `}
                             >
-                              <IconComponent className="h-4.5 w-4.5 shrink-0" />
+                              <IconComponent className="h-4.5 w-4.5 shrink-0 icon-sway-pop" />
                             </div>
                           ) : (
                             <IconComponent
@@ -485,12 +485,12 @@ export default function Sidebar({
                                 h-5.5
                                 w-5.5
                                 shrink-0
+                                icon-sway-pop
                                 transition-all
                                 duration-200
-                                group-hover:scale-115
                                 ${
                                   isActive
-                                    ? "text-emerald-400 light:text-emerald-600 drop-shadow-[0_0_8px_rgba(52,211,153,0.6)] scale-110"
+                                    ? "text-emerald-400 light:text-emerald-600 drop-shadow-[0_0_8px_rgba(52,211,153,0.6)]"
                                     : "text-slate-400 light:text-slate-500 group-hover:text-emerald-400 light:group-hover:text-emerald-600"
                                 }
                               `}
