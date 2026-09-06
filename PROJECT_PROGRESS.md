@@ -1561,6 +1561,28 @@ Status:
 
 ---
 
+# 🛸 Sprint 15 — v1.0.3 PC PokeMMO Desktop Companion & Platform Separation 🚀
+
+**Goals & Focus:**
+1. Establish complete architectural separation between **Android** (`android` branch) and **PC** (`pc` branch) builds with dedicated, isolated GitHub Actions CI pipelines.
+2. Elevate PC desktop experience to v1.0.3 hand-in-hand with Android while preserving clean Glassmorphic desktop UX without mobile revamps.
+3. Overhaul UFO Easter Egg abduction sequence: UFO flies in empty, ground target appears first, emerald tractor beam locks on, lifts the item from ground up into the saucer, and returns it safely to a new coordinate with sparkles.
+4. Implement PC desktop superpowers: Native Always-on-Top Window Pin (`Ctrl + T`) for uninterrupted PokeMMO split-screen play.
+5. Add persistent feedback drafting and PokéMMO Trainer IGN support in bug/feedback reports.
+6. Standardize application release version to **`v1.0.3`** across all PC configurations (`package.json`, `src/services/updateService.ts`, `src-tauri/Cargo.toml`, and `src-tauri/tauri.conf.json`).
+
+**Completed Implementations:**
+✔ Created isolated `build-pc.yml` workflow building Windows desktop installers without mobile SDK dependencies.
+✔ Implemented Always-on-Top toggle with `Ctrl + T` global hotkey, glowing status indicator, and native Tauri window pin command.
+✔ Completely overhauled UFO easter egg: ground target spawns first, UFO enters 100% empty, tractor beam illuminates target, and smooth keyframe animation lifts target from ground into saucer.
+✔ Implemented feedback draft auto-saving to local storage with optional PokéMMO Trainer IGN integration.
+✔ Bumped and synchronized version `1.0.3` across all PC project files.
+
+Status:
+✅ Complete
+
+---
+
 "Great software isn't built in one giant leap. It's built one well-designed sprint at a time."
 
-— BerryMaster Development Journal  
+— BerryMaster Development Journal

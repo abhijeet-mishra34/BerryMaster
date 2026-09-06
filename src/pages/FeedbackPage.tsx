@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   MessageSquare,
   Bug,
@@ -19,6 +19,9 @@ import {
   submitFeedback,
   getFeedbackHistory,
   clearFeedbackHistory,
+  getFeedbackDraft,
+  saveFeedbackDraft,
+  clearFeedbackDraft,
   type FeedbackCategory,
   type FeedbackItem,
 } from "../services/feedbackService";
@@ -26,18 +29,35 @@ import { sendFeedbackToDiscord } from "../services/discordService";
 import { openExternalUrl } from "../utils/urlHelper";
 
 export default function FeedbackPage() {
-  const [category, setCategory] = useState<FeedbackCategory>("general");
-  const [rating, setRating] = useState<number>(5);
+  const initialDraft = getFeedbackDraft();
+  const [category, setCategory] = useState<FeedbackCategory>(initialDraft?.category || "general");
+  const [rating, setRating] = useState<number>(initialDraft?.rating || 5);
   const [hoverRating, setHoverRating] = useState<number>(0);
-  const [subject, setSubject] = useState("");
-  const [message, setMessage] = useState("");
-  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState(initialDraft?.subject || "");
+  const [message, setMessage] = useState(initialDraft?.message || "");
+  const [ign, setIgn] = useState(initialDraft?.ign || localStorage.getItem("berrymaster_saved_ign") || "");
+  const [email, setEmail] = useState(initialDraft?.email || "");
   const [submitted, setSubmitted] = useState(false);
   const [activeTab, setActiveTab] = useState<"submit" | "history">("submit");
   const [copiedLink, setCopiedLink] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [history, setHistory] = useState<FeedbackItem[]>(getFeedbackHistory());
+
+  // Auto-save draft as user types
+  useEffect(() => {
+    if (submitted) return;
+    if (subject.trim() || message.trim() || ign.trim() || email.trim()) {
+      saveFeedbackDraft({
+        category,
+        rating,
+        subject,
+        message,
+        ign: ign.trim() || undefined,
+        email: email.trim() || undefined,
+      });
+    }
+  }, [category, rating, subject, message, ign, email, submitted]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -51,6 +71,7 @@ export default function FeedbackPage() {
       rating,
       subject: subject.trim(),
       message: message.trim(),
+      ign: ign.trim() || undefined,
       email: email.trim() || undefined,
     });
 
@@ -61,11 +82,17 @@ export default function FeedbackPage() {
         rating,
         subject: subject.trim(),
         message: message.trim(),
+        ign: ign.trim() || undefined,
         email: email.trim() || undefined,
       });
     } catch (err) {
       console.warn("[BerryMaster] Discord webhook failed:", err);
     }
+
+    if (ign.trim()) {
+      localStorage.setItem("berrymaster_saved_ign", ign.trim());
+    }
+    clearFeedbackDraft();
 
     setIsSubmitting(false);
     setSubmitted(true);
@@ -390,6 +417,47 @@ export default function FeedbackPage() {
                       focus:ring-emerald-500/15
                       resize-none
                       leading-relaxed
+                    "
+                  />
+                </div>
+
+                {/* PokeMMO Trainer IGN (Optional) */}
+                <div className="space-y-2">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 light:text-slate-700">
+                    🎮 PokeMMO Trainer IGN{" "}
+                    <span className="text-slate-500 font-normal">
+                      (Optional — to recognize your character)
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    value={ign}
+                    onChange={(e) => setIgn(e.target.value)}
+                    placeholder="e.g. Red, AshKetchum, BerryMasterPro"
+                    className="
+                      w-full
+                      rounded-xl
+                      border
+                      border-slate-800
+                      light:border-slate-300
+                      bg-slate-950/80
+                      light:bg-white
+                      px-5
+                      py-4
+                      text-base
+                      font-semibold
+                      text-white
+                      light:text-slate-900
+                      placeholder:text-slate-500
+                      light:placeholder:text-slate-400
+                      outline-none
+                      transition-all
+                      duration-200
+                      focus:border-emerald-400/80
+                      focus:bg-slate-950
+                      light:focus:bg-white
+                      focus:ring-4
+                      focus:ring-emerald-500/15
                     "
                   />
                 </div>

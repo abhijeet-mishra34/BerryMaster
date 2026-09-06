@@ -402,6 +402,42 @@ html.light .card-shine::after {
   100% { transform: translateX(150%); }
 }
 
+/* UFO Abduction Ground-to-Saucer Liftoff & Return */
+@keyframes ufoAbductLift {
+  0% {
+    top: 85%;
+    transform: translateX(-50%) scale(1.15) rotate(0deg);
+    opacity: 1;
+  }
+  60% {
+    top: 35%;
+    transform: translateX(-50%) scale(1.0) rotate(180deg);
+    opacity: 0.95;
+  }
+  100% {
+    top: 5%;
+    transform: translateX(-50%) scale(0.35) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes ufoDropLower {
+  0% {
+    top: 5%;
+    transform: translateX(-50%) scale(0.35) rotate(0deg);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.95;
+    transform: translateX(-50%) scale(0.9) rotate(90deg);
+  }
+  100% {
+    top: 85%;
+    transform: translateX(-50%) scale(1.15) rotate(0deg);
+    opacity: 1;
+  }
+}
+
 .cyber-spin {
   animation: cyberSpinClockwise 24s linear infinite;
 }
