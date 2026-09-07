@@ -194,7 +194,11 @@ export default function Sidebar({
                     <NavLink
                       key={item.path}
                       to={item.path}
-                      onClick={onCloseMobile}
+                      onClick={() => {
+                        if (window.location.pathname === item.path) {
+                          onCloseMobile?.();
+                        }
+                      }}
                       className={({ isActive }) =>
                         `
                           group
