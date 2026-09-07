@@ -5,7 +5,6 @@ import {
   ChevronLeft,
   ChevronRight,
   RotateCcw,
-  Sparkles,
   Droplets,
   Sprout,
   X,
@@ -14,7 +13,6 @@ import type { Character } from "../../types/Character";
 import { berryDatabase } from "../../data/berryDatabase";
 import { farmingProfiles } from "../../data/farmingProfiles";
 import { calculateNextWaterTime } from "../../utils/wateringCalculator";
-import { formatDate } from "../../utils/date";
 
 export type TimerTarget = "planted" | "water";
 
