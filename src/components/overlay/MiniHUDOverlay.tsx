@@ -4,20 +4,14 @@ import {
   X,
   Droplets,
   Wheat,
-  Clock,
   Pin,
-  Sparkles,
-  AlertTriangle,
-  RefreshCw,
 } from "lucide-react";
 
 import { useCharacters } from "../../context/CharacterContext";
 import { useNow } from "../../hooks/useNow";
 import { formatRemainingTime } from "../../utils/countdown";
-import { formatDate } from "../../utils/date";
 import { getCharacterStatus } from "../../utils/characterStatus";
 import { berryDatabase } from "../../data/berryDatabase";
-import { soundService } from "../../services/soundService";
 
 type MiniHUDOverlayProps = {
   onClose: () => void;
