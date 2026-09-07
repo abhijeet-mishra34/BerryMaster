@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Settings, User, ChevronDown, MessageSquareHeart, Info, Menu } from "lucide-react";
+import { Settings, User, ChevronDown, MessageSquareHeart, Info, Menu, Pin, Layers } from "lucide-react";
 
 import NotificationBell from "../notifications/NotificationBell";
+
 
 const pageInfo: Record<
   string,
@@ -51,14 +52,40 @@ const pageInfo: Record<
 
 type HeaderProps = {
   onOpenMobileMenu?: () => void;
+  onToggleHUD?: () => void;
+  isHUDActive?: boolean;
 };
 
-export default function Header({ onOpenMobileMenu }: HeaderProps) {
+export default function Header({ onOpenMobileMenu, onToggleHUD, isHUDActive }: HeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isPinned, setIsPinned] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
+
+  async function togglePin() {
+    const next = !isPinned;
+    setIsPinned(next);
+    try {
+      const { getCurrentWindow } = await import("@tauri-apps/api/window");
+      await getCurrentWindow().setAlwaysOnTop(next);
+    } catch (err) {
+      console.log("[BerryMaster] Not running inside Tauri desktop or setAlwaysOnTop unavailable:", err);
+    }
+  }
+
+  // Ctrl + T to toggle Always-on-Top pin
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "t") {
+        e.preventDefault();
+        togglePin();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isPinned]);
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
@@ -78,6 +105,7 @@ export default function Header({ onOpenMobileMenu }: HeaderProps) {
   }, [isProfileMenuOpen]);
 
   const currentPage = pageInfo[location.pathname] ?? pageInfo["/"];
+
 
   return (
     <header
@@ -144,9 +172,64 @@ export default function Header({ onOpenMobileMenu }: HeaderProps) {
       </div>
 
       {/* Header Actions */}
-      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+      <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+        {/* PokéMMO HUD Mode Button */}
+        {onToggleHUD && (
+          <button
+            type="button"
+            onClick={onToggleHUD}
+            title="Open Compact PokéMMO HUD Overlay"
+            className={`flex h-9 w-9 items-center justify-center rounded-xl border transition-all cursor-pointer ${
+              isHUDActive
+                ? "border-emerald-400/60 bg-emerald-500/20 text-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.35)]"
+                : "border-slate-800 light:border-slate-200 bg-slate-900/60 light:bg-slate-100 text-slate-400 light:text-slate-600 hover:border-emerald-500/50 hover:bg-emerald-500/10 hover:text-emerald-400"
+            }`}
+            aria-label="Toggle PokéMMO HUD Mode"
+          >
+            <Layers className="h-4 w-4" />
+          </button>
+        )}
+
         {/* Notifications Bell */}
         <NotificationBell />
+
+        {/* Always on Top Pin Button (Desktop PokeMMO companion) */}
+        <button
+          type="button"
+          onClick={togglePin}
+          title={
+            isPinned
+              ? "Window Pinned Always on Top [Ctrl + T]"
+              : "Pin Window Always on Top (for PokeMMO) [Ctrl + T]"
+          }
+          className={`
+            relative
+            flex
+            h-9
+            w-9
+            items-center
+            justify-center
+            rounded-xl
+            border
+            transition-all
+            duration-200
+            cursor-pointer
+            ${
+              isPinned
+                ? "border-emerald-400/60 bg-emerald-500/20 text-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.35)]"
+                : "border-slate-800 light:border-slate-200 bg-slate-900/60 light:bg-slate-100 text-slate-400 light:text-slate-600 hover:border-slate-700 hover:text-emerald-400"
+            }
+          `}
+          aria-label="Toggle always on top"
+        >
+          <Pin className={`h-4 w-4 ${isPinned ? "fill-emerald-400 text-emerald-400 rotate-45" : ""}`} />
+          {isPinned && (
+            <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+            </span>
+          )}
+        </button>
 
         {/* Settings Button */}
         <button

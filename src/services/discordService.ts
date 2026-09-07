@@ -72,7 +72,7 @@ export async function sendFeedbackToDiscord(
   // Truncate fields to safe Discord limits
   const safeSubject = payload.subject.slice(0, 250);
   const safeMessage = payload.message.slice(0, 1900);
-  const safeIgn = payload.ign && payload.ign.trim() ? payload.ign.trim().slice(0, 50) : "*Not provided*";
+  const safeIgn = payload.ign && payload.ign.trim() ? payload.ign.trim().slice(0, 100) : "*Not provided*";
   const safeEmail = payload.email && payload.email.trim() ? payload.email.trim().slice(0, 200) : "*Not provided*";
 
   const body = {

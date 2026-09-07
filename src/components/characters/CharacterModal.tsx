@@ -62,10 +62,10 @@ export default function CharacterModal({
       maxWidth="2xl"
       onClose={handleClose}
     >
-      <div className="space-y-8 pt-3">
+      <div className="space-y-6 pt-1">
         {/* Character Name Input Field */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between pb-0.5">
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
             <label
               htmlFor="character-name"
               className="text-xs font-bold uppercase tracking-wider text-slate-300 light:text-slate-700 flex items-center gap-2.5"
@@ -80,30 +80,28 @@ export default function CharacterModal({
             </span>
           </div>
 
-          {/* Clean Flex-based Input Group (Zero Overlap Guaranteed) */}
+          {/* Clean Flex-based Input Group */}
           <div
             className="
               flex
               items-center
-              gap-4
-              rounded-xl
+              gap-3.5
+              rounded-2xl
               border
-              border-slate-800
+              border-white/15
               light:border-slate-300
-              bg-slate-950/80
-              light:bg-slate-50
-              px-5
-              py-3.5
+              bg-[#121422]
+              light:bg-white
+              px-4
+              py-3
               transition-all
               duration-200
               focus-within:border-emerald-400
-              focus-within:bg-slate-950
-              light:focus-within:bg-white
               focus-within:ring-4
               focus-within:ring-emerald-500/20
             "
           >
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400 light:text-emerald-600 border border-emerald-500/20">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-400 light:text-emerald-600 border border-emerald-500/25">
               <User className="h-5 w-5" />
             </div>
 
@@ -123,7 +121,7 @@ export default function CharacterModal({
               className="
                 w-full
                 bg-transparent
-                py-2
+                py-1
                 text-base
                 sm:text-lg
                 font-semibold
@@ -136,14 +134,14 @@ export default function CharacterModal({
             />
           </div>
 
-          <p className="text-xs text-slate-400 light:text-slate-600 leading-relaxed pl-1 pt-2">
+          <p className="text-xs text-slate-400 light:text-slate-600 leading-relaxed pl-1 pt-1">
             Give this character a recognizable name to easily distinguish them on your dashboard.
           </p>
         </div>
 
-        {/* Helpful Pro Tip Callout Box with generous margins */}
-        <div className="mt-8 flex items-start gap-4 rounded-xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-500/[0.05] light:bg-emerald-50/70 p-5 text-xs sm:text-sm text-slate-300 light:text-slate-700">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-400 light:text-emerald-600 border border-emerald-500/20 mt-0.5">
+        {/* Helpful Pro Tip Callout Box */}
+        <div className="flex items-start gap-3.5 rounded-2xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-500/[0.06] light:bg-emerald-50/70 p-4 sm:p-5 text-xs sm:text-sm text-slate-300 light:text-slate-700">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-400 light:text-emerald-600 border border-emerald-500/25 mt-0.5">
             <Sparkles className="h-5 w-5" />
           </div>
           <p className="leading-relaxed">
@@ -153,14 +151,14 @@ export default function CharacterModal({
 
         {/* Remove Planted Berry Section (if editing) */}
         {hasPlantedBerry && onRemoveBerry && (
-          <div className="rounded-xl border border-red-500/25 light:border-red-200 bg-red-500/[0.05] light:bg-red-50/60 p-5">
+          <div className="rounded-2xl border border-rose-500/25 light:border-red-200 bg-rose-500/[0.06] light:bg-red-50/60 p-5">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="flex items-start gap-3.5">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-red-500/30 bg-red-500/15 text-red-400">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-rose-500/30 bg-rose-500/15 text-rose-400">
                   <Trash2 className="h-5 w-5" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-red-300 light:text-red-700">
+                  <h4 className="text-sm font-bold text-rose-300 light:text-red-700">
                     Remove Planted Berry
                   </h4>
                   <p className="mt-0.5 text-xs text-slate-400 light:text-slate-600 leading-relaxed">
@@ -176,20 +174,20 @@ export default function CharacterModal({
                   shrink-0
                   rounded-xl
                   border
-                  border-red-500/30
-                  bg-red-500/20
+                  border-rose-500/30
+                  bg-rose-500/20
                   px-5
-                  py-3
+                  py-2.5
                   text-xs
                   font-bold
-                  text-red-300
+                  text-rose-300
                   light:text-red-700
                   transition-all
                   duration-200
-                  hover:bg-red-500
+                  hover:bg-rose-500
                   hover:text-white
                   hover:shadow-lg
-                  hover:shadow-red-500/25
+                  hover:shadow-rose-500/25
                   active:scale-95
                   cursor-pointer
                 "
@@ -201,21 +199,21 @@ export default function CharacterModal({
         )}
 
         {/* Action Buttons */}
-        <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3.5 pt-7 border-t border-slate-800 light:border-slate-200">
+        <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 pt-4">
           <button
             type="button"
             onClick={handleClose}
             className="
               w-full
               sm:w-auto
+              h-12
+              px-7
               rounded-xl
               border
               border-slate-700
               light:border-slate-300
               bg-slate-800/90
               light:bg-slate-100
-              px-7
-              py-4
               text-sm
               font-bold
               text-slate-200
@@ -243,37 +241,33 @@ export default function CharacterModal({
             className="
               w-full
               sm:w-auto
+              h-12
               inline-flex
               items-center
               justify-center
-              gap-3
+              gap-2.5
               rounded-xl
-              border
-              border-emerald-400/40
               bg-gradient-to-r
               from-emerald-500
               to-teal-500
-              px-9
-              py-4
+              px-8
               text-sm
-              font-bold
+              font-extrabold
               text-slate-950
-              shadow-xl
+              shadow-lg
               shadow-emerald-500/25
               transition-all
               duration-200
-              hover:-translate-y-0.5
               hover:from-emerald-400
               hover:to-teal-400
-              hover:shadow-emerald-500/45
-              active:translate-y-0
+              hover:shadow-emerald-500/40
+              active:scale-[0.98]
               disabled:opacity-50
               disabled:cursor-not-allowed
-              disabled:hover:translate-y-0
               cursor-pointer
             "
           >
-            <UserPlus className="h-5 w-5" />
+            <UserPlus className="h-4 w-4" />
             <span>{saveButtonText}</span>
           </button>
         </div>

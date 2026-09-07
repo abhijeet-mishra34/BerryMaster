@@ -2,12 +2,12 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 type ButtonProps = {
   children: ReactNode;
-  variant?: "primary" | "secondary" | "danger" | "info";
+  variant?: "primary" | "secondary" | "danger" | "info" | "purple" | "orange";
   size?: "sm" | "md" | "lg" | "xl";
   className?: string;
 } & Pick<
   ButtonHTMLAttributes<HTMLButtonElement>,
-  "onClick" | "type" | "disabled"
+  "onClick" | "type" | "disabled" | "title" | "aria-label"
 >;
 
 const variants = {
@@ -18,7 +18,11 @@ const variants = {
   danger:
     "border border-red-500/30 light:border-red-200 bg-red-500/10 light:bg-red-50 text-red-300 light:text-red-700 hover:bg-red-500 hover:text-white hover:shadow-lg hover:shadow-red-500/20 active:scale-[0.98]",
   info:
-    "border border-sky-500/30 light:border-sky-200 bg-sky-500/10 light:bg-sky-50 text-sky-300 light:text-sky-700 hover:bg-sky-500 hover:text-slate-950 light:hover:text-white hover:shadow-lg hover:shadow-sky-500/20 active:scale-[0.98]",
+    "border border-sky-500/30 light:border-sky-200 bg-sky-500/10 light:bg-sky-50 text-sky-300 light:text-sky-700 hover:bg-sky-500 hover:text-white hover:shadow-lg hover:shadow-sky-500/20 active:scale-[0.98]",
+  purple:
+    "border border-purple-500/30 light:border-purple-200 bg-purple-500/10 light:bg-purple-50 text-purple-300 light:text-purple-700 hover:bg-purple-600 hover:border-purple-500 hover:text-white hover:shadow-lg hover:shadow-purple-500/25 active:scale-[0.98]",
+  orange:
+    "border border-orange-500/30 light:border-orange-200 bg-orange-500/10 light:bg-orange-50 text-orange-300 light:text-orange-700 hover:bg-orange-500 hover:border-orange-400 hover:text-white hover:shadow-lg hover:shadow-orange-500/25 active:scale-[0.98]",
 };
 
 const sizes = {
@@ -36,12 +40,16 @@ export default function Button({
   variant = "primary",
   size = "md",
   className = "",
+  title,
+  "aria-label": ariaLabel,
 }: ButtonProps) {
   return (
     <button
       type={type}
       onClick={onClick}
       disabled={disabled}
+      title={title}
+      aria-label={ariaLabel}
       className={`
         inline-flex
         items-center
@@ -56,6 +64,10 @@ export default function Button({
         disabled:cursor-not-allowed
         disabled:opacity-50
         cursor-pointer
+        hover:-translate-y-1
+        hover:scale-[1.02]
+        active:translate-y-0
+        active:scale-[0.98]
         ${sizes[size]}
         ${variants[variant]}
         ${className}

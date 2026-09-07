@@ -18,7 +18,12 @@ import {
   Activity,
   Database,
   Smartphone,
+  Pin,
+  Volume2,
+  VolumeX,
+  Music,
 } from "lucide-react";
+import { soundService } from "../services/soundService";
 
 import { exportBerryMasterData } from "../utils/dataExport";
 import { importBerryMasterData } from "../utils/dataImport";
@@ -153,6 +158,24 @@ export default function SettingsPage() {
     const result = await checkForAppUpdates();
     setUpdateResult(result);
     setIsCheckingUpdate(false);
+  }
+
+  // Sound & Audio state
+  const [soundEnabled, setSoundEnabled] = useState(() => soundService.isEnabled());
+  const [soundVolume, setSoundVolume] = useState(() => soundService.getVolume());
+
+  function handleToggleSound() {
+    const next = !soundEnabled;
+    setSoundEnabled(next);
+    soundService.setEnabled(next);
+    if (next) {
+      soundService.playClickSound();
+    }
+  }
+
+  function handleVolumeChange(val: number) {
+    setSoundVolume(val);
+    soundService.setVolume(val);
   }
 
   // Import handlers
@@ -585,6 +608,28 @@ export default function SettingsPage() {
           </button>
         </div>
 
+        {/* Always-on-Top Pin Mode Explanation */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-white/[0.08] bg-slate-950/40 light:bg-slate-50/80 p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-800 light:bg-slate-200 text-sky-400 border border-slate-700/50">
+              <Pin className="h-5 w-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2.5">
+                <h3 className="text-sm font-bold text-white light:text-slate-900">
+                  Always-on-Top Floating Mode
+                </h3>
+                <span className="rounded-md bg-sky-500/10 px-2 py-0.5 text-[10px] font-bold text-sky-400 border border-sky-500/20">
+                  Ctrl + T
+                </span>
+              </div>
+              <p className="mt-1 text-xs text-slate-400 light:text-slate-500 leading-relaxed max-w-xl">
+                Floats BerryMaster over your PokéMMO game client so you never have to Alt-Tab while tending crops. Toggle with the Pin icon in the top header or press <kbd className="rounded bg-slate-800 px-1.5 py-0.5 font-mono text-[11px] text-slate-200 border border-slate-700">Ctrl + T</kbd>.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* 3 Event Filter Cards */}
         <div className="grid gap-4 sm:grid-cols-3">
           {/* Water Needed */}
@@ -797,7 +842,130 @@ export default function SettingsPage() {
       </section>
 
       {/* =====================================
-          3. Data Management & Backups
+          3. Sound & Audio Effects
+      ===================================== */}
+      <section
+        className="
+          theme-card
+          rounded-xl
+          p-4
+          sm:p-8
+          md:p-10
+          shadow-xl
+          backdrop-blur-xl
+          flex
+          flex-col
+          gap-7
+        "
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3.5">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400">
+              <Music className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-white light:text-slate-900">
+                Audio & Sound Chimes
+              </h2>
+              <p className="text-xs text-slate-400 light:text-slate-500">
+                Procedural audio chimes for watering, harvesting, and timer alarms.
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            role="switch"
+            aria-checked={soundEnabled}
+            onClick={handleToggleSound}
+            className={`
+              relative
+              h-7
+              w-13
+              shrink-0
+              cursor-pointer
+              rounded-full
+              p-1
+              transition-colors
+              duration-200
+              ${soundEnabled ? "bg-emerald-500" : "bg-slate-700"}
+            `}
+          >
+            <span
+              className={`
+                block
+                h-5
+                w-5
+                rounded-full
+                bg-white
+                shadow-md
+                transition-transform
+                duration-200
+                ${soundEnabled ? "translate-x-6" : "translate-x-0"}
+              `}
+            />
+          </button>
+        </div>
+
+        {/* Volume Slider & Previews */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-white/[0.08] bg-slate-950/40 light:bg-slate-50/80 p-6">
+          <div className="flex items-center gap-4 flex-1">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-800 text-emerald-400 border border-slate-700/50">
+              {soundEnabled ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5 text-slate-500" />}
+            </div>
+            <div className="flex-1 max-w-xs">
+              <div className="flex justify-between text-xs font-bold mb-1.5">
+                <span className="text-white light:text-slate-900">Chime Volume</span>
+                <span className="text-emerald-400">{Math.round(soundVolume * 100)}%</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                disabled={!soundEnabled}
+                value={soundVolume}
+                onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
+                className="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-400 disabled:opacity-40"
+              />
+            </div>
+          </div>
+
+          {/* Test Chime Buttons */}
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              disabled={!soundEnabled}
+              onClick={() => soundService.playWaterSound()}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-sky-500/30 bg-sky-500/10 hover:bg-sky-500/20 px-3 py-2 text-xs font-bold text-sky-300 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <Droplets className="h-3.5 w-3.5" />
+              <span>Water Chime</span>
+            </button>
+            <button
+              type="button"
+              disabled={!soundEnabled}
+              onClick={() => soundService.playHarvestSound()}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 px-3 py-2 text-xs font-bold text-amber-300 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <Sparkles className="h-3.5 w-3.5" />
+              <span>Harvest Fanfare</span>
+            </button>
+            <button
+              type="button"
+              disabled={!soundEnabled}
+              onClick={() => soundService.playAlertSound()}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 px-3 py-2 text-xs font-bold text-emerald-300 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <Bell className="h-3.5 w-3.5" />
+              <span>Alert Ping</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================
+          4. Data Management & Backups
       ===================================== */}
       <section
         className="

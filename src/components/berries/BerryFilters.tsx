@@ -27,13 +27,18 @@ export default function BerryFilters({
   return (
     <div
       className="
-        theme-card
-        space-y-6
-        rounded-xl
-        p-6
-        sm:p-7
-        shadow-sm
-        backdrop-blur-md
+        rounded-2xl
+        border
+        border-white/10
+        light:border-slate-200
+        bg-[#151829]/70
+        light:bg-white
+        space-y-5
+        p-5
+        sm:p-6
+        shadow-lg
+        shadow-black/10
+        backdrop-blur-xl
       "
     >
       <BerrySearch
@@ -47,7 +52,5 @@ export default function BerryFilters({
         onCategoryChange={onCategoryChange}
       />
     </div>
-
-
-);
+  );
 }

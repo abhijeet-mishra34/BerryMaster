@@ -268,14 +268,14 @@ export default function PlantBerrySelector({
             lg:h-[580px]
             flex-col
             overflow-hidden
-            rounded-2xl
+            rounded-3xl
             border
-            border-slate-800
+            border-white/10
             light:border-slate-200
-            bg-slate-900/60
+            bg-[#151829]/70
             light:bg-white
             shadow-xl
-            shadow-black/10
+            shadow-black/20
             backdrop-blur-xl
             lg:col-span-2
           `}
@@ -285,9 +285,9 @@ export default function PlantBerrySelector({
             className="
               shrink-0
               border-b
-              border-slate-800
+              border-white/10
               light:border-slate-200
-              bg-slate-900/40
+              bg-white/[0.02]
               light:bg-slate-50
               px-4
               sm:px-5

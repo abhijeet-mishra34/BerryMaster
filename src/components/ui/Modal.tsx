@@ -86,40 +86,51 @@ export default function Modal({
         aria-modal="true"
         aria-labelledby="modal-title"
         className={`
-          theme-modal
           relative
           w-full
           ${maxWidthClasses[maxWidth]}
           max-h-[92vh]
           overflow-y-auto
-          rounded-2xl
-          p-4
+          rounded-3xl
+          border
+          border-white/[0.12]
+          light:border-slate-200
+          bg-gradient-to-b
+          from-[#25283c]
+          via-[#1a1d2e]
+          to-[#121422]
+          light:from-white
+          light:via-slate-50
+          light:to-slate-100
+          p-6
           sm:p-8
-          md:p-10
+          md:p-9
+          shadow-[0_25px_60px_rgba(0,0,0,0.85)]
+          light:shadow-2xl
           backdrop-blur-2xl
         `}
         onClick={(event) => event.stopPropagation()}
       >
-        {/* Top Gradient Accent Glow Line */}
-        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-500 opacity-90" />
+        {/* Subtle Top Inset Rim Highlight */}
+        <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-white/20 light:via-slate-300 to-transparent pointer-events-none" />
 
         {/* Modal Header */}
-        <div className="mb-6 sm:mb-8 flex items-start justify-between gap-3 sm:gap-4">
-          <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+        <div className="mb-6 sm:mb-8 flex items-start justify-between gap-4">
+          <div className="flex items-center gap-3.5 sm:gap-4 min-w-0">
             {icon && (
-              <div className="flex h-11 w-11 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 font-bold shadow-[0_0_20px_-4px_rgba(16,185,129,0.35)]">
+              <div className="flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-2xl border border-emerald-400/30 bg-emerald-500/15 text-emerald-400 font-bold shadow-[0_0_20px_-4px_rgba(52,211,153,0.3)]">
                 {icon}
               </div>
             )}
             <div className="min-w-0">
               <h2
                 id="modal-title"
-                className="text-lg sm:text-2xl md:text-3xl font-extrabold tracking-tight text-white light:text-slate-900 truncate sm:whitespace-normal"
+                className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-white light:text-slate-900 truncate sm:whitespace-normal"
               >
                 {title}
               </h2>
               {subtitle && (
-                <p className="mt-1 text-xs sm:text-sm text-slate-400 light:text-slate-600 leading-relaxed max-w-lg">
+                <p className="mt-1.5 text-xs sm:text-sm text-slate-400 light:text-slate-500 leading-relaxed max-w-xl">
                   {subtitle}
                 </p>
               )}
@@ -140,17 +151,17 @@ export default function Modal({
               justify-center
               rounded-xl
               border
-              border-slate-800
+              border-white/10
               light:border-slate-200
-              bg-slate-800/40
+              bg-white/[0.05]
               light:bg-slate-100
               text-slate-400
               light:text-slate-600
               transition-all
               duration-200
-              hover:border-slate-700
+              hover:border-white/20
               light:hover:border-slate-300
-              hover:bg-slate-800
+              hover:bg-white/10
               light:hover:bg-slate-200
               hover:text-white
               light:hover:text-slate-900

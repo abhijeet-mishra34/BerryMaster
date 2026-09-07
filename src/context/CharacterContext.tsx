@@ -18,6 +18,7 @@ import { harvestBerryOnCharacter } from "../services/harvestService";
 
 import { useActivities } from "./ActivityContext";
 import { useToast } from "./ToastContext";
+import { soundService } from "../services/soundService";
 
 type CharacterContextType = {
   characters: Character[];
@@ -51,6 +52,11 @@ type CharacterContextType = {
   waterAllReady: () => number;
 
   harvestAllReady: () => number;
+
+  updateCharacterTimers: (
+    characterId: string,
+    timers: Partial<Pick<Character, "plantedAt" | "lastWateredAt" | "nextWaterAt" | "harvestAt" | "wiltAt">>
+  ) => void;
 };
 
 const CharacterContext = createContext<
@@ -305,6 +311,19 @@ export function CharacterProvider({
       "watered",
       `Watered ${character.name}'s ${berry.name}`
     );
+
+    // Only play water chime when all character plots that needed water are now watered
+    const now = new Date();
+    const remainingNeedWater = characters.some((c) => {
+      if (c.id === characterId) return false;
+      if (!c.plantedBerryId || !c.nextWaterAt) return false;
+      const harvestAt = c.harvestAt ? new Date(c.harvestAt) : null;
+      return now >= new Date(c.nextWaterAt) && (!harvestAt || now < harvestAt);
+    });
+
+    if (!remainingNeedWater) {
+      soundService.playWaterSound();
+    }
   }
 
   /**
@@ -358,11 +377,25 @@ export function CharacterProvider({
         "wilted",
         `Removed wilted ${berry.name} from ${character.name}`
       );
+      soundService.playAlertSound();
     } else {
       addActivity(
         "harvested",
         `Harvested ${berry.name} from ${character.name}`
       );
+
+      // Only play harvest chime when all character plots ready to harvest have been harvested
+      const remainingHarvestReady = characters.some((c) => {
+        if (c.id === characterId) return false;
+        if (!c.plantedBerryId || !c.harvestAt) return false;
+        const harvestAt = new Date(c.harvestAt).getTime();
+        const wiltAt = c.wiltAt ? new Date(c.wiltAt).getTime() : Infinity;
+        return now >= harvestAt && now < wiltAt;
+      });
+
+      if (!remainingHarvestReady) {
+        soundService.playHarvestSound();
+      }
     }
   }
 
@@ -400,6 +433,7 @@ export function CharacterProvider({
       );
     });
 
+    soundService.playWaterSound();
     return charactersToWater.length;
   }
 
@@ -432,11 +466,36 @@ export function CharacterProvider({
       const berry = berryDatabase.find((b) => b.id === c.plantedBerryId);
       addActivity(
         "harvested",
-        `Harvested ${berry?.name ?? "berries"} from ${c.name}`
+        `Harvested ${berry?.name ?? "berry"} from ${c.name}`
       );
     });
 
+    soundService.playHarvestSound();
     return charactersToHarvest.length;
+  }
+
+  /**
+   * Updates specific timers for a character (e.g. from the Date/Time picker).
+   */
+  function updateCharacterTimers(
+    characterId: string,
+    timers: Partial<Pick<Character, "plantedAt" | "lastWateredAt" | "nextWaterAt" | "harvestAt" | "wiltAt">>
+  ) {
+    const character = characters.find((c) => c.id === characterId);
+    if (!character) return;
+
+    setCharacters((current) =>
+      current.map((c) =>
+        c.id === characterId
+          ? { ...c, ...timers }
+          : c
+      )
+    );
+
+    addActivity(
+      "watered",
+      `Adjusted farming timers for ${character.name}`
+    );
   }
 
   return (
@@ -452,6 +511,7 @@ export function CharacterProvider({
         harvestBerry,
         waterAllReady,
         harvestAllReady,
+        updateCharacterTimers,
       }}
     >
       {children}

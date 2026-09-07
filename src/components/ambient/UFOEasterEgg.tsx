@@ -18,7 +18,7 @@ const ABDUCTION_TARGETS = [
 ];
 
 const ALIEN_MESSAGES = [
-  "BEEP BOOP! BORROWING THIS COW FOR MOO-SEARCH! 🐄🛸",
+  "BEEP BOOP! BORROWING THIS COW FOR MOO-RESEARCH! 🐄🛸",
   "ANALYZING POKEMMO HAY NUTRITION! 🌾",
   "WHO IS A GOOD FARM DOGGO? THE ALIENS AGREE! 🐕",
   "UPGRADING YOUR FARMING TOOLS WITH ALIEN TECH! 🧰⚡",
@@ -30,12 +30,12 @@ const ALIEN_MESSAGES = [
 
 type UFOState =
   | "idle" // Off-screen, waiting
-  | "flyIn" // Flying to random pickup position
-  | "beamDown" // Hovering, tractor beam turns on
-  | "abducting" // Object lifts from ground into UFO
-  | "cruisingOff" // UFO flies across and off the screen
-  | "away" // Completely off-screen in space for 5-8 seconds
-  | "returnFlyIn" // Flying back into the screen to a NEW random drop zone
+  | "flyIn" // Flying from random off-screen edge to pickup position
+  | "beamDown" // Hovering over ground target, tractor beam turns on
+  | "abducting" // Target lifts from ground smoothly up into UFO saucer
+  | "cruisingOff" // Target safely absorbed, UFO flies across and off screen
+  | "away" // Completely off-screen in space orbit
+  | "returnFlyIn" // Flying back into the screen from a DIFFERENT random off-screen edge
   | "returning" // Lowering object down at the new random drop zone
   | "landed" // Object lands safely at new spot, beam powers down
   | "warpOut"; // UFO warps into hyperspace
@@ -45,18 +45,79 @@ interface Vec2 {
   y: number;
 }
 
+interface TrajectoryPoint {
+  x: string;
+  y: string;
+  angle: number;
+}
+
+// Distance from UFO center to ground target (matches tractor beam top: 32px + 180px in-beam)
+const GROUND_OFFSET_PX = 212;
+
+function getRandomOffscreenPoint(excludeSide?: "left" | "right" | "top"): TrajectoryPoint {
+  const sides: Array<"top" | "right" | "left" | "diagonal"> = ["top", "right", "left", "diagonal"];
+  const validSides = excludeSide ? sides.filter((s) => s !== excludeSide) : sides;
+  const pickedSide = validSides[Math.floor(Math.random() * validSides.length)];
+
+  switch (pickedSide) {
+    case "top":
+      return {
+        x: `${Math.round(15 + Math.random() * 70)}%`,
+        y: "-20%",
+        angle: Math.round((Math.random() - 0.5) * 24),
+      };
+    case "right":
+      return {
+        x: "120%",
+        y: `${Math.round(8 + Math.random() * 55)}%`,
+        angle: -16 - Math.round(Math.random() * 8),
+      };
+    case "left":
+      return {
+        x: "-20%",
+        y: `${Math.round(8 + Math.random() * 55)}%`,
+        angle: 16 + Math.round(Math.random() * 8),
+      };
+    case "diagonal":
+    default:
+      if (Math.random() > 0.5) {
+        return { x: "115%", y: "-15%", angle: -20 };
+      } else {
+        return { x: "-15%", y: "-15%", angle: 20 };
+      }
+  }
+}
+
+function getRandomExitPoint(currentX: number): TrajectoryPoint {
+  if (currentX < 50) {
+    return {
+      x: "125%",
+      y: `${Math.round(5 + Math.random() * 45)}%`,
+      angle: -15,
+    };
+  } else {
+    return {
+      x: "-25%",
+      y: `${Math.round(5 + Math.random() * 45)}%`,
+      angle: 15,
+    };
+  }
+}
+
 export default function UFOEasterEgg() {
   const [state, setState] = useState<UFOState>("idle");
   const [target, setTarget] = useState(ABDUCTION_TARGETS[0]);
   const [speech, setSpeech] = useState<string | null>(null);
   const [clickCount, setClickCount] = useState(0);
 
-  // Position coordinates (% of viewport)
-  const [currentPos, setCurrentPos] = useState<Vec2>({ x: 45, y: 30 });
+  // Dynamic UFO animation coordinates & styling
+  const [ufoPos, setUfoPos] = useState<{ x: string; y: string }>({ x: "50%", y: "30%" });
+  const [ufoTransform, setUfoTransform] = useState("translate(-50%, -50%) rotate(0deg)");
+  const [ufoTransition, setUfoTransition] = useState("all 1.6s cubic-bezier(0.16, 1, 0.3, 1)");
 
-  // Entry & Exit directions for variety
-  const [entrySide, setEntrySide] = useState<"top-right" | "top-left">("top-right");
-  const [exitSide, setExitSide] = useState<"left" | "right">("left");
+  // Target positions on ground (% of viewport)
+  const [pickupPos, setPickupPos] = useState<Vec2>({ x: 45, y: 30 });
+  const [dropPos, setDropPos] = useState<Vec2>({ x: 45, y: 30 });
 
   const activeRef = useRef(false);
 
@@ -64,85 +125,134 @@ export default function UFOEasterEgg() {
     if (activeRef.current) return;
     activeRef.current = true;
 
-    // Pick random target from farm items (haybale, cow, sheep, goat, dog, tools)
+    // Pick random target from farm items
     const randomTarget =
       ABDUCTION_TARGETS[Math.floor(Math.random() * ABDUCTION_TARGETS.length)];
     setTarget(randomTarget);
     setSpeech(null);
 
-    // Randomize initial pickup position (15% to 80% screen width, 15% to 45% screen height)
+    // 1. Randomize pickup position widely across the farm screen (15% to 80% width, 18% to 55% height)
     const pX = Math.round(15 + Math.random() * 65);
-    const pY = Math.round(15 + Math.random() * 32);
+    const pY = Math.round(18 + Math.random() * 37);
     const pickup: Vec2 = { x: pX, y: pY };
 
-    // Randomize completely distinct drop position for the return
+    // 2. Randomize completely distinct drop position for the return
     let dX = Math.round(15 + Math.random() * 65);
-    const dY = Math.round(15 + Math.random() * 32);
-    // Ensure drop position is noticeably different from pickup
-    if (Math.abs(dX - pX) < 20) {
-      dX = pX > 50 ? pX - 30 : pX + 30;
+    let dY = Math.round(18 + Math.random() * 37);
+    if (Math.abs(dX - pX) < 22 && Math.abs(dY - pY) < 18) {
+      dX = pX > 50 ? pX - 32 : pX + 32;
+      dY = pY > 35 ? pY - 20 : pY + 20;
     }
     const drop: Vec2 = { x: dX, y: dY };
 
-    setCurrentPos(pickup);
+    setPickupPos(pickup);
+    setDropPos(drop);
 
-    // Randomize flight angles
-    const entry = Math.random() > 0.5 ? "top-right" : "top-left";
-    const exit = entry === "top-right" ? "left" : "right";
-    setEntrySide(entry);
-    setExitSide(exit);
+    // 3. Random appearing entry location (from any random edge of the screen!)
+    const spawnEntry = getRandomOffscreenPoint();
 
-    // Step 1: Fly In to random pickup spot (1.6s)
+    // Place UFO at initial offscreen position without transition
+    setUfoPos({ x: spawnEntry.x, y: spawnEntry.y });
+    setUfoTransform(`translate(-50%, -50%) rotate(${spawnEntry.angle}deg)`);
+    setUfoTransition("none");
     setState("flyIn");
 
-    // Step 2: Hover & Beam Down (0.8s)
-    setTimeout(() => {
+    // 4. In next tick, fly smoothly into pickup location!
+    const tFly = setTimeout(() => {
+      setUfoPos({ x: `${pickup.x}%`, y: `${pickup.y}%` });
+      setUfoTransform("translate(-50%, -50%) rotate(0deg)");
+      setUfoTransition("all 1.6s cubic-bezier(0.16, 1, 0.3, 1)");
+    }, 50);
+
+    // 5. Arrived over target -> Beam Down (0.8s)
+    const tBeam = setTimeout(() => {
       setState("beamDown");
 
-      // Step 3: Farm object rises from ground into UFO (1.4s)
-      setTimeout(() => {
+      // 6. Abduct: Farm object rises seamlessly into UFO saucer (1.3s)
+      const tAbduct = setTimeout(() => {
         setState("abducting");
 
-        // Step 4: UFO absorbs item, beam shuts off, flies across and OFF screen (1.4s)
-        setTimeout(() => {
+        // 7. Object absorbed -> Beam shuts off, UFO cruises off screen to random exit point (1.6s)
+        const tCruise = setTimeout(() => {
           setState("cruisingOff");
+          const exitPoint = getRandomExitPoint(pickup.x);
+          setUfoPos({ x: exitPoint.x, y: exitPoint.y });
+          setUfoTransform(`translate(-50%, -50%) rotate(${exitPoint.angle}deg) scale(0.9)`);
+          setUfoTransition("all 1.6s cubic-bezier(0.4, 0, 0.2, 1)");
 
-          // Step 5: UFO stays away off-screen in orbit (5-7 seconds)
-          setTimeout(() => {
+          // 8. UFO stays away in deep orbit researching (4.5 seconds)
+          const tAway = setTimeout(() => {
             setState("away");
 
-            setTimeout(() => {
-              // Update target position to the NEW random drop location!
-              setCurrentPos(drop);
+            const tOrbit = setTimeout(() => {
+              // 9. Pick a completely NEW, random re-entry point for coming back!
+              const returnSpawn = getRandomOffscreenPoint(exitPoint.x === "125%" ? "right" : "left");
 
-              // Step 6: UFO returns from deep sky to the NEW random drop coordinate
+              // Place UFO at new return spawn offscreen instantly
+              setUfoPos({ x: returnSpawn.x, y: returnSpawn.y });
+              setUfoTransform(`translate(-50%, -50%) rotate(${returnSpawn.angle}deg)`);
+              setUfoTransition("none");
               setState("returnFlyIn");
 
-              // Step 7: Beam turns back on & lowers object to this new location
-              setTimeout(() => {
-                setState("returning");
+              // 10. Swoop into the new random drop location!
+              const tReturnFly = setTimeout(() => {
+                setUfoPos({ x: `${drop.x}%`, y: `${drop.y}%` });
+                setUfoTransform("translate(-50%, -50%) rotate(0deg)");
+                setUfoTransition("all 1.7s cubic-bezier(0.16, 1, 0.3, 1)");
 
-                // Step 8: Object lands safely on the new ground spot with sparkles
-                setTimeout(() => {
-                  setState("landed");
+                // 11. Lower object smoothly back down to the new ground coordinate (1.4s)
+                const tLower = setTimeout(() => {
+                  setState("returning");
 
-                  // Step 9: UFO warps out into hyperspace
-                  setTimeout(() => {
-                    setState("warpOut");
+                  // 12. Object lands safely on new ground spot with sparkles (1.4s)
+                  const tLanded = setTimeout(() => {
+                    setState("landed");
 
-                    // Step 10: Reset to idle
-                    setTimeout(() => {
-                      setState("idle");
-                      activeRef.current = false;
-                    }, 1200);
-                  }, 1800);
-                }, 1400);
-              }, 1600);
-            }, 6000); // Orbiting research time
-          }, 1800);
-        }, 1400);
+                    // 13. UFO warps out into hyperspace! (1.0s)
+                    const tWarp = setTimeout(() => {
+                      setState("warpOut");
+                      const warpExit = getRandomOffscreenPoint();
+                      setUfoPos({ x: warpExit.x, y: warpExit.y });
+                      setUfoTransform(`translate(-50%, -50%) scale(0.15) rotate(${warpExit.angle * 2}deg)`);
+                      setUfoTransition("all 0.9s cubic-bezier(0.55, 0.055, 0.675, 0.19)");
+
+                      // 14. Reset to idle
+                      const tReset = setTimeout(() => {
+                        setState("idle");
+                        activeRef.current = false;
+                      }, 1000);
+
+                      return () => clearTimeout(tReset);
+                    }, 1400);
+
+                    return () => clearTimeout(tWarp);
+                  }, 1400);
+
+                  return () => clearTimeout(tLanded);
+                }, 1750);
+
+                return () => clearTimeout(tLower);
+              }, 50);
+
+              return () => clearTimeout(tReturnFly);
+            }, 4500); // Orbiting research time
+
+            return () => clearTimeout(tOrbit);
+          }, 1650);
+
+          return () => clearTimeout(tAway);
+        }, 1300);
+
+        return () => clearTimeout(tCruise);
       }, 800);
-    }, 1600);
+
+      return () => clearTimeout(tAbduct);
+    }, 1700);
+
+    return () => {
+      clearTimeout(tFly);
+      clearTimeout(tBeam);
+    };
   }, []);
 
   // Organic randomized visitation schedule (first visit in 15-30s, subsequent visits every 45-90s)
@@ -186,38 +296,6 @@ export default function UFOEasterEgg() {
 
   if (state === "idle" || state === "away") return null;
 
-  // Determine UFO Position & Trajectory Animation
-  let ufoLeft = `${currentPos.x}%`;
-  let ufoTop = `${currentPos.y}%`;
-  let transform = "translate(-50%, -50%)";
-  let transitionDuration = "0.8s";
-
-  if (state === "flyIn") {
-    // Coming from off-screen top
-    ufoLeft = entrySide === "top-right" ? "115%" : "-15%";
-    ufoTop = "6%";
-    transform = entrySide === "top-right" ? "translate(0, 0) rotate(-15deg)" : "translate(0, 0) rotate(15deg)";
-    transitionDuration = "1.6s";
-  } else if (state === "cruisingOff") {
-    // Flying completely across and OFF screen
-    ufoLeft = exitSide === "left" ? "-25%" : "125%";
-    ufoTop = "12%";
-    transform = exitSide === "left" ? "translate(0, 0) rotate(18deg) scale(0.9)" : "translate(0, 0) rotate(-18deg) scale(0.9)";
-    transitionDuration = "1.8s";
-  } else if (state === "returnFlyIn") {
-    // Returning from sky into NEW random drop location
-    ufoLeft = `${currentPos.x}%`;
-    ufoTop = `${currentPos.y}%`;
-    transform = "translate(-50%, -50%) rotate(0deg)";
-    transitionDuration = "1.6s";
-  } else if (state === "warpOut") {
-    // Accelerating into hyperspace
-    ufoLeft = entrySide === "top-right" ? "-25%" : "125%";
-    ufoTop = "-25%";
-    transform = "translate(0, 0) scale(0.2) rotate(-35deg)";
-    transitionDuration = "0.9s";
-  }
-
   const isBeaming =
     state === "beamDown" ||
     state === "abducting" ||
@@ -225,15 +303,57 @@ export default function UFOEasterEgg() {
 
   return (
     <div className="fixed inset-0 pointer-events-none z-40 overflow-hidden select-none">
-      {/* UFO SAUCER & TRACTOR BEAM CONTAINER */}
+      {/* ================================================================= */}
+      {/* 1. GROUND TARGET: Sits on ground BEFORE and AS the UFO arrives    */}
+      {/* ================================================================= */}
+      {(state === "flyIn" || state === "beamDown") && (
+        <div
+          className="absolute pointer-events-none flex flex-col items-center -translate-x-1/2 -translate-y-1/2 z-30"
+          style={{
+            left: `${pickupPos.x}%`,
+            top: `calc(${pickupPos.y}% + ${GROUND_OFFSET_PX}px)`,
+            transition: "opacity 0.2s ease",
+          }}
+        >
+          <span className="text-3xl leading-none select-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)] animate-pulse">
+            {target.icon}
+          </span>
+          <span className="h-2 w-8 mt-1 rounded-full bg-black/40 blur-xs border border-emerald-500/15" />
+        </div>
+      )}
+
+      {/* ================================================================= */}
+      {/* 2. LANDED TARGET: Bounces cheerfully after safe return drop-off   */}
+      {/* ================================================================= */}
+      {state === "landed" && (
+        <div
+          className="absolute pointer-events-none flex flex-col items-center -translate-x-1/2 -translate-y-1/2 z-30 animate-bounce"
+          style={{
+            left: `${dropPos.x}%`,
+            top: `calc(${dropPos.y}% + ${GROUND_OFFSET_PX}px)`,
+          }}
+        >
+          <span className="text-3xl leading-none select-none drop-shadow-[0_0_16px_rgba(16,185,129,0.95)]">
+            {target.icon}
+          </span>
+          <span className="text-xs mt-0.5 text-emerald-400 font-bold drop-shadow-[0_0_8px_#34d399] animate-ping">
+            ✨
+          </span>
+          <span className="h-2 w-8 mt-0.5 rounded-full bg-black/40 blur-xs border border-emerald-500/20" />
+        </div>
+      )}
+
+      {/* ================================================================= */}
+      {/* 3. UFO SAUCER & TRACTOR BEAM CONTAINER                           */}
+      {/* ================================================================= */}
       <div
         className="absolute pointer-events-auto cursor-pointer"
         onClick={handleUFOClick}
         style={{
-          left: ufoLeft,
-          top: ufoTop,
-          transform,
-          transition: `all ${transitionDuration} cubic-bezier(0.25, 1, 0.5, 1)`,
+          left: ufoPos.x,
+          top: ufoPos.y,
+          transform: ufoTransform,
+          transition: ufoTransition,
         }}
       >
         {/* Alien Speech Bubble */}
@@ -247,11 +367,12 @@ export default function UFOEasterEgg() {
         {/* TRACTOR BEAM */}
         {isBeaming && (
           <div
-            className="absolute left-1/2 top-12 -translate-x-1/2 w-48 h-56 pointer-events-none transition-opacity duration-300 opacity-90"
+            className="absolute left-1/2 top-[32px] -translate-x-1/2 w-48 pointer-events-none transition-opacity duration-300 opacity-90"
+            style={{ height: "190px" }}
           >
             {/* Soft Translucent Light Beam */}
             <svg
-              viewBox="0 0 160 200"
+              viewBox="0 0 160 190"
               className="w-full h-full drop-shadow-[0_0_24px_rgba(16,185,129,0.7)]"
             >
               <defs>
@@ -268,13 +389,13 @@ export default function UFOEasterEgg() {
                 </linearGradient>
               </defs>
               <polygon
-                points="70,0 90,0 155,200 5,200"
+                points="70,0 90,0 155,190 5,190"
                 fill="url(#cleanTractorGradient)"
               />
               {/* Laser energy rings */}
               <ellipse
                 cx="80"
-                cy="100"
+                cy="95"
                 rx="35"
                 ry="8"
                 fill="none"
@@ -285,7 +406,7 @@ export default function UFOEasterEgg() {
               />
               <ellipse
                 cx="80"
-                cy="160"
+                cy="155"
                 rx="55"
                 ry="12"
                 fill="none"
@@ -296,6 +417,7 @@ export default function UFOEasterEgg() {
               />
             </svg>
 
+<<<<<<< HEAD
             {/* Farm Item in Transit inside Tractor Beam */}
             {(state === "beamDown" || state === "abducting" || state === "returning") && (
               <div
@@ -309,6 +431,14 @@ export default function UFOEasterEgg() {
                     state === "abducting" || state === "returning"
                       ? "all 1.3s cubic-bezier(0.4, 0, 0.2, 1)"
                       : "none",
+=======
+            {/* Farm Item In-Flight Animation: Lifting Up seamlessly into Saucer */}
+            {state === "abducting" && (
+              <div
+                className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl leading-none select-none drop-shadow-[0_0_16px_rgba(255,255,255,0.95)]"
+                style={{
+                  animation: "ufoAbductLift 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards",
+>>>>>>> pc
                 }}
               >
                 <span className="inline-flex items-center justify-center leading-none text-center">
@@ -316,9 +446,8 @@ export default function UFOEasterEgg() {
                 </span>
               </div>
             )}
-          </div>
-        )}
 
+<<<<<<< HEAD
         {/* Landed item bounce at new random drop coordinate */}
         {state === "landed" && (
           <div
@@ -332,6 +461,19 @@ export default function UFOEasterEgg() {
             <span className="text-xs -mt-2 text-emerald-400 font-bold drop-shadow-[0_0_8px_#34d399] animate-ping">
               ✨
             </span>
+=======
+            {/* Farm Item In-Flight Animation: Lowering Down seamlessly from Saucer to Ground */}
+            {state === "returning" && (
+              <div
+                className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl leading-none select-none drop-shadow-[0_0_16px_rgba(255,255,255,0.95)]"
+                style={{
+                  animation: "ufoDropLower 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards",
+                }}
+              >
+                {target.icon}
+              </div>
+            )}
+>>>>>>> pc
           </div>
         )}
 
