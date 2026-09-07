@@ -9,6 +9,7 @@ import FarmingBackground from "../background/FarmingBackground";
 import ToastContainer from "../ui/Toast";
 import FeedbackPromptBot from "../feedback/FeedbackPromptBot";
 import MiniHUDOverlay from "../overlay/MiniHUDOverlay";
+import { useAndroidBackHandler } from "../../hooks/useAndroidBackHandler";
 
 type AppLayoutProps = {
   children: React.ReactNode;
@@ -18,6 +19,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isHUDMode, setIsHUDMode] = useState(false);
+
+  // Close mobile drawer on Android back gesture
+  useAndroidBackHandler(mobileMenuOpen, () => setMobileMenuOpen(false));
+  // Exit HUD mode on Android back gesture
+  useAndroidBackHandler(isHUDMode, () => setIsHUDMode(false));
+
   const location = useLocation();
 
   const mainRef = useRef<HTMLElement>(null);

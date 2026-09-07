@@ -130,6 +130,19 @@ body {
 }
 
 /* ── Android / Mobile Safe Area & Touch Optimization ── */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button, a, input, select, textarea, [role="button"] {
+  touch-action: manipulation;
+}
+
+button, [role="button"], .theme-card {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 @supports (padding: env(safe-area-inset-top)) {
   :root {
     --safe-area-top: env(safe-area-inset-top);

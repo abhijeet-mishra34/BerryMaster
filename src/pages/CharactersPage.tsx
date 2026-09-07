@@ -544,7 +544,7 @@ export default function CharactersPage() {
           </div>
 
           {/* Action Buttons: Bulk actions + Add Character */}
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 w-full lg:w-auto">
             {characters.length > 0 && (
               <button
                 type="button"
@@ -552,15 +552,20 @@ export default function CharactersPage() {
                 disabled={countNeedWater === 0}
                 title={countNeedWater > 0 ? `Water all ${countNeedWater} plots needing water` : "No plots need watering"}
                 className={`
+                  flex-1
+                  sm:flex-initial
                   inline-flex
                   items-center
                   justify-center
                   gap-2
                   rounded-xl
                   border
-                  px-4
-                  py-3.5
-                  text-sm
+                  px-3.5
+                  sm:px-4
+                  py-2.5
+                  sm:py-3.5
+                  text-xs
+                  sm:text-sm
                   font-bold
                   transition-all
                   duration-200
@@ -571,7 +576,7 @@ export default function CharactersPage() {
                   }
                 `}
               >
-                <Droplets className="h-4.5 w-4.5" />
+                <Droplets className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
                 <span>Water All ({countNeedWater})</span>
               </button>
             )}
@@ -583,15 +588,20 @@ export default function CharactersPage() {
                 disabled={countHarvestReady === 0}
                 title={countHarvestReady > 0 ? `Harvest all ${countHarvestReady} ripe crops` : "No crops ready to harvest"}
                 className={`
+                  flex-1
+                  sm:flex-initial
                   inline-flex
                   items-center
                   justify-center
                   gap-2
                   rounded-xl
                   border
-                  px-4
-                  py-3.5
-                  text-sm
+                  px-3.5
+                  sm:px-4
+                  py-2.5
+                  sm:py-3.5
+                  text-xs
+                  sm:text-sm
                   font-bold
                   transition-all
                   duration-200
@@ -602,7 +612,7 @@ export default function CharactersPage() {
                   }
                 `}
               >
-                <Wheat className="h-4.5 w-4.5" />
+                <Wheat className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
                 <span>Harvest All ({countHarvestReady})</span>
               </button>
             )}
@@ -611,6 +621,8 @@ export default function CharactersPage() {
               type="button"
               onClick={openAddModal}
               className="
+                w-full
+                sm:w-auto
                 group
                 relative
                 inline-flex
@@ -623,27 +635,24 @@ export default function CharactersPage() {
                 bg-gradient-to-r
                 from-emerald-500
                 to-teal-500
-                px-5
+                px-4
                 sm:px-6
-                py-3
+                py-2.5
                 sm:py-3.5
-                text-sm
-                font-bold
+                text-xs
+                sm:text-sm
+                font-extrabold
                 text-slate-950
                 shadow-lg
-                shadow-emerald-500/25
+                shadow-emerald-500/20
                 transition-all
                 duration-200
                 hover:-translate-y-1
-                hover:from-emerald-400
-                hover:to-teal-400
-                hover:shadow-xl
-                hover:shadow-emerald-500/45
-                active:translate-y-0
+                hover:shadow-emerald-500/35
+                hover:brightness-110
                 active:scale-95
+                active:translate-y-0
                 cursor-pointer
-                w-full
-                sm:w-auto
               "
             >
               <UserPlus className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />

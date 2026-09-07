@@ -13,6 +13,7 @@ on:
     tags:
       - 'android-v*'
       - 'v*-android'
+      - 'v*'
 
 permissions:
   contents: write
@@ -196,8 +197,7 @@ jobs:
         with:
           tag_name: ${{ github.event.inputs.release_tag || github.ref_name }}
           files: |
-            dist-apk/BerryMaster-universal.apk
-            dist-apk/BerryMaster-arm64-v8a.apk
+            dist-apk/*.apk
           draft: false
           prerelease: false
         env:

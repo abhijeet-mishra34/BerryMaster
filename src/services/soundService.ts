@@ -1,3 +1,5 @@
+import { hapticService } from "./hapticService";
+
 // Procedural Web Audio API sound generator for BerryMaster
 // No external MP3 files required — works offline, in Tauri, and in browsers.
 
@@ -42,6 +44,7 @@ class SoundService {
    * Fresh, ascending crystal droplet chime for watering berries
    */
   public playWaterSound(): void {
+    hapticService.water();
     if (!this.isEnabled()) return;
     const ctx = this.getAudioContext();
     if (!ctx) return;
@@ -74,6 +77,7 @@ class SoundService {
    * Rewarding major triad fanfare chime for harvesting ripe berries
    */
   public playHarvestSound(): void {
+    hapticService.harvest();
     if (!this.isEnabled()) return;
     const ctx = this.getAudioContext();
     if (!ctx) return;
@@ -106,6 +110,7 @@ class SoundService {
    * Gentle dual-ping notification chime for timers or needs attention
    */
   public playAlertSound(): void {
+    hapticService.alert();
     if (!this.isEnabled()) return;
     const ctx = this.getAudioContext();
     if (!ctx) return;
@@ -137,6 +142,7 @@ class SoundService {
    * Subtle tactile glass tap for button feedback
    */
   public playClickSound(): void {
+    hapticService.tap();
     if (!this.isEnabled()) return;
     const ctx = this.getAudioContext();
     if (!ctx) return;
@@ -160,6 +166,29 @@ class SoundService {
     osc.start(now);
     osc.stop(now + 0.05);
   }
+
+  /**
+   * Warm up and resume AudioContext upon first touch gesture on mobile WebViews
+   */
+  public unlockAudio(): void {
+    const ctx = this.getAudioContext();
+    if (ctx && ctx.state === "suspended") {
+      ctx.resume().catch(() => {});
+    }
+  }
 }
 
 export const soundService = new SoundService();
+
+// Auto-warmup Web Audio on first user interaction for Android WebView
+if (typeof window !== "undefined") {
+  const handleFirstInteraction = () => {
+    soundService.unlockAudio();
+    window.removeEventListener("touchstart", handleFirstInteraction);
+    window.removeEventListener("pointerdown", handleFirstInteraction);
+    window.removeEventListener("click", handleFirstInteraction);
+  };
+  window.addEventListener("touchstart", handleFirstInteraction, { passive: true, once: true });
+  window.addEventListener("pointerdown", handleFirstInteraction, { passive: true, once: true });
+  window.addEventListener("click", handleFirstInteraction, { passive: true, once: true });
+}

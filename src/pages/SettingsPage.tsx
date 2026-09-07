@@ -22,8 +22,11 @@ import {
   Volume2,
   VolumeX,
   Music,
+  Vibrate,
+  Eye,
 } from "lucide-react";
 import { soundService } from "../services/soundService";
+import { hapticService } from "../services/hapticService";
 
 import { exportBerryMasterData } from "../utils/dataExport";
 import { importBerryMasterData } from "../utils/dataImport";
@@ -177,6 +180,57 @@ export default function SettingsPage() {
     setSoundVolume(val);
     soundService.setVolume(val);
   }
+
+  // Haptic Feedback state
+  const [hapticEnabled, setHapticEnabled] = useState(() => hapticService.isEnabled());
+
+  function handleToggleHaptic() {
+    const next = !hapticEnabled;
+    setHapticEnabled(next);
+    hapticService.setEnabled(next);
+    if (next) {
+      hapticService.success();
+    }
+  }
+
+  // Screen Wake Lock state (Keep screen awake on mobile)
+  const [wakeLockActive, setWakeLockActive] = useState(false);
+  const wakeLockSentinelRef = useRef<{ release: () => Promise<void> } | null>(null);
+
+  async function handleToggleWakeLock() {
+    if (wakeLockActive) {
+      if (wakeLockSentinelRef.current) {
+        await wakeLockSentinelRef.current.release().catch(() => {});
+        wakeLockSentinelRef.current = null;
+      }
+      setWakeLockActive(false);
+      addToast("Screen timeout restored to system defaults", "info");
+    } else {
+      try {
+        if (typeof navigator !== "undefined" && "wakeLock" in navigator) {
+          const sentinel = await (navigator as unknown as { wakeLock: { request: (type: string) => Promise<{ release: () => Promise<void>; addEventListener: (event: string, callback: () => void) => void }> } }).wakeLock.request("screen");
+          wakeLockSentinelRef.current = sentinel;
+          sentinel.addEventListener("release", () => {
+            setWakeLockActive(false);
+          });
+          setWakeLockActive(true);
+          addToast("💡 Screen will stay awake while farming!", "success");
+        } else {
+          addToast("Screen Wake Lock is not supported on this device", "warning");
+        }
+      } catch {
+        addToast("Could not acquire screen wake lock", "error");
+      }
+    }
+  }
+
+  useEffect(() => {
+    return () => {
+      if (wakeLockSentinelRef.current) {
+        wakeLockSentinelRef.current.release().catch(() => {});
+      }
+    };
+  }, []);
 
   // Import handlers
   function handleImportClick() {
@@ -961,6 +1015,136 @@ export default function SettingsPage() {
               <span>Alert Ping</span>
             </button>
           </div>
+        </div>
+
+        {/* Haptic Vibration Feedback Row */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-white/[0.08] bg-slate-950/40 light:bg-slate-50/80 p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-800 text-emerald-400 border border-slate-700/50">
+              <Vibrate className="h-5 w-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2.5">
+                <h3 className="text-sm font-bold text-white light:text-slate-900">
+                  Haptic Vibration Feedback
+                </h3>
+                <span className="rounded-md bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/20">
+                  Mobile / Android
+                </span>
+              </div>
+              <p className="mt-1 text-xs text-slate-400 light:text-slate-500 leading-relaxed max-w-xl">
+                Crisp tactile vibration pulses on Android when watering, harvesting, clicking buttons, and completing farming rounds.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              disabled={!hapticEnabled}
+              onClick={() => hapticService.harvest()}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 px-3 py-1.5 text-xs font-bold text-emerald-300 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <span>Test Pulse</span>
+            </button>
+
+            <button
+              type="button"
+              role="switch"
+              aria-checked={hapticEnabled}
+              onClick={handleToggleHaptic}
+              className={`
+                relative
+                h-7
+                w-13
+                shrink-0
+                cursor-pointer
+                rounded-full
+                p-1
+                transition-colors
+                duration-200
+                focus:outline-none
+                focus:ring-2
+                focus:ring-emerald-500/40
+                ${hapticEnabled ? "bg-emerald-500" : "bg-slate-700"}
+              `}
+            >
+              <span
+                className={`
+                  block
+                  h-5
+                  w-5
+                  rounded-full
+                  bg-white
+                  shadow-md
+                  transition-transform
+                  duration-200
+                  ${hapticEnabled ? "translate-x-6" : "translate-x-0"}
+                `}
+              />
+            </button>
+          </div>
+        </div>
+
+        {/* Keep Screen Awake Row */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-white/[0.08] bg-slate-950/40 light:bg-slate-50/80 p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-800 text-emerald-400 border border-slate-700/50">
+              <Eye className="h-5 w-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2.5">
+                <h3 className="text-sm font-bold text-white light:text-slate-900">
+                  Keep Screen Awake
+                </h3>
+                <span className="rounded-md bg-sky-500/10 px-2 py-0.5 text-[10px] font-bold text-sky-400 border border-sky-500/20">
+                  Screen Lock
+                </span>
+                {wakeLockActive && (
+                  <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
+                )}
+              </div>
+              <p className="mt-1 text-xs text-slate-400 light:text-slate-500 leading-relaxed max-w-xl">
+                Prevents your mobile or tablet screen from sleeping or timing out while farming in PokéMMO.
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            role="switch"
+            aria-checked={wakeLockActive}
+            onClick={handleToggleWakeLock}
+            className={`
+              relative
+              h-7
+              w-13
+              shrink-0
+              cursor-pointer
+              rounded-full
+              p-1
+              transition-colors
+              duration-200
+              focus:outline-none
+              focus:ring-2
+              focus:ring-emerald-500/40
+              ${wakeLockActive ? "bg-emerald-500" : "bg-slate-700"}
+            `}
+          >
+            <span
+              className={`
+                block
+                h-5
+                w-5
+                rounded-full
+                bg-white
+                shadow-md
+                transition-transform
+                duration-200
+                ${wakeLockActive ? "translate-x-6" : "translate-x-0"}
+              `}
+            />
+          </button>
         </div>
       </section>
 
