@@ -14,8 +14,8 @@ export const specialBerries: Berry[] = [
     growthTime: 67,
     harvestWindow: 8,
 
-    minYield: 7,
-    maxYield: 10,
+    minYield: 11,
+    maxYield: 13,
 
     recipes: [
       {
@@ -46,8 +46,8 @@ export const specialBerries: Berry[] = [
     growthTime: 67,
     harvestWindow: 8,
 
-    minYield: 7,
-    maxYield: 10,
+    minYield: 11,
+    maxYield: 13,
 
     recipes: [
       {
@@ -78,8 +78,8 @@ export const specialBerries: Berry[] = [
     growthTime: 67,
     harvestWindow: 8,
 
-    minYield: 7,
-    maxYield: 10,
+    minYield: 11,
+    maxYield: 13,
 
     recipes: [
       {
@@ -110,8 +110,8 @@ export const specialBerries: Berry[] = [
     growthTime: 67,
     harvestWindow: 8,
 
-    minYield: 7,
-    maxYield: 10,
+    minYield: 11,
+    maxYield: 13,
 
     recipes: [
       {
@@ -142,8 +142,8 @@ export const specialBerries: Berry[] = [
     growthTime: 67,
     harvestWindow: 8,
 
-    minYield: 7,
-    maxYield: 10,
+    minYield: 11,
+    maxYield: 13,
 
     recipes: [
       {
@@ -174,8 +174,8 @@ export const specialBerries: Berry[] = [
     growthTime: 67,
     harvestWindow: 8,
 
-    minYield: 7,
-    maxYield: 10,
+    minYield: 11,
+    maxYield: 13,
 
     recipes: [
       {
@@ -206,8 +206,8 @@ export const specialBerries: Berry[] = [
     growthTime: 67,
     harvestWindow: 8,
 
-    minYield: 7,
-    maxYield: 10,
+    minYield: 11,
+    maxYield: 13,
 
     recipes: [
       {
