@@ -17,6 +17,8 @@ export function useAndroidBackHandler(isOpen: boolean, onBack: () => void) {
       return;
     }
 
+    const initialPath = window.location.pathname;
+
     // Push a dummy history state to trap the back gesture
     window.history.pushState({ berryMasterModal: true }, "");
     pushedRef.current = true;
@@ -32,14 +34,19 @@ export function useAndroidBackHandler(isOpen: boolean, onBack: () => void) {
 
     return () => {
       window.removeEventListener("popstate", handlePopState);
-      // If modal closed via UI click rather than back button, clean up the dummy history state
-      if (pushedRef.current) {
+      // If modal/drawer closed via UI click rather than back button, clean up the dummy history state
+      // ONLY if the user remained on the exact same route.
+      // If the user navigated to a new route (e.g. clicking a link in the mobile drawer), DO NOT call
+      // history.back() as that would revert the navigation and keep the user on the previous page!
+      if (pushedRef.current && window.location.pathname === initialPath) {
         pushedRef.current = false;
         try {
           window.history.back();
         } catch {
           // Ignore history pop errors
         }
+      } else {
+        pushedRef.current = false;
       }
     };
   }, [isOpen]);
