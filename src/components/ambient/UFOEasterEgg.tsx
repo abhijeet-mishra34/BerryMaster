@@ -417,28 +417,12 @@ export default function UFOEasterEgg() {
               />
             </svg>
 
-<<<<<<< HEAD
-            {/* Farm Item in Transit inside Tractor Beam */}
-            {(state === "beamDown" || state === "abducting" || state === "returning") && (
-              <div
-                className="absolute left-1/2 w-16 h-16 flex items-center justify-center text-3xl select-none drop-shadow-[0_0_16px_rgba(255,255,255,0.95)] pointer-events-none"
-                style={{
-                  top: state === "abducting" ? "8%" : "72%",
-                  transform: `translateX(-50%) scale(${
-                    state === "abducting" ? 0.85 : 1.15
-                  }) rotate(${clickCount * 180}deg)`,
-                  transition:
-                    state === "abducting" || state === "returning"
-                      ? "all 1.3s cubic-bezier(0.4, 0, 0.2, 1)"
-                      : "none",
-=======
             {/* Farm Item In-Flight Animation: Lifting Up seamlessly into Saucer */}
             {state === "abducting" && (
               <div
                 className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl leading-none select-none drop-shadow-[0_0_16px_rgba(255,255,255,0.95)]"
                 style={{
                   animation: "ufoAbductLift 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards",
->>>>>>> pc
                 }}
               >
                 <span className="inline-flex items-center justify-center leading-none text-center">
@@ -447,21 +431,6 @@ export default function UFOEasterEgg() {
               </div>
             )}
 
-<<<<<<< HEAD
-        {/* Landed item bounce at new random drop coordinate */}
-        {state === "landed" && (
-          <div
-            className="absolute left-1/2 -translate-x-1/2 top-[210px] pointer-events-none flex flex-col items-center justify-center animate-bounce"
-          >
-            <div className="w-16 h-16 flex items-center justify-center">
-              <span className="inline-flex items-center justify-center text-3xl leading-none drop-shadow-[0_0_12px_rgba(16,185,129,0.9)]">
-                {target.icon}
-              </span>
-            </div>
-            <span className="text-xs -mt-2 text-emerald-400 font-bold drop-shadow-[0_0_8px_#34d399] animate-ping">
-              ✨
-            </span>
-=======
             {/* Farm Item In-Flight Animation: Lowering Down seamlessly from Saucer to Ground */}
             {state === "returning" && (
               <div
@@ -470,10 +439,11 @@ export default function UFOEasterEgg() {
                   animation: "ufoDropLower 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards",
                 }}
               >
-                {target.icon}
+                <span className="inline-flex items-center justify-center leading-none text-center">
+                  {target.icon}
+                </span>
               </div>
             )}
->>>>>>> pc
           </div>
         )}
 
