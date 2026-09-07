@@ -125,7 +125,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
               key={location.pathname}
               className="app-main min-h-full p-3.5 sm:p-6 md:p-8 md:pb-8 page-enter"
               style={{
-                paddingBottom: "calc(6.5rem + env(safe-area-inset-bottom, 0px))",
+                paddingBottom: "calc(9.5rem + env(safe-area-inset-bottom, 0px))",
               }}
             >
               {children}
@@ -158,8 +158,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
           md:hidden
         "
         style={{
-          paddingBottom: "env(safe-area-inset-bottom, 0px)",
-          height: "calc(4rem + env(safe-area-inset-bottom, 0px))",
+          paddingBottom: "max(env(safe-area-inset-bottom, 0px), 8px)",
+          height: "calc(4.25rem + max(env(safe-area-inset-bottom, 0px), 8px))",
         }}
       >
         <NavLink

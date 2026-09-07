@@ -43,7 +43,12 @@ export default function FeedbackPromptBot() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 max-w-sm animate-bounce-subtle">
+    <div
+      className="fixed z-40 max-w-sm animate-bounce-subtle bottom-20 right-4 sm:bottom-6 sm:right-6"
+      style={{
+        bottom: "calc(5.25rem + max(env(safe-area-inset-bottom, 0px), 8px))",
+      }}
+    >
       <div className="theme-card relative overflow-hidden rounded-2xl border border-emerald-400/30 bg-slate-900/90 p-4 shadow-2xl shadow-emerald-500/15 backdrop-blur-2xl">
         {/* Glow Accent */}
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-400 via-teal-400 to-sky-400" />
