@@ -62,11 +62,31 @@ jobs:
           path: dist-windows/*.exe
           retention-days: 14
 
+      - name: Determine Unified Release Tag
+        id: version_tag
+        if: startsWith(github.ref, 'refs/tags/pc-')
+        shell: pwsh
+        run: |
+          $ref = "${{ github.ref_name }}"
+          $unified = $ref -replace '^pc-', ''
+          Write-Output "unified=$unified" >> $env:GITHUB_OUTPUT
+
       - name: Publish Windows Installer to GitHub Release
         if: startsWith(github.ref, 'refs/tags/') || github.event.inputs.release_tag != ''
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.event.inputs.release_tag || github.ref_name }}
+          files: dist-windows/BerryMaster-Windows-Setup.exe
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish Windows Installer to Unified Release
+        if: startsWith(github.ref, 'refs/tags/pc-')
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version_tag.outputs.unified }}
           files: dist-windows/BerryMaster-Windows-Setup.exe
           draft: false
           prerelease: false
