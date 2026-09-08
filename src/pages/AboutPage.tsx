@@ -16,7 +16,7 @@ import {
   ChevronUp,
 } from "lucide-react";
 import berryMasterIcon from "../assets/brand/berrymaster-icon.png";
-import { CURRENT_APP_VERSION } from "../services/updateService";
+import { CURRENT_APP_VERSION, DOWNLOAD_LINKS } from "../services/updateService";
 import { openExternalUrl } from "../utils/urlHelper";
 
 export default function AboutPage() {
@@ -376,11 +376,7 @@ export default function AboutPage() {
         <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-white/[0.08] light:border-slate-200">
           <button
             type="button"
-            onClick={() =>
-              openExternalUrl(
-                "https://github.com/abhijeet-mishra34/BerryMaster/releases/latest/download/BerryMaster-Windows-Setup.exe"
-              )
-            }
+            onClick={() => openExternalUrl(DOWNLOAD_LINKS.pcSetup)}
             className="
               inline-flex
               items-center
@@ -410,11 +406,7 @@ export default function AboutPage() {
 
           <button
             type="button"
-            onClick={() =>
-              openExternalUrl(
-                "https://github.com/abhijeet-mishra34/BerryMaster/releases/latest/download/BerryMaster-universal.apk"
-              )
-            }
+            onClick={() => openExternalUrl(DOWNLOAD_LINKS.androidApk)}
             className="
               inline-flex
               items-center
@@ -444,11 +436,7 @@ export default function AboutPage() {
 
           <button
             type="button"
-            onClick={() =>
-              openExternalUrl(
-                "https://github.com/abhijeet-mishra34/BerryMaster/releases"
-              )
-            }
+            onClick={() => openExternalUrl(DOWNLOAD_LINKS.allReleases)}
             className="
               inline-flex
               items-center
