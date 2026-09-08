@@ -22,6 +22,12 @@ export interface UpdateCheckResult {
 
 export const CURRENT_APP_VERSION = "1.0.4";
 
+export const DOWNLOAD_LINKS = {
+  pcSetup: `https://github.com/abhijeet-mishra34/BerryMaster/releases/download/pc-v${CURRENT_APP_VERSION}/BerryMaster-Windows-Setup.exe`,
+  androidApk: `https://github.com/abhijeet-mishra34/BerryMaster/releases/download/v${CURRENT_APP_VERSION}/BerryMaster-universal.apk`,
+  allReleases: "https://github.com/abhijeet-mishra34/BerryMaster/releases",
+};
+
 const GITHUB_REPO = "abhijeet-mishra34/BerryMaster";
 
 export async function checkForAppUpdates(): Promise<UpdateCheckResult> {

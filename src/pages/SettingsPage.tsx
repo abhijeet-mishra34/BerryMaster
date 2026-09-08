@@ -34,6 +34,7 @@ import { resetBerryMaster } from "../utils/resetApp";
 import {
   checkForAppUpdates,
   CURRENT_APP_VERSION,
+  DOWNLOAD_LINKS,
   type UpdateCheckResult,
 } from "../services/updateService";
 import { openExternalUrl } from "../utils/urlHelper";
@@ -1162,11 +1163,7 @@ export default function SettingsPage() {
 
             <button
               type="button"
-              onClick={() =>
-                openExternalUrl(
-                  "https://github.com/abhijeet-mishra34/BerryMaster/releases/latest/download/BerryMaster-Windows-Setup.exe"
-                )
-              }
+              onClick={() => openExternalUrl(DOWNLOAD_LINKS.pcSetup)}
               className="
                 mt-5
                 flex
@@ -1217,11 +1214,7 @@ export default function SettingsPage() {
 
             <button
               type="button"
-              onClick={() =>
-                openExternalUrl(
-                  "https://github.com/abhijeet-mishra34/BerryMaster/releases/latest/download/BerryMaster-universal.apk"
-                )
-              }
+              onClick={() => openExternalUrl(DOWNLOAD_LINKS.androidApk)}
               className="
                 mt-5
                 flex
@@ -1269,11 +1262,7 @@ export default function SettingsPage() {
           <div className="flex items-center gap-3 flex-wrap shrink-0">
             <button
               type="button"
-              onClick={() =>
-                openExternalUrl(
-                  "https://github.com/abhijeet-mishra34/BerryMaster/releases"
-                )
-              }
+              onClick={() => openExternalUrl(DOWNLOAD_LINKS.allReleases)}
               className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-700 light:border-slate-300 bg-slate-800/80 light:bg-white px-6 py-3.5 text-sm font-bold text-slate-200 light:text-slate-800 hover:bg-slate-700 light:hover:bg-slate-100 hover:text-white light:hover:text-slate-900 transition-all cursor-pointer active:scale-95 shadow-xs"
             >
               <ExternalLink className="h-4.5 w-4.5" />
