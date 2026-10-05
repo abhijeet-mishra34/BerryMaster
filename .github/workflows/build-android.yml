@@ -91,6 +91,8 @@ jobs:
 
       - name: Build Android APK (Release)
         run: npx tauri android build --apk
+        env:
+          VITE_DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
 
       - name: Setup Signing Keystore
         run: |

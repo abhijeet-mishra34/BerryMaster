@@ -24,6 +24,8 @@ import {
   Music,
   Vibrate,
   Eye,
+  User,
+  Globe,
 } from "lucide-react";
 import { soundService } from "../services/soundService";
 import { hapticService } from "../services/hapticService";
@@ -33,6 +35,7 @@ import { importBerryMasterData } from "../utils/dataImport";
 import { useActivities } from "../context/ActivityContext";
 import { useSettings } from "../context/SettingsContext";
 import { useToast } from "../context/ToastContext";
+import { useTranslation } from "../context/LanguageContext";
 import { resetBerryMaster } from "../utils/resetApp";
 import {
   checkForAppUpdates,
@@ -68,9 +71,13 @@ export default function SettingsPage() {
     setNotifyOnHarvest,
     notifyOnWilt,
     setNotifyOnWilt,
+    enableUfoEasterEgg,
+    setEnableUfoEasterEgg,
   } = useSettings();
 
   const { addToast } = useToast();
+  const { language, setLanguage, supportedLanguages, t } = useTranslation();
+
 
   const [exportMessage, setExportMessage] = useState<string | null>(null);
   const [exportError, setExportError] = useState(false);
@@ -80,6 +87,17 @@ export default function SettingsPage() {
   const [importError, setImportError] = useState(false);
   const [isClearActivitiesOpen, setIsClearActivitiesOpen] = useState(false);
   const [isResetOpen, setIsResetOpen] = useState(false);
+
+  const [ignInput, setIgnInput] = useState(
+    () => localStorage.getItem("berrymaster_saved_ign") || "CrimsonAbhi"
+  );
+
+  function handleSaveIgn() {
+    const trimmed = ignInput.trim();
+    localStorage.setItem("berrymaster_saved_ign", trimmed);
+    window.dispatchEvent(new Event("storage"));
+    addToast(trimmed ? `Trainer IGN updated to "${trimmed}"!` : "Trainer IGN cleared.", "success");
+  }
 
   async function handleExportData() {
     setIsExporting(true);
@@ -329,6 +347,206 @@ export default function SettingsPage() {
       </div>
 
       {/* =====================================
+          Trainer Profile (PokeMMO IGN)
+      ===================================== */}
+      <section
+        className="
+          theme-card
+          rounded-xl
+          p-4
+          sm:p-8
+          md:p-10
+          shadow-xl
+          backdrop-blur-xl
+          flex
+          flex-col
+          gap-5
+        "
+      >
+        <div className="flex items-center gap-3.5">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400">
+            <User className="h-5 w-5" />
+          </div>
+          <div>
+            <h2 className="text-lg font-bold text-white light:text-slate-900">
+              Trainer Profile (PokeMMO IGN)
+            </h2>
+            <p className="text-xs text-slate-400 light:text-slate-500">
+              Set your in-game name to personalize your PokeMMO farmer companion and profile dropdown.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+          <div className="relative flex-1">
+            <input
+              type="text"
+              value={ignInput}
+              onChange={(e) => setIgnInput(e.target.value)}
+              placeholder="e.g. CrimsonAbhi"
+              maxLength={20}
+              className="
+                w-full
+                rounded-xl
+                border
+                border-slate-800
+                light:border-slate-300
+                bg-slate-950/80
+                light:bg-white
+                px-4
+                py-3
+                text-sm
+                font-semibold
+                text-white
+                light:text-slate-900
+                placeholder:text-slate-500
+                light:placeholder:text-slate-400
+                outline-none
+                focus:border-emerald-400
+                focus:ring-2
+                focus:ring-emerald-500/20
+                transition-all
+              "
+            />
+          </div>
+          <button
+            type="button"
+            onClick={handleSaveIgn}
+            className="
+              inline-flex
+              items-center
+              justify-center
+              gap-2
+              rounded-xl
+              border
+              border-emerald-400/40
+              bg-emerald-500
+              px-6
+              py-3
+              text-xs
+              font-bold
+              text-slate-950
+              hover:bg-emerald-400
+              transition-all
+              shadow-sm
+              active:scale-95
+              cursor-pointer
+              shrink-0
+            "
+          >
+            <Check className="h-4 w-4" />
+            <span>{t("settings.saveIgn")}</span>
+          </button>
+        </div>
+      </section>
+
+      {/* =====================================
+          Language & Localization (语言与区域设置)
+      ===================================== */}
+      <section
+        className="
+          theme-card
+          rounded-xl
+          p-4
+          sm:p-8
+          md:p-10
+          shadow-xl
+          backdrop-blur-xl
+          flex
+          flex-col
+          gap-5
+        "
+      >
+        <div className="flex items-center gap-3.5">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400">
+            <Globe className="h-5 w-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2.5">
+              <h2 className="text-lg font-bold text-white light:text-slate-900">
+                {t("settings.languageTitle")}
+              </h2>
+              <span className="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
+                10 Languages
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 light:text-slate-500">
+              {t("settings.languageSubtitle")}
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-2">
+          {supportedLanguages.map((lang) => {
+            const isSelected = lang.code === language;
+            return (
+              <button
+                key={lang.code}
+                type="button"
+                onClick={() => {
+                  setLanguage(lang.code);
+                  addToast(
+                    lang.code === "zh-CN"
+                      ? "语言已切换为简体中文"
+                      : lang.code === "zh-TW"
+                      ? "語言已切換為繁體中文"
+                      : `Language changed to ${lang.name}`,
+                    "success"
+                  );
+                }}
+                className={`
+                  group
+                  relative
+                  flex
+                  items-center
+                  justify-between
+                  rounded-xl
+                  border
+                  p-3.5
+                  text-left
+                  transition-all
+                  duration-200
+                  hover:scale-[1.01]
+                  active:scale-[0.99]
+                  cursor-pointer
+                  ${
+                    isSelected
+                      ? "border-emerald-500/60 bg-emerald-500/15 text-white ring-2 ring-emerald-500/30 shadow-lg shadow-emerald-950/20"
+                      : "border-white/[0.08] light:border-slate-200 bg-slate-950/40 light:bg-slate-50/80 text-slate-300 light:text-slate-700 hover:border-white/[0.15] light:hover:border-slate-300"
+                  }
+                `}
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className="text-2xl leading-none select-none">{lang.flag}</span>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-sm font-bold truncate">
+                      {lang.name}
+                    </span>
+                    <span className="text-[11px] text-slate-400 light:text-slate-500 truncate">
+                      {lang.englishName}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                  {lang.badge && (
+                    <span className="rounded-md bg-emerald-500/20 px-1.5 py-0.5 text-[9px] font-bold text-emerald-400 border border-emerald-500/30">
+                      {lang.badge}
+                    </span>
+                  )}
+                  {isSelected && (
+                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-500 text-slate-950 shadow-xs">
+                      <Check className="h-3.5 w-3.5 stroke-[3]" />
+                    </span>
+                  )}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* =====================================
           1. Appearance & Theme
       ===================================== */}
       <section
@@ -503,27 +721,79 @@ export default function SettingsPage() {
               </span>
             </div>
             <div>
-              <h4 className="text-sm font-bold text-white light:text-slate-900">
-                UFO Abduction Easter Egg
-              </h4>
+              <div className="flex items-center gap-2.5">
+                <h4 className="text-sm font-bold text-white light:text-slate-900">
+                  UFO Abduction Easter Egg
+                </h4>
+                <span
+                  className={`rounded-md px-2 py-0.5 text-[10px] font-bold border transition-colors ${
+                    enableUfoEasterEgg
+                      ? "border-teal-500/30 bg-teal-500/15 text-teal-400"
+                      : "border-slate-700 bg-slate-800/80 text-slate-400"
+                  }`}
+                >
+                  {enableUfoEasterEgg ? "Active" : "Disabled"}
+                </span>
+              </div>
               <p className="text-xs text-slate-400 light:text-slate-500">
                 A curious UFO hovers by occasionally to borrow a specimen and return it safely.
               </p>
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={() =>
-              window.dispatchEvent(new CustomEvent("berrymaster:summon-ufo"))
-            }
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-teal-500/30 bg-teal-500/20 px-4 py-2.5 text-xs font-bold text-teal-300 hover:bg-teal-500 hover:text-slate-950 light:bg-teal-600 light:text-white transition-all cursor-pointer shadow-xs shrink-0"
-          >
-            <span className="inline-flex items-center justify-center text-sm leading-none -translate-y-0.5">
-              🛸
-            </span>
-            <span className="leading-none">Summon UFO Now</span>
-          </button>
+          <div className="flex items-center gap-3 self-end sm:self-auto shrink-0">
+            {enableUfoEasterEgg && (
+              <button
+                type="button"
+                onClick={() =>
+                  window.dispatchEvent(new CustomEvent("berrymaster:summon-ufo"))
+                }
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-teal-500/30 bg-teal-500/20 px-3.5 py-2 text-xs font-bold text-teal-300 hover:bg-teal-500 hover:text-slate-950 light:bg-teal-600 light:text-white transition-all cursor-pointer shadow-xs active:scale-95"
+              >
+                <span className="inline-flex items-center justify-center text-sm leading-none -translate-y-0.5">
+                  🛸
+                </span>
+                <span className="leading-none">Summon Now</span>
+              </button>
+            )}
+
+            <button
+              type="button"
+              role="switch"
+              aria-checked={enableUfoEasterEgg}
+              aria-label="Toggle UFO Easter Egg"
+              onClick={() => setEnableUfoEasterEgg(!enableUfoEasterEgg)}
+              className={`
+                relative
+                h-7
+                w-13
+                shrink-0
+                cursor-pointer
+                rounded-full
+                p-1
+                transition-colors
+                duration-200
+                focus:outline-none
+                focus:ring-2
+                focus:ring-teal-500/40
+                ${enableUfoEasterEgg ? "bg-teal-500" : "bg-slate-700"}
+              `}
+            >
+              <span
+                className={`
+                  block
+                  h-5
+                  w-5
+                  rounded-full
+                  bg-white
+                  shadow-md
+                  transition-transform
+                  duration-200
+                  ${enableUfoEasterEgg ? "translate-x-6" : "translate-x-0"}
+                `}
+              />
+            </button>
+          </div>
         </div>
       </section>
 
@@ -1456,6 +1726,8 @@ export default function SettingsPage() {
               <ExternalLink className="h-4.5 w-4.5" />
               <span>All Releases</span>
             </button>
+
+
             <button
               type="button"
               disabled={isCheckingUpdate}

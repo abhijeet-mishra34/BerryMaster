@@ -18,6 +18,7 @@ import {
 
 import berryMasterIcon from "../../assets/brand/berrymaster-icon.png";
 import { CURRENT_APP_VERSION } from "../../services/updateService";
+import { useTranslation } from "../../context/LanguageContext";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -26,70 +27,71 @@ type SidebarProps = {
   onCloseMobile?: () => void;
 };
 
-const menuGroups = [
-  {
-    title: "Farming",
-    items: [
-      {
-        label: "Dashboard",
-        icon: LayoutDashboard,
-        path: "/",
-      },
-      {
-        label: "Characters",
-        icon: Users,
-        path: "/characters",
-      },
-      {
-        label: "Berries",
-        icon: Cherry,
-        path: "/berries",
-      },
-      {
-        label: "Inventory",
-        icon: Package,
-        path: "/inventory",
-      },
-      {
-        label: "Calendar",
-        icon: Calendar,
-        path: "/calendar",
-      },
-    ],
-  },
-  {
-    title: "System & Tools",
-    items: [
-      {
-        label: "Analytics",
-        icon: LineChart,
-        path: "/analytics",
-      },
-      {
-        label: "Settings",
-        icon: Settings,
-        path: "/settings",
-      },
-      {
-        label: "Feedback",
-        icon: MessageSquareHeart,
-        path: "/feedback",
-      },
-      {
-        label: "About Us",
-        icon: Info,
-        path: "/about",
-      },
-    ],
-  },
-];
-
 export default function Sidebar({
   isOpen,
   onToggleSidebar,
   isMobileOpen = false,
   onCloseMobile,
 }: SidebarProps) {
+  const { t } = useTranslation();
+
+  const menuGroups = [
+    {
+      title: "PokeMMO Farming",
+      items: [
+        {
+          label: t("nav.dashboard"),
+          icon: LayoutDashboard,
+          path: "/",
+        },
+        {
+          label: t("nav.characters"),
+          icon: Users,
+          path: "/characters",
+        },
+        {
+          label: t("nav.berries"),
+          icon: Cherry,
+          path: "/berries",
+        },
+        {
+          label: t("nav.inventory"),
+          icon: Package,
+          path: "/inventory",
+        },
+        {
+          label: t("nav.calendar"),
+          icon: Calendar,
+          path: "/calendar",
+        },
+      ],
+    },
+    {
+      title: "Tools & Preferences",
+      items: [
+        {
+          label: t("nav.analytics"),
+          icon: LineChart,
+          path: "/analytics",
+        },
+        {
+          label: t("nav.settings"),
+          icon: Settings,
+          path: "/settings",
+        },
+        {
+          label: t("nav.feedback"),
+          icon: MessageSquareHeart,
+          path: "/feedback",
+        },
+        {
+          label: t("nav.about"),
+          icon: Info,
+          path: "/about",
+        },
+      ],
+    },
+  ];
   return (
     <>
       {/* ========================================================= */}

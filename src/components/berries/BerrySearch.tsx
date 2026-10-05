@@ -1,3 +1,5 @@
+import { useTranslation } from "../../context/LanguageContext";
+
 type BerrySearchProps = {
   search: string;
   onSearchChange: (value: string) => void;
@@ -7,19 +9,21 @@ export default function BerrySearch({
   search,
   onSearchChange,
 }: BerrySearchProps) {
+  const { t } = useTranslation();
+
   return (
     <div>
       <label
         htmlFor="berry-search"
         className="mb-2.5 flex items-center gap-2 text-sm font-semibold text-slate-300 light:text-slate-700"
       >
-        🔍 Search Berries
+        🔍 {t("characters.searchBerries")}
       </label>
 
       <input
         id="berry-search"
         type="text"
-        placeholder="Search by name, ID or tags..."
+        placeholder={t("characters.searchBerriesPlaceholder")}
         value={search}
         onChange={(e) => onSearchChange(e.target.value)}
         className="

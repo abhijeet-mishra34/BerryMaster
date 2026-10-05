@@ -1,6 +1,7 @@
 import type { MutableRefObject } from "react";
 import type { Berry } from "../../types/Berry";
 import { useFavorites } from "../../context/FavoritesContext";
+import { useTranslation } from "../../context/LanguageContext";
 import { Sparkles, Heart } from "lucide-react";
 
 type BerryListProps = {
@@ -17,6 +18,7 @@ export default function BerryList({
   itemRefs,
 }: BerryListProps) {
   const { isFavorite } = useFavorites();
+  const { t, getBerryName, getCategoryName } = useTranslation();
 
   const favoriteBerries = berries.filter((berry) => isFavorite(berry.id));
   const regularBerries = berries.filter((berry) => !isFavorite(berry.id));
@@ -24,6 +26,10 @@ export default function BerryList({
   function renderBerryButton(berry: Berry, index: number) {
     const isSelected = selectedBerry?.id === berry.id;
     const favorite = isFavorite(berry.id);
+    const localizedBerryName = getBerryName(berry.id, berry.name);
+    const localizedCategories = berry.categories
+      .map((cat) => getCategoryName(cat))
+      .join(" • ");
 
     return (
       <button
@@ -103,7 +109,7 @@ export default function BerryList({
             {berry.image ? (
               <img
                 src={berry.image}
-                alt={berry.name}
+                alt={localizedBerryName}
                 className="h-8 w-8 object-contain drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] transition-transform duration-200 group-hover:scale-110"
               />
             ) : (
@@ -119,10 +125,10 @@ export default function BerryList({
                   : "text-white light:text-slate-900 group-hover:text-emerald-200 light:group-hover:text-emerald-700"
               }`}
             >
-              {berry.name}
+              {localizedBerryName}
             </p>
             <p className="truncate text-[11px] text-slate-400 light:text-slate-500 font-medium">
-              {berry.categories.join(" • ")}
+              {localizedCategories}
             </p>
           </div>
         </div>
@@ -186,15 +192,15 @@ export default function BerryList({
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-400 light:text-emerald-700">
-              Selection
+              {t("characters.berryInfo")}
             </p>
 
             <h2 className="mt-1 flex items-center gap-2 text-lg font-semibold text-white light:text-slate-900">
-              <span>Berry List</span>
+              <span>{t("characters.chooseBerryTab")}</span>
             </h2>
 
             <p className="mt-1 text-xs text-slate-400 light:text-slate-600">
-              Select a berry to preview and plant.
+              {t("characters.noBerrySelectedDesc")}
             </p>
           </div>
 
@@ -215,11 +221,11 @@ export default function BerryList({
             </div>
 
             <p className="mt-4 text-sm font-semibold text-white light:text-slate-900">
-              No berries found
+              {t("characters.noBerriesFound")}
             </p>
 
             <p className="mt-1 text-xs text-slate-500">
-              Try another search query or category filter.
+              {t("characters.noBerriesFoundDesc")}
             </p>
           </div>
         ) : (
@@ -230,7 +236,7 @@ export default function BerryList({
                 <div className="flex items-center justify-between px-2 pt-1">
                   <h3 className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-pink-400">
                     <Heart className="h-3.5 w-3.5 fill-pink-400" />
-                    <span>Favorites</span>
+                    <span>{t("characters.favorites")}</span>
                   </h3>
 
                   <span className="rounded-md bg-pink-500/10 px-2 py-0.5 text-[11px] font-bold text-pink-400">
@@ -253,7 +259,7 @@ export default function BerryList({
               <div className="flex items-center justify-between px-2 pt-1">
                 <h3 className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-400 light:text-slate-500">
                   <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
-                  <span>All Berries</span>
+                  <span>{t("characters.allBerries")}</span>
                 </h3>
 
                 <span className="rounded-md bg-slate-800/60 light:bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-400 light:text-slate-600">

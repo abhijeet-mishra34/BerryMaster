@@ -13,6 +13,11 @@ import {
   Send,
   Trash2,
   Loader2,
+  Wrench,
+  Monitor,
+  Smartphone,
+  Download,
+  Info,
   type LucideIcon,
 } from "lucide-react";
 import {
@@ -27,10 +32,18 @@ import {
 } from "../services/feedbackService";
 import { sendFeedbackToDiscord } from "../services/discordService";
 import { openExternalUrl } from "../utils/urlHelper";
+import { useSettings } from "../context/SettingsContext";
+import { useDownloadStats } from "../hooks/useDownloadStats";
+import { DOWNLOAD_LINKS } from "../services/updateService";
+
 
 export default function FeedbackPage() {
+  const { showDeveloperBerries } = useSettings();
+  const { stats: downloadStats } = useDownloadStats();
+
   const initialDraft = getFeedbackDraft();
   const [category, setCategory] = useState<FeedbackCategory>(initialDraft?.category || "general");
+
   const [rating, setRating] = useState<number>(initialDraft?.rating || 5);
   const [hoverRating, setHoverRating] = useState<number>(0);
   const [subject, setSubject] = useState(initialDraft?.subject || "");
@@ -711,6 +724,145 @@ export default function FeedbackPage() {
           )}
         </div>
       )}
+
+      {/* Developer Mode Only: GitHub Release Telemetry */}
+      {showDeveloperBerries && (
+        <section className="theme-card rounded-xl border border-amber-500/30 light:border-amber-200 bg-amber-950/15 light:bg-amber-50/50 p-6 sm:p-8 backdrop-blur-xl shadow-xl flex flex-col gap-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                <Wrench className="h-5 w-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2.5 flex-wrap">
+                  <h2 className="text-lg font-bold text-white light:text-slate-900">
+                    Developer Telemetry: GitHub Release Metrics
+                  </h2>
+                  <span className="rounded-md border border-amber-500/40 bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold text-amber-300 uppercase tracking-wider">
+                    Developer Mode Active
+                  </span>
+                </div>
+                <p className="text-xs text-slate-400 light:text-slate-600 mt-0.5">
+                  Live download statistics aggregated dynamically via GitHub Releases API for past, present, and future builds.
+                </p>
+              </div>
+            </div>
+
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3.5 py-1 font-mono text-xs font-bold text-amber-400 self-start sm:self-auto">
+              <Download className="h-3.5 w-3.5" />
+              {downloadStats.total}+ Total Downloads
+            </span>
+          </div>
+
+          {/* Metric Cards Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+            {/* Total Downloads */}
+            <div className="rounded-xl border border-white/[0.08] light:border-slate-200 bg-slate-950/60 light:bg-white p-4.5 flex items-center justify-between shadow-xs">
+              <div className="min-w-0">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 light:text-slate-500">
+                  Total Installs
+                </p>
+                <div className="mt-1 flex items-baseline gap-1.5">
+                  <span className="text-2xl font-extrabold font-mono text-emerald-400 light:text-emerald-600">
+                    {downloadStats.total}+
+                  </span>
+                  <span className="text-[11px] text-slate-400 light:text-slate-500">
+                    all releases
+                  </span>
+                </div>
+                <p className="mt-0.5 text-[11px] text-slate-500 light:text-slate-600 truncate">
+                  Across {downloadStats.releasesCount} published releases
+                </p>
+              </div>
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
+                <Download className="h-5 w-5" />
+              </div>
+            </div>
+
+            {/* Windows Downloads */}
+            <div className="rounded-xl border border-white/[0.08] light:border-slate-200 bg-slate-950/60 light:bg-white p-4.5 flex items-center justify-between shadow-xs">
+              <div className="min-w-0">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 light:text-slate-500">
+                  Windows (.exe)
+                </p>
+                <div className="mt-1 flex items-baseline gap-1.5">
+                  <span className="text-2xl font-extrabold font-mono text-sky-400 light:text-sky-600">
+                    {downloadStats.windows}+
+                  </span>
+                  <span className="text-[11px] text-slate-400 light:text-slate-500">
+                    downloads
+                  </span>
+                </div>
+                <p className="mt-0.5 text-[11px] text-slate-500 light:text-slate-600 truncate">
+                  Windows 64-bit setup installers
+                </p>
+              </div>
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-sky-500/30 bg-sky-500/10 text-sky-400">
+                <Monitor className="h-5 w-5" />
+              </div>
+            </div>
+
+            {/* Android Universal Downloads */}
+            <div className="rounded-xl border border-white/[0.08] light:border-slate-200 bg-slate-950/60 light:bg-white p-4.5 flex items-center justify-between shadow-xs">
+              <div className="min-w-0">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 light:text-slate-500">
+                  Android Universal (.apk)
+                </p>
+                <div className="mt-1 flex items-baseline gap-1.5">
+                  <span className="text-2xl font-extrabold font-mono text-teal-400 light:text-teal-600">
+                    {downloadStats.android}+
+                  </span>
+                  <span className="text-[11px] text-slate-400 light:text-slate-500">
+                    downloads
+                  </span>
+                </div>
+                <p className="mt-0.5 text-[11px] text-slate-500 light:text-slate-600 truncate">
+                  Universal Android APKs (all ABIs)
+                </p>
+              </div>
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-teal-500/30 bg-teal-500/10 text-teal-400">
+                <Smartphone className="h-5 w-5" />
+              </div>
+            </div>
+          </div>
+
+          {/* Developer Telemetry Notes */}
+          <div className="rounded-xl border border-amber-500/20 bg-slate-950/70 light:bg-white p-4.5 space-y-2 text-xs text-slate-300 light:text-slate-700 leading-relaxed">
+            <p className="font-bold text-amber-300 flex items-center gap-1.5">
+              <Info className="h-4 w-4 text-amber-400" />
+              <span>Developer Telemetry Insights:</span>
+            </p>
+            <ul className="list-disc pl-5 space-y-1 text-slate-400 light:text-slate-600">
+              <li>
+                <strong>Self-Downloads vs User Downloads:</strong> GitHub&apos;s Releases API only counts raw HTTP asset download requests. It does not record IP addresses or user accounts, so your own test downloads and end-user downloads share the same asset counter.
+              </li>
+              <li>
+                <strong>Universal Android Package:</strong> The &quot;universal&quot; APK bundles all CPU architectures (ARM64, ARMv7, x86, x86_64) into one installer.
+              </li>
+            </ul>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="flex items-center gap-3 pt-1 border-t border-white/[0.08] light:border-slate-200 flex-wrap">
+            <button
+              type="button"
+              onClick={() => openExternalUrl(DOWNLOAD_LINKS.allReleases)}
+              className="inline-flex items-center gap-2 rounded-xl border border-amber-500/40 bg-amber-500/20 px-4 py-2.5 text-xs font-bold text-amber-300 hover:bg-amber-500 hover:text-slate-950 transition-all cursor-pointer active:scale-95"
+            >
+              <ExternalLink className="h-4 w-4" />
+              <span>Open GitHub Releases</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => openExternalUrl(DOWNLOAD_LINKS.repo)}
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-700 light:border-slate-200 bg-slate-800/80 light:bg-white px-4 py-2.5 text-xs font-bold text-slate-300 light:text-slate-700 hover:bg-slate-700 hover:text-white transition-all cursor-pointer active:scale-95"
+            >
+              <ExternalLink className="h-4 w-4" />
+              <span>GitHub Repository</span>
+            </button>
+          </div>
+        </section>
+      )}
     </div>
   );
-}
+}

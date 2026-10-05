@@ -18,6 +18,7 @@ import { getCharacterStatus } from "../../utils/characterStatus";
 import { formatDate } from "../../utils/date";
 import { formatRemainingTime } from "../../utils/countdown";
 import { useNow } from "../../hooks/useNow";
+import { useTranslation } from "../../context/LanguageContext";
 
 type CharacterCardProps = {
   character: Character;
@@ -51,10 +52,28 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
     ref
   ) {
     const now = useNow();
+    const { t, getBerryName } = useTranslation();
 
     const berry = berryDatabase.find((b) => b.id === character.plantedBerryId);
     const status = getCharacterStatus(character);
     const characterNumber = String(index + 1).padStart(3, "0");
+
+    const getStatusLabel = () => {
+      switch (status.status) {
+        case "ready":
+          return t("characters.readyToPlant");
+        case "growing":
+          return t("farming.growing");
+        case "needWater":
+          return t("farming.needsWater");
+        case "harvestReady":
+          return t("farming.harvestReady");
+        case "wilted":
+          return t("farming.wilted");
+        default:
+          return status.label;
+      }
+    };
 
     // Calculate Moisture & Ripeness Progress Percentages
     let moisturePercent: number | null = null;
@@ -161,19 +180,16 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
               </div>
             </div>
 
-            {/* Name & Subtitle */}
+            {/* Name */}
             <div className="min-w-0 space-y-0.5">
               <div className="flex items-center gap-2">
                 <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[9px] sm:text-[9.5px] font-extrabold uppercase tracking-widest text-slate-300">
-                  Slot #{characterNumber}
+                  {t("characters.slot", { slot: characterNumber })}
                 </span>
               </div>
               <h2 className="text-base sm:text-lg font-extrabold tracking-tight text-white truncate leading-tight">
                 {character.name}
               </h2>
-              <p className="text-[11px] sm:text-xs text-slate-400 truncate">
-                {berry ? `Planted: ${berry.name}` : "Ready to Plant"}
-              </p>
             </div>
           </div>
 
@@ -194,7 +210,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
               `}
             >
               <span className="h-1.5 w-1.5 rounded-full bg-current" />
-              {status.label}
+              {getStatusLabel()}
             </span>
           </div>
         </div>
@@ -202,8 +218,9 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
         {/* ========================================================= */}
         {/* TIER 1: TOP ROW (PLANTED & WATER IN - FULL WIDTH CARDS)   */}
         {/* ========================================================= */}
-        <div className="grid grid-cols-2 gap-2.5 sm:gap-3 mb-0">
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-3 mb-2.5 sm:mb-3">
           {/* Card 1: Planted Berry & Planted Time */}
+
           <div className="relative flex flex-col justify-between rounded-2xl border border-white/[0.08] bg-[#25283c]/85 p-2 sm:p-2.5 min-h-[78px] sm:min-h-[82px] transition-all duration-200 hover:bg-[#2e324a]/95 hover:-translate-y-0.5 hover:shadow-lg hover:border-white/20">
             {/* Top: Icon + Label + Changer Button */}
             <div className="flex items-center justify-between w-full">
@@ -216,7 +233,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
                   )}
                 </div>
                 <span className="text-[10px] sm:text-[10.5px] font-extrabold uppercase tracking-wider text-slate-400 truncate">
-                  Planted
+                  {t("characters.planted")}
                 </span>
               </div>
 
@@ -227,7 +244,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
                     e.stopPropagation();
                     onOpenTimerPicker?.("planted");
                   }}
-                  title="Change Planted Time (Recalculates all timers)"
+                  title={t("characters.changePlantedTime")}
                   className="flex h-5.5 w-5.5 shrink-0 items-center justify-center rounded-lg bg-sky-500 hover:bg-sky-400 text-white shadow-sm transition-all cursor-pointer hover:scale-110 active:scale-95"
                 >
                   <Clock className="h-2.5 w-2.5" />
@@ -237,15 +254,22 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
 
             {/* Middle: Berry Name */}
             <p className="text-xs sm:text-[13px] font-extrabold text-white truncate my-0.5">
-              {berry?.name ?? "No Berry Planted"}
+              {berry ? getBerryName(berry.id, berry.name) : t("characters.noBerryPlanted")}
             </p>
 
             {/* Bottom: Planted Timestamp */}
-            <div className="flex items-center gap-1 text-[11px] sm:text-xs font-bold text-slate-200 truncate">
-              <Clock className="h-3 w-3 text-emerald-400 shrink-0" />
-              <span className="truncate">
-                {character.plantedAt ? formatDate(character.plantedAt) : "Ready to Plant"}
-              </span>
+            <div>
+              <div className="flex items-center gap-1 text-[11px] sm:text-xs font-bold text-slate-200 truncate">
+                <Clock className="h-3 w-3 text-emerald-400 shrink-0" />
+                <span className="truncate">
+                  {character.plantedAt ? formatDate(character.plantedAt) : t("characters.readyToPlant")}
+                </span>
+              </div>
+              {moisturePercent !== null && (
+                <div className="w-full h-1 bg-slate-800/90 rounded-full overflow-hidden mt-1.5 border border-white/[0.05]">
+                  <div className="h-full w-full rounded-full bg-emerald-500/70 shadow-[0_0_6px_rgba(16,185,129,0.4)]" />
+                </div>
+              )}
             </div>
           </div>
 
@@ -258,7 +282,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
                   <Droplets className="h-3.5 w-3.5" />
                 </div>
                 <span className="text-[10px] sm:text-[10.5px] font-extrabold uppercase tracking-wider text-slate-400 truncate">
-                  Water In
+                  {t("characters.waterIn")}
                 </span>
               </div>
 
@@ -269,7 +293,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
                     e.stopPropagation();
                     onOpenTimerPicker?.("water");
                   }}
-                  title="Change When Berry Was Watered"
+                  title={t("characters.changeWateredTime")}
                   className="flex h-5.5 w-5.5 shrink-0 items-center justify-center rounded-lg bg-sky-500 hover:bg-sky-400 text-white shadow-sm transition-all cursor-pointer hover:scale-110 active:scale-95"
                 >
                   <Clock className="h-2.5 w-2.5" />
@@ -282,7 +306,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
               {character.nextWaterAt
                 ? formatRemainingTime(character.nextWaterAt, now)
                 : character.plantedBerryId
-                ? "Fully Watered"
+                ? t("characters.fullyWatered")
                 : "—"}
             </p>
 
@@ -292,10 +316,10 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
                 <Clock className="h-3 w-3 text-sky-400 shrink-0" />
                 <span className="truncate">
                   {character.nextWaterAt
-                    ? `Due ${formatDate(character.nextWaterAt)}`
+                    ? t("characters.due", { date: formatDate(character.nextWaterAt) })
                     : character.plantedBerryId
-                    ? "Watered"
-                    : "No Schedule"}
+                    ? t("farming.watered")
+                    : t("characters.noSchedule")}
                 </span>
               </div>
               {moisturePercent !== null && (
@@ -317,60 +341,59 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
         </div>
 
         {/* ========================================================= */}
-        {/* TIER 2: BOTTOM ROW (HARVEST & WILT - CENTERED & PROPORTIONAL) */}
+        {/* TIER 2: BOTTOM ROW (HARVEST & WILT - BALANCED & ALIGNED)   */}
         {/* ========================================================= */}
-        <div className="w-full flex justify-center mb-4 sm:mb-4.5" style={{ marginBottom: "18px" }}>
-          <div className="w-[92%] sm:w-[90%] max-w-[370px] grid grid-cols-2 gap-2.5 sm:gap-3">
-            {/* Card 3: Harvest Timer */}
-            <div className="relative flex flex-col justify-between rounded-xl border border-white/[0.07] bg-[#1c1f32]/85 p-2 sm:p-2.5 min-h-[72px] sm:min-h-[76px] transition-all duration-200 hover:bg-[#25283c]/90 hover:-translate-y-0.5 hover:shadow-md hover:border-white/15">
-              {/* Top: Icon + Label */}
-              <div className="flex items-center justify-between w-full">
-                <div className="flex items-center gap-1.5 min-w-0">
-                  <div className="flex h-5.5 w-5.5 shrink-0 items-center justify-center rounded-lg bg-amber-500/15 text-amber-400">
-                    <Wheat className="h-3 w-3" />
-                  </div>
-                  <span className="text-[10px] sm:text-[10.5px] font-extrabold uppercase tracking-wider text-slate-400 truncate">
-                    Harvest In
-                  </span>
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-3 mb-4 sm:mb-4.5">
+          {/* Card 3: Harvest Timer */}
+          <div className="relative flex flex-col justify-between rounded-2xl border border-white/[0.07] bg-[#1c1f32]/85 p-2 sm:p-2.5 min-h-[72px] sm:min-h-[76px] transition-all duration-200 hover:bg-[#25283c]/90 hover:-translate-y-0.5 hover:shadow-md hover:border-white/15">
+            {/* Top: Icon + Label */}
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <div className="flex h-5.5 w-5.5 shrink-0 items-center justify-center rounded-lg bg-amber-500/15 text-amber-400">
+                  <Wheat className="h-3 w-3" />
                 </div>
-              </div>
-
-              {/* Middle: Live Countdown / Status */}
-              <p className="text-xs sm:text-sm font-extrabold text-white truncate my-0.5">
-                {character.plantedBerryId
-                  ? status.status === "wilted"
-                    ? "Cycle Expired"
-                    : status.status === "harvestReady"
-                    ? "Ready!"
-                    : formatRemainingTime(character.harvestAt, now)
-                  : "—"}
-              </p>
-
-              {/* Bottom: Harvest Timestamp & Ripeness Gauge */}
-              <div>
-                <div className="flex items-center gap-1 text-[10.5px] sm:text-[11.5px] font-bold text-slate-200 truncate">
-                  <Clock className="h-3 w-3 text-amber-400 shrink-0" />
-                  <span className="truncate">
-                    {character.harvestAt ? formatDate(character.harvestAt) : "No Cycle"}
-                  </span>
-                </div>
-                {growthPercent !== null && (
-                  <div className="w-full h-1 bg-slate-800/90 rounded-full overflow-hidden mt-1.5 border border-white/[0.05]">
-                    <div
-                      className={`h-full rounded-full transition-all duration-500 ${
-                        growthPercent >= 100
-                          ? "bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.7)] animate-pulse"
-                          : "bg-gradient-to-r from-emerald-500 to-amber-400 shadow-[0_0_6px_rgba(16,185,129,0.5)]"
-                      }`}
-                      style={{ width: `${growthPercent}%` }}
-                    />
-                  </div>
-                )}
+                <span className="text-[10px] sm:text-[10.5px] font-extrabold uppercase tracking-wider text-slate-400 truncate">
+                  {t("characters.harvestIn")}
+                </span>
               </div>
             </div>
 
-            {/* Card 4: Wilt Threshold */}
-            <div className="relative flex flex-col justify-between rounded-xl border border-white/[0.07] bg-[#1c1f32]/85 p-2 sm:p-2.5 min-h-[72px] sm:min-h-[76px] transition-all duration-200 hover:bg-[#25283c]/90 hover:-translate-y-0.5 hover:shadow-md hover:border-white/15">
+            {/* Middle: Live Countdown / Status */}
+            <p className="text-xs sm:text-sm font-extrabold text-white truncate my-0.5">
+              {character.plantedBerryId
+                ? status.status === "wilted"
+                  ? t("characters.cycleExpired")
+                  : status.status === "harvestReady"
+                  ? t("characters.ready")
+                  : formatRemainingTime(character.harvestAt, now)
+                : "—"}
+            </p>
+
+            {/* Bottom: Harvest Timestamp & Ripeness Gauge */}
+            <div>
+              <div className="flex items-center gap-1 text-[10.5px] sm:text-[11.5px] font-bold text-slate-200 truncate">
+                <Clock className="h-3 w-3 text-amber-400 shrink-0" />
+                <span className="truncate">
+                  {character.harvestAt ? formatDate(character.harvestAt) : t("characters.noCycle")}
+                </span>
+              </div>
+              {growthPercent !== null && (
+                <div className="w-full h-1 bg-slate-800/90 rounded-full overflow-hidden mt-1.5 border border-white/[0.05]">
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${
+                      growthPercent >= 100
+                        ? "bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.7)] animate-pulse"
+                        : "bg-gradient-to-r from-emerald-500 to-amber-400 shadow-[0_0_6px_rgba(16,185,129,0.5)]"
+                    }`}
+                    style={{ width: `${growthPercent}%` }}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Card 4: Wilt Threshold */}
+          <div className="relative flex flex-col justify-between rounded-2xl border border-white/[0.07] bg-[#1c1f32]/85 p-2 sm:p-2.5 min-h-[72px] sm:min-h-[76px] transition-all duration-200 hover:bg-[#25283c]/90 hover:-translate-y-0.5 hover:shadow-md hover:border-white/15">
               {/* Top: Icon + Label */}
               <div className="flex items-center justify-between w-full">
                 <div className="flex items-center gap-1.5 min-w-0">
@@ -378,7 +401,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
                     <AlertTriangle className="h-3 w-3" />
                   </div>
                   <span className="text-[10px] sm:text-[10.5px] font-extrabold uppercase tracking-wider text-slate-400 truncate">
-                    Wilt Threshold
+                    {t("characters.wiltThreshold")}
                   </span>
                 </div>
               </div>
@@ -387,24 +410,33 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
               <p className="text-xs sm:text-sm font-extrabold text-white truncate my-0.5">
                 {character.plantedBerryId
                   ? status.status === "wilted"
-                    ? "Plot Wilted"
+                    ? t("characters.plotWilted")
                     : formatRemainingTime(character.wiltAt, now)
                   : "—"}
               </p>
 
               {/* Bottom: Wilts At Timestamp */}
-              <div className="flex items-center gap-1 text-[10.5px] sm:text-[11.5px] font-bold text-slate-200 truncate">
-                <Clock className="h-3 w-3 text-rose-400 shrink-0" />
-                <span className="truncate">
-                  {character.wiltAt ? formatDate(character.wiltAt) : "No Wilt"}
-                </span>
+              <div>
+                <div className="flex items-center gap-1 text-[10.5px] sm:text-[11.5px] font-bold text-slate-200 truncate">
+                  <Clock className="h-3 w-3 text-rose-400 shrink-0" />
+                  <span className="truncate">
+                    {character.wiltAt ? formatDate(character.wiltAt) : t("characters.noWilt")}
+                  </span>
+                </div>
+                {growthPercent !== null && (
+                  <div className="w-full h-1 bg-slate-800/90 rounded-full overflow-hidden mt-1.5 border border-white/[0.05]">
+                    <div
+                      className="h-full rounded-full bg-rose-500/40"
+                      style={{ width: "100%" }}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>
-        </div>
 
         {/* ========================================================= */}
-        {/* 2X2 ACTION BUTTONS GRID: EQUAL SIZED, BALANCED             */}
+        {/* 2X2 ACTION BUTTONS GRID: BALANCED & RESPONSIVE            */}
         {/* ========================================================= */}
         <div className="mt-auto pt-1">
           <div className="grid grid-cols-2 gap-x-2 sm:gap-x-2.5 gap-y-2.5 sm:gap-y-3">
@@ -416,7 +448,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
                 onClick={onPlant}
               >
                 <Sprout className="mr-1.5 h-4 w-4 shrink-0" />
-                <span>Plant Berry</span>
+                <span>{t("characters.plantBerry")}</span>
               </Button>
             ) : status.status === "wilted" ? (
               <Button
@@ -426,7 +458,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
                 onClick={onHarvest}
               >
                 <Trash2 className="mr-1.5 h-4 w-4 shrink-0" />
-                <span>Clear Wilted</span>
+                <span>{t("characters.clearWilted")}</span>
               </Button>
             ) : status.status === "harvestReady" ? (
               <Button
@@ -435,7 +467,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
                 onClick={onHarvest}
               >
                 <Wheat className="mr-1.5 h-4 w-4 shrink-0" />
-                <span>Harvest</span>
+                <span>{t("characters.harvest")}</span>
               </Button>
             ) : (
               <Button
@@ -445,7 +477,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
                 onClick={onWater}
               >
                 <Droplets className="mr-1.5 h-4 w-4 shrink-0" />
-                <span>Water</span>
+                <span>{t("characters.water")}</span>
               </Button>
             )}
 
@@ -458,7 +490,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
                 onClick={onChangeBerry}
               >
                 <RefreshCw className="mr-1.5 h-3.5 w-3.5 shrink-0" />
-                <span>Change Berry</span>
+                <span>{t("characters.changeBerry")}</span>
               </Button>
             ) : (
               <Button
@@ -468,7 +500,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
                 onClick={onPlant}
               >
                 <Sprout className="mr-1.5 h-4 w-4 shrink-0" />
-                <span>Select Berry</span>
+                <span>{t("characters.selectBerry")}</span>
               </Button>
             )}
 
@@ -480,7 +512,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
               onClick={onEdit}
             >
               <Pencil className="mr-1.5 h-3.5 w-3.5 shrink-0" />
-              <span>Edit</span>
+              <span>{t("common.edit")}</span>
             </Button>
 
             {/* Button 4: Delete */}
@@ -491,7 +523,7 @@ const CharacterCard = forwardRef<HTMLDivElement, CharacterCardProps>(
               onClick={() => onDelete(character.id)}
             >
               <Trash2 className="mr-1.5 h-3.5 w-3.5 shrink-0" />
-              <span>Delete</span>
+              <span>{t("common.delete")}</span>
             </Button>
           </div>
         </div>

@@ -16,6 +16,7 @@ import {
 } from "../../data/berryDatabase";
 import { useCharacters } from "../../context/CharacterContext";
 import { useFavorites } from "../../context/FavoritesContext";
+import { useTranslation } from "../../context/LanguageContext";
 
 import type { Berry } from "../../types/Berry";
 import type { BerryCategory } from "../../types/BerryCategories";
@@ -48,6 +49,7 @@ export default function PlantBerrySelector({
   const { plantBerry } = useCharacters();
   const { isFavorite } = useFavorites();
   const { showDeveloperBerries } = useSettings();
+  const { t, getBerryName } = useTranslation();
   const [search, setSearch] = useState("");
 
   const [selectedCategory, setSelectedCategory] = useState<"All" | BerryCategory>("All");
@@ -57,7 +59,7 @@ export default function PlantBerrySelector({
   const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   // =====================================
-  // Filter & Sort Berries
+  // Filter & Sort Berries (with localized name search!)
   // =====================================
   const filteredBerries = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -68,8 +70,10 @@ export default function PlantBerrySelector({
           selectedCategory === "All" ||
           berry.categories.includes(selectedCategory);
 
+        const localizedName = getBerryName(berry.id, berry.name);
         const matchesSearch =
           berry.name.toLowerCase().includes(query) ||
+          localizedName.toLowerCase().includes(query) ||
           berry.id.toLowerCase().includes(query) ||
           berry.description?.toLowerCase().includes(query) ||
           berry.tags?.some((tag) => tag.toLowerCase().includes(query));
@@ -88,7 +92,7 @@ export default function PlantBerrySelector({
         // Alphabetical order
         return a.name.localeCompare(b.name);
       });
-  }, [search, selectedCategory, isFavorite, showDeveloperBerries]);
+  }, [search, selectedCategory, isFavorite, showDeveloperBerries, getBerryName]);
 
   // =====================================
   // Keep Selection Valid
@@ -196,6 +200,10 @@ export default function PlantBerrySelector({
     setActiveTab("details");
   }
 
+  const selectedBerryDisplayName = selectedBerry
+    ? getBerryName(selectedBerry.id, selectedBerry.name)
+    : "";
+
   return (
     <div
       ref={selectorRef}
@@ -215,7 +223,9 @@ export default function PlantBerrySelector({
           }`}
         >
           <ListFilter className="h-3.5 w-3.5" />
-          <span>Choose Berry ({filteredBerries.length})</span>
+          <span>
+            {t("characters.chooseBerryTab")} ({filteredBerries.length})
+          </span>
         </button>
 
         <button
@@ -228,7 +238,10 @@ export default function PlantBerrySelector({
           }`}
         >
           <Info className="h-3.5 w-3.5 shrink-0" />
-          <span className="truncate">Details & Plant {selectedBerry ? `(${selectedBerry.name})` : ""}</span>
+          <span className="truncate">
+            {t("characters.detailsPlantTab")}{" "}
+            {selectedBerry ? `(${selectedBerryDisplayName})` : ""}
+          </span>
         </button>
       </div>
 
@@ -298,15 +311,15 @@ export default function PlantBerrySelector({
             <div className="flex items-center justify-between gap-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-400 light:text-emerald-700">
-                  Berry Information
+                  {t("characters.berryInfo")}
                 </p>
 
                 <h2 className="mt-0.5 sm:mt-1 text-base sm:text-lg font-semibold text-white light:text-slate-900">
-                  Berry Details
+                  {t("characters.berryDetails")}
                 </h2>
 
                 <p className="mt-0.5 text-xs text-slate-400 light:text-slate-600">
-                  Review requirements and growth stats before planting.
+                  {t("characters.berryDetailsDesc")}
                 </p>
               </div>
 
@@ -317,11 +330,11 @@ export default function PlantBerrySelector({
                 className="lg:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-xs font-bold cursor-pointer"
               >
                 <ListFilter className="h-3.5 w-3.5" />
-                <span>Change Berry</span>
+                <span>{t("characters.changeBerry")}</span>
               </button>
 
               <div className="hidden rounded-lg border border-slate-800 light:border-slate-200 bg-slate-950/40 light:bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-400 light:text-slate-600 sm:block">
-                Use ↑ ↓ to navigate
+                {t("characters.useArrows")}
               </div>
             </div>
           </div>
@@ -331,7 +344,7 @@ export default function PlantBerrySelector({
             {selectedBerry ? (
               <BerryCard
                 berry={selectedBerry}
-                actionLabel="Plant This Berry"
+                actionLabel={t("characters.plantThisBerry")}
                 onAction={handlePlant}
                 hideActionOnMobile
               />
@@ -343,11 +356,11 @@ export default function PlantBerrySelector({
                   </div>
 
                   <h2 className="mt-4 text-base sm:text-lg font-bold text-white light:text-slate-900">
-                    No Berry Selected
+                    {t("characters.noBerrySelected")}
                   </h2>
 
                   <p className="mt-1.5 text-xs text-slate-400 light:text-slate-500">
-                    Choose a berry from the list to preview details and plant.
+                    {t("characters.noBerrySelectedDesc")}
                   </p>
 
                   <button
@@ -356,7 +369,7 @@ export default function PlantBerrySelector({
                     className="mt-4 lg:hidden inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500 text-slate-950 text-xs font-bold cursor-pointer"
                   >
                     <ListFilter className="h-4 w-4" />
-                    <span>Open Berry List</span>
+                    <span>{t("characters.openBerryList")}</span>
                   </button>
                 </div>
               </div>
@@ -406,7 +419,9 @@ export default function PlantBerrySelector({
                 ) : (
                   <span className="text-base">🌱</span>
                 )}
-                <span>Plant {selectedBerry.name}</span>
+                <span>
+                  {t("characters.plantBerry")}: {selectedBerryDisplayName}
+                </span>
               </button>
             </div>
           )}

@@ -8,6 +8,7 @@ import {
 import type { Berry } from "../../types/Berry";
 import { seedDisplay } from "../../utils/seedDisplay";
 import { useFavorites } from "../../context/FavoritesContext";
+import { useTranslation } from "../../context/LanguageContext";
 
 interface BerryCardProps {
   berry: Berry;
@@ -28,8 +29,10 @@ export default function BerryCard({
     isFavorite,
     toggleFavorite,
   } = useFavorites();
+  const { getBerryName, getSeedName, language } = useTranslation();
 
   const favorite = isFavorite(berry.id);
+  const localizedBerryName = getBerryName(berry.id, berry.name);
 
   return (
     <div
@@ -86,9 +89,16 @@ export default function BerryCard({
                 )}
               </div>
 
-              <h2 className="truncate text-2xl font-bold tracking-tight text-white light:text-slate-900">
-                {berry.name}
-              </h2>
+              <div className="flex flex-col min-w-0">
+                <h2 className="truncate text-2xl font-bold tracking-tight text-white light:text-slate-900">
+                  {localizedBerryName}
+                </h2>
+                {language !== "en" && localizedBerryName !== berry.name && (
+                  <span className="text-xs text-slate-400 light:text-slate-500 font-medium">
+                    {berry.name}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
@@ -190,7 +200,7 @@ export default function BerryCard({
                         className="h-6 w-6 object-contain"
                       />
                       <span className="text-xs font-bold text-slate-200 light:text-slate-800">
-                        {seed.name}
+                        {getSeedName(ingredient.seedType)}
                       </span>
                     </div>
 
@@ -232,7 +242,7 @@ export default function BerryCard({
                     alt={seed.name}
                     className="h-4.5 w-4.5 object-contain"
                   />
-                  <span>{seed.name}</span>
+                  <span>{getSeedName(drop.seedType)}</span>
                 </span>
               );
             })}

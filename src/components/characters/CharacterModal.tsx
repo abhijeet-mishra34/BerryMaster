@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { User, UserPlus, Sparkles, Trash2 } from "lucide-react";
 
 import Modal from "../ui/Modal";
+import { useTranslation } from "../../context/LanguageContext";
 
 type CharacterModalProps = {
   isOpen: boolean;
@@ -18,12 +19,13 @@ export default function CharacterModal({
   isOpen,
   onClose,
   onSave,
-  title = "Add Character",
-  saveButtonText = "Add Character",
+  title,
+  saveButtonText,
   initialName = "",
   hasPlantedBerry = false,
   onRemoveBerry,
 }: CharacterModalProps) {
+  const { t } = useTranslation();
   const [name, setName] = useState(initialName);
 
   useEffect(() => {
@@ -49,15 +51,21 @@ export default function CharacterModal({
   const isValid = trimmedName.length > 0;
   const isEditing = Boolean(initialName);
 
+  const displayTitle =
+    title ||
+    (isEditing ? t("characters.editCharacter") : t("characters.addCharacter"));
+  const displaySaveText =
+    saveButtonText ||
+    (isEditing ? t("characters.saveChanges") : t("characters.addCharacter"));
+  const displaySubtitle = isEditing
+    ? t("characters.modalEditSubtitle")
+    : t("characters.modalCreateSubtitle");
+
   return (
     <Modal
       isOpen={isOpen}
-      title={title}
-      subtitle={
-        isEditing
-          ? "Update your character profile name and plot configuration."
-          : "Create a dedicated profile to manage plots, watering countdowns, and harvest alerts."
-      }
+      title={displayTitle}
+      subtitle={displaySubtitle}
       icon={<UserPlus className="h-7 w-7" />}
       maxWidth="2xl"
       onClose={handleClose}
@@ -70,9 +78,9 @@ export default function CharacterModal({
               htmlFor="character-name"
               className="text-xs font-bold uppercase tracking-wider text-slate-300 light:text-slate-700 flex items-center gap-2.5"
             >
-              <span>Character Name</span>
+              <span>{t("characters.characterName")}</span>
               <span className="text-[10px] font-bold text-emerald-400 light:text-emerald-700 uppercase tracking-widest bg-emerald-500/10 light:bg-emerald-50 border border-emerald-500/30 light:border-emerald-300 px-2.5 py-0.5 rounded-full">
-                Required
+                {t("characters.required")}
               </span>
             </label>
             <span className="text-xs font-mono font-bold text-slate-400 light:text-slate-500">
@@ -117,7 +125,7 @@ export default function CharacterModal({
                   handleSave();
                 }
               }}
-              placeholder="e.g. Unova Main, Kanto Farmer 1, Alt Plot..."
+              placeholder={t("characters.characterPlaceholder")}
               className="
                 w-full
                 bg-transparent
@@ -135,7 +143,7 @@ export default function CharacterModal({
           </div>
 
           <p className="text-xs text-slate-400 light:text-slate-600 leading-relaxed pl-1 pt-1">
-            Give this character a recognizable name to easily distinguish them on your dashboard.
+            {t("characters.characterDesc")}
           </p>
         </div>
 
@@ -145,7 +153,10 @@ export default function CharacterModal({
             <Sparkles className="h-5 w-5" />
           </div>
           <p className="leading-relaxed">
-            <strong className="font-bold text-emerald-300 light:text-emerald-800">Organization tip:</strong> Name characters by region, farming cycle, or in-game account to keep watering schedules and wilt timers perfectly organized.
+            <strong className="font-bold text-emerald-300 light:text-emerald-800">
+              {t("characters.characterOrgTip")}{" "}
+            </strong>
+            {t("characters.characterOrgTipDesc")}
           </p>
         </div>
 
@@ -159,10 +170,10 @@ export default function CharacterModal({
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-rose-300 light:text-red-700">
-                    Remove Planted Berry
+                    {t("characters.removePlantedBerry")}
                   </h4>
                   <p className="mt-0.5 text-xs text-slate-400 light:text-slate-600 leading-relaxed">
-                    Clear the current planted plot and reset its growth timers.
+                    {t("characters.removePlantedBerryDesc")}
                   </p>
                 </div>
               </div>
@@ -192,7 +203,7 @@ export default function CharacterModal({
                   cursor-pointer
                 "
               >
-                Remove Berry
+                {t("characters.removeBerry")}
               </button>
             </div>
           </div>
@@ -231,7 +242,7 @@ export default function CharacterModal({
               text-center
             "
           >
-            Cancel
+            {t("common.cancel")}
           </button>
 
           <button
@@ -268,7 +279,7 @@ export default function CharacterModal({
             "
           >
             <UserPlus className="h-4 w-4" />
-            <span>{saveButtonText}</span>
+            <span>{displaySaveText}</span>
           </button>
         </div>
       </div>

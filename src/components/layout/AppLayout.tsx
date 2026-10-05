@@ -10,6 +10,8 @@ import ToastContainer from "../ui/Toast";
 import FeedbackPromptBot from "../feedback/FeedbackPromptBot";
 import MiniHUDOverlay from "../overlay/MiniHUDOverlay";
 import { useAndroidBackHandler } from "../../hooks/useAndroidBackHandler";
+import { useSettings } from "../../context/SettingsContext";
+import { useTranslation } from "../../context/LanguageContext";
 
 type AppLayoutProps = {
   children: React.ReactNode;
@@ -19,6 +21,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isHUDMode, setIsHUDMode] = useState(false);
+  const { enableUfoEasterEgg } = useSettings();
+  const { t } = useTranslation();
 
   // Close mobile drawer on Android back gesture
   useAndroidBackHandler(mobileMenuOpen, () => setMobileMenuOpen(false));
@@ -90,7 +94,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       <FloatingLeaves />
 
       {/* UFO Easter Egg (occasional ambient visitor that borrows a sample and returns it) */}
-      <UFOEasterEgg />
+      {enableUfoEasterEgg && <UFOEasterEgg />}
 
       {/* UI Shell */}
       <div
@@ -123,10 +127,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           >
             <div
               key={location.pathname}
-              className="app-main min-h-full p-3.5 sm:p-6 md:p-8 md:pb-8 page-enter"
-              style={{
-                paddingBottom: "calc(9.5rem + env(safe-area-inset-bottom, 0px))",
-              }}
+              className="app-main min-h-full p-3.5 sm:p-6 md:p-8 pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-10 page-enter"
             >
               {children}
             </div>
@@ -173,7 +174,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           }
         >
           <LayoutDashboard className="h-5 w-5 icon-sway-pop" />
-          <span>Dashboard</span>
+          <span>{t("nav.dashboard")}</span>
         </NavLink>
 
         <NavLink
@@ -187,7 +188,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           }
         >
           <Users className="h-5 w-5 icon-sway-pop" />
-          <span>Farmers</span>
+          <span>{t("nav.characters")}</span>
         </NavLink>
 
         <NavLink
@@ -201,7 +202,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           }
         >
           <Cherry className="h-5 w-5 icon-sway-pop" />
-          <span>Berries</span>
+          <span>{t("nav.berries")}</span>
         </NavLink>
 
         <NavLink
@@ -215,7 +216,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           }
         >
           <Package className="h-5 w-5 icon-sway-pop" />
-          <span>Inventory</span>
+          <span>{t("nav.inventory")}</span>
         </NavLink>
 
         <button
@@ -224,7 +225,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           className="group flex flex-col items-center justify-center gap-1 flex-1 py-1 text-[10px] font-bold text-slate-400 light:text-slate-500 hover:text-slate-200 cursor-pointer"
         >
           <Menu className="h-5 w-5 icon-sway-pop" />
-          <span>More</span>
+          <span>{t("nav.more")}</span>
         </button>
       </nav>
 

@@ -11,25 +11,29 @@ import { validateBerryDatabase } from "./utils/validation/validateBerryDatabase"
 import { NotificationProvider } from "./context/NotificationContext";
 import { ToastProvider } from "./context/ToastContext";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { LanguageProvider } from "./context/LanguageContext";
+
 validateBerryDatabase();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ErrorBoundary>
       <BrowserRouter>
-        <ToastProvider>
-          <ActivityProvider>
-            <SettingsProvider>
-            <CharacterProvider>
-              <FavoritesProvider>
-                  <NotificationProvider>
-                    <App />
-                  </NotificationProvider>
-                </FavoritesProvider>
-              </CharacterProvider>
+        <LanguageProvider>
+          <ToastProvider>
+            <ActivityProvider>
+              <SettingsProvider>
+                <CharacterProvider>
+                  <FavoritesProvider>
+                    <NotificationProvider>
+                      <App />
+                    </NotificationProvider>
+                  </FavoritesProvider>
+                </CharacterProvider>
               </SettingsProvider>
             </ActivityProvider>
           </ToastProvider>
+        </LanguageProvider>
       </BrowserRouter>
     </ErrorBoundary>
   </React.StrictMode>

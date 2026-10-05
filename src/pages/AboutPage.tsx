@@ -25,6 +25,7 @@ export default function AboutPage() {
   const toggleLegalTab = (tab: "license" | "privacy" | "disclaimer") => {
     setActiveLegalTab((prev) => (prev === tab ? null : tab));
   };
+
   return (
     <div className="max-w-4xl mx-auto flex flex-col gap-8 pb-16">
       {/* Page Banner Header */}
@@ -199,7 +200,7 @@ export default function AboutPage() {
               Created By Abhi
             </h2>
             <p className="text-xs sm:text-sm text-emerald-400 light:text-emerald-700 font-semibold">
-              IGN: MastAbhi
+              IGN: CrimsonAbhi
             </p>
           </div>
         </div>
@@ -373,19 +374,20 @@ export default function AboutPage() {
           </span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-white/[0.08] light:border-slate-200">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2 border-t border-white/[0.08] light:border-slate-200">
           <button
             type="button"
             onClick={() => openExternalUrl(DOWNLOAD_LINKS.pcSetup)}
             className="
-              inline-flex
+              flex
               items-center
+              justify-center
               gap-2
               rounded-xl
               border
               border-sky-400/40
               bg-sky-500
-              px-5
+              px-4
               py-3
               text-xs
               font-bold
@@ -401,21 +403,22 @@ export default function AboutPage() {
             "
           >
             <Monitor className="h-4 w-4" />
-            <span>Download Windows (.exe)</span>
+            <span>Windows Setup (.exe)</span>
           </button>
 
           <button
             type="button"
             onClick={() => openExternalUrl(DOWNLOAD_LINKS.androidApk)}
             className="
-              inline-flex
+              flex
               items-center
+              justify-center
               gap-2
               rounded-xl
               border
               border-emerald-400/40
               bg-emerald-500
-              px-5
+              px-4
               py-3
               text-xs
               font-bold
@@ -431,15 +434,16 @@ export default function AboutPage() {
             "
           >
             <Smartphone className="h-4 w-4" />
-            <span>Download Android (.apk)</span>
+            <span>Android APK (.apk)</span>
           </button>
 
           <button
             type="button"
             onClick={() => openExternalUrl(DOWNLOAD_LINKS.allReleases)}
             className="
-              inline-flex
+              flex
               items-center
+              justify-center
               gap-2
               rounded-xl
               border
@@ -447,7 +451,7 @@ export default function AboutPage() {
               light:border-slate-300
               bg-slate-800/80
               light:bg-white
-              px-5
+              px-4
               py-3
               text-xs
               font-bold
@@ -465,8 +469,43 @@ export default function AboutPage() {
             <ExternalLink className="h-4 w-4" />
             <span>GitHub Releases</span>
           </button>
+
+          <button
+            type="button"
+            onClick={() => openExternalUrl(DOWNLOAD_LINKS.repo)}
+            className="
+              flex
+              items-center
+              justify-center
+              gap-2
+              rounded-xl
+              border
+              border-slate-800
+              light:border-slate-300
+              bg-slate-900/60
+              light:bg-white
+              px-4
+              py-3
+              text-xs
+              font-bold
+              text-slate-300
+              light:text-slate-700
+              hover:bg-slate-800
+              light:hover:bg-slate-100
+              hover:text-white
+              light:hover:text-slate-900
+              transition-all
+              cursor-pointer
+              active:scale-95
+            "
+          >
+            <ExternalLink className="h-4 w-4" />
+            <span>Source Code</span>
+          </button>
         </div>
       </section>
+
     </div>
   );
 }
+

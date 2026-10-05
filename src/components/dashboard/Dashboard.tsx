@@ -8,10 +8,12 @@ import FarmStatusChart from "./FarmStatusChart";
 import NeedsAttention from "./NeedsAttention";
 import RecentActivity from "./RecentActivity";
 import { calculateFarmStats } from "../../utils/farmStats";
+import { useTranslation } from "../../context/LanguageContext";
 
 export default function Dashboard() {
   const { characters } = useCharacters();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const stats = calculateFarmStats(characters);
 
   // Greeting
@@ -21,30 +23,30 @@ export default function Dashboard() {
 
   if (hour < 12) {
     greetingTitle = "Good Morning! 🌞";
-    greetingSubtitle = "Your berry farm is ready for another productive day.";
+    greetingSubtitle = t("dashboard.heroSubtitle");
   } else if (hour < 18) {
     greetingTitle = "Good Afternoon! ☀️";
-    greetingSubtitle = "Keep your berry farm healthy and thriving.";
+    greetingSubtitle = t("dashboard.heroSubtitle");
   } else {
     greetingTitle = "Good Evening! 🌙";
-    greetingSubtitle = "Time to check on your berries before calling it a day.";
+    greetingSubtitle = t("dashboard.heroSubtitle");
   }
 
   const topStats = [
     {
-      title: "Characters",
+      title: t("nav.characters"),
       value: stats.totalCharacters,
       icon: <Users className="h-5 w-5" />,
       color: "emerald" as const,
     },
     {
-      title: "Planted",
+      title: t("farming.growing"),
       value: `${stats.planted}/${stats.totalCharacters}`,
       icon: <Sprout className="h-5 w-5" />,
       color: "emerald" as const,
     },
     {
-      title: "Need Water",
+      title: t("farming.needsWater"),
       value: stats.needWater,
       icon: <Droplets className="h-5 w-5" />,
       color: "blue" as const,
@@ -53,13 +55,13 @@ export default function Dashboard() {
 
   const bottomStats = [
     {
-      title: "Harvest Ready",
+      title: t("farming.harvestReady"),
       value: stats.readyHarvest,
       icon: <Wheat className="h-5 w-5" />,
       color: "amber" as const,
     },
     {
-      title: "Wilted",
+      title: t("farming.wilted"),
       value: stats.wilted,
       icon: <AlertTriangle className="h-5 w-5" />,
       color: "red" as const,

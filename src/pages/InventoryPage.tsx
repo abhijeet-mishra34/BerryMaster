@@ -1,9 +1,9 @@
 export default function InventoryPage() {
   const slots = Array.from({ length: 24 });
   return (
-    <div className="flex flex-col gap-8 pb-12">
+    <div className="flex flex-col gap-6 sm:gap-8">
       <div
-        className="theme-hero flex items-center gap-4 sm:gap-5 rounded-xl p-4 sm:p-6 md:p-8 backdrop-blur-xl shadow-xl"
+        className="theme-hero flex items-center gap-4 sm:gap-5 rounded-xl p-4 sm:p-6 backdrop-blur-xl shadow-xl"
       >
         <div className="flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 border border-amber-500/20 text-2xl sm:text-3xl shadow-lg shadow-amber-500/10">
           🎒
