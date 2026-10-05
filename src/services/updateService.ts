@@ -30,7 +30,7 @@ export interface UpdateCheckResult {
   error?: string;
 }
 
-export const CURRENT_APP_VERSION = "1.0.4";
+export const CURRENT_APP_VERSION = "1.0.5";
 
 export const DOWNLOAD_LINKS = {
   repo: "https://github.com/abhijeet-mishra34/BerryMaster",
