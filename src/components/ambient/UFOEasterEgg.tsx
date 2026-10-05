@@ -255,13 +255,22 @@ export default function UFOEasterEgg() {
     };
   }, []);
 
-  // Periodic automatic visitation (every 2 minutes)
+  // Organic randomized visitation schedule (first visit in 15-30s, subsequent visits every 45-90s)
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (Math.random() > 0.2) {
+    let timerId: ReturnType<typeof setTimeout>;
+
+    const scheduleNextMission = (isFirst = false) => {
+      const minDelay = isFirst ? 15000 : 45000;
+      const maxDelay = isFirst ? 30000 : 90000;
+      const randomDelay = Math.floor(minDelay + Math.random() * (maxDelay - minDelay));
+
+      timerId = setTimeout(() => {
         startAbductionMission();
-      }
-    }, 120000);
+        scheduleNextMission(false);
+      }, randomDelay);
+    };
+
+    scheduleNextMission(true);
 
     // Also trigger on custom summon event
     const handleSummon = () => {
@@ -270,7 +279,7 @@ export default function UFOEasterEgg() {
     window.addEventListener("berrymaster:summon-ufo", handleSummon);
 
     return () => {
-      clearInterval(interval);
+      clearTimeout(timerId);
       window.removeEventListener("berrymaster:summon-ufo", handleSummon);
     };
   }, [startAbductionMission]);
@@ -416,7 +425,9 @@ export default function UFOEasterEgg() {
                   animation: "ufoAbductLift 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards",
                 }}
               >
-                {target.icon}
+                <span className="inline-flex items-center justify-center leading-none text-center">
+                  {target.icon}
+                </span>
               </div>
             )}
 
@@ -428,7 +439,9 @@ export default function UFOEasterEgg() {
                   animation: "ufoDropLower 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards",
                 }}
               >
-                {target.icon}
+                <span className="inline-flex items-center justify-center leading-none text-center">
+                  {target.icon}
+                </span>
               </div>
             )}
           </div>
@@ -448,7 +461,7 @@ export default function UFOEasterEgg() {
         >
           {/* Glass Cockpit Dome with Little Alien */}
           <div className="relative -mb-3 h-10 w-16 rounded-t-full border border-teal-300/40 bg-gradient-to-b from-teal-200/40 via-emerald-400/20 to-transparent backdrop-blur-xs flex items-center justify-center shadow-[0_0_15px_rgba(45,212,191,0.5)]">
-            <span className="text-sm select-none animate-pulse">👽</span>
+            <span className="inline-flex items-center justify-center text-sm leading-none select-none animate-pulse">👽</span>
           </div>
 
           {/* Saucer Hull Metallic Ring */}

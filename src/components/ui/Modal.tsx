@@ -1,6 +1,7 @@
 import { createPortal } from "react-dom";
 import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
+import { useAndroidBackHandler } from "../../hooks/useAndroidBackHandler";
 
 type ModalProps = {
   isOpen: boolean;
@@ -34,6 +35,9 @@ export default function Modal({
   maxWidth = "2xl",
 }: ModalProps) {
   const previousFocus = useRef<HTMLElement | null>(null);
+
+  // Intercept Android back button / swipe gesture to close modal gracefully
+  useAndroidBackHandler(isOpen, onClose);
 
   useEffect(() => {
     if (!isOpen) {

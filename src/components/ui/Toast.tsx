@@ -124,7 +124,10 @@ export default function ToastContainer() {
     <div
       aria-live="polite"
       aria-label="Notifications"
-      className="fixed bottom-6 right-6 z-[200] flex flex-col gap-2.5 pointer-events-auto"
+      className="fixed bottom-20 md:bottom-6 right-3 md:right-6 left-3 md:left-auto z-[200] flex flex-col gap-2.5 pointer-events-auto"
+      style={{
+        bottom: "calc(5rem + env(safe-area-inset-bottom, 0px))",
+      }}
     >
       {toasts.map((t) => (
         <Toast key={t.id} {...t} />

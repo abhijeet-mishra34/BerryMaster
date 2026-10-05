@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation, NavLink } from "react-router-dom";
 import { LayoutDashboard, Users, Cherry, Package, Menu } from "lucide-react";
 import Sidebar from "./Sidebar";
@@ -9,6 +9,9 @@ import FarmingBackground from "../background/FarmingBackground";
 import ToastContainer from "../ui/Toast";
 import FeedbackPromptBot from "../feedback/FeedbackPromptBot";
 import MiniHUDOverlay from "../overlay/MiniHUDOverlay";
+import { useAndroidBackHandler } from "../../hooks/useAndroidBackHandler";
+import { useSettings } from "../../context/SettingsContext";
+import { useTranslation } from "../../context/LanguageContext";
 
 type AppLayoutProps = {
   children: React.ReactNode;
@@ -18,12 +21,43 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isHUDMode, setIsHUDMode] = useState(false);
+  const { enableUfoEasterEgg } = useSettings();
+  const { t } = useTranslation();
+
+  // Close mobile drawer on Android back gesture
+  useAndroidBackHandler(mobileMenuOpen, () => setMobileMenuOpen(false));
+  // Exit HUD mode on Android back gesture
+  useAndroidBackHandler(isHUDMode, () => setIsHUDMode(false));
+
   const location = useLocation();
 
-  // Close mobile drawer on route navigation
+  const mainRef = useRef<HTMLElement>(null);
+  const scrollPositionsRef = useRef<Record<string, number>>({});
+  const currentPathRef = useRef(location.pathname);
+
+  // Close mobile drawer and restore independent page scroll position on route navigation
   useEffect(() => {
     setMobileMenuOpen(false);
+
+    // Save scroll position for previous path
+    if (mainRef.current && currentPathRef.current !== location.pathname) {
+      scrollPositionsRef.current[currentPathRef.current] = mainRef.current.scrollTop;
+    }
+
+    currentPathRef.current = location.pathname;
+
+    // Restore scroll position for current path (defaulting cleanly to 0 for fresh pages)
+    const savedTop = scrollPositionsRef.current[location.pathname] ?? 0;
+    if (mainRef.current) {
+      mainRef.current.scrollTop = savedTop;
+    }
   }, [location.pathname]);
+
+  const handleMainScroll = () => {
+    if (mainRef.current) {
+      scrollPositionsRef.current[location.pathname] = mainRef.current.scrollTop;
+    }
+  };
 
   // Ctrl/Cmd + H to toggle HUD Mode
   useEffect(() => {
@@ -45,7 +79,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
   return (
     <div
-      className="app-root relative flex h-screen overflow-hidden"
+      className="app-root relative flex h-[100dvh] overflow-hidden"
       style={{
         background: "var(--bg-app-gradient)",
       }}
@@ -60,10 +94,15 @@ export default function AppLayout({ children }: AppLayoutProps) {
       <FloatingLeaves />
 
       {/* UFO Easter Egg (occasional ambient visitor that borrows a sample and returns it) */}
-      <UFOEasterEgg />
+      {enableUfoEasterEgg && <UFOEasterEgg />}
 
       {/* UI Shell */}
-      <div className="relative z-10 flex h-full w-full md:p-3.5 lg:p-4 md:gap-3.5 lg:gap-4 overflow-hidden">
+      <div
+        className="relative z-10 flex h-full w-full md:p-3.5 lg:p-4 md:gap-3.5 lg:gap-4 overflow-hidden"
+        style={{
+          paddingTop: "env(safe-area-inset-top, 0px)",
+        }}
+      >
         <Sidebar
           isOpen={sidebarOpen}
           onToggleSidebar={toggleSidebar}
@@ -78,10 +117,17 @@ export default function AppLayout({ children }: AppLayoutProps) {
             isHUDActive={isHUDMode}
           />
 
-          <main className="flex-1 overflow-y-auto">
+          <main
+            ref={mainRef}
+            onScroll={handleMainScroll}
+            className="flex-1 overflow-y-auto overscroll-y-contain"
+            style={{
+              WebkitOverflowScrolling: "touch",
+            }}
+          >
             <div
               key={location.pathname}
-              className="app-main min-h-full p-3.5 sm:p-6 md:p-8 pb-24 md:pb-8 page-enter"
+              className="app-main min-h-full p-3.5 sm:p-6 md:p-8 pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-10 page-enter"
             >
               {children}
             </div>
@@ -100,7 +146,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
           right-0
           z-30
           flex
-          h-16
           items-center
           justify-around
           border-t
@@ -113,6 +158,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
           shadow-lg
           md:hidden
         "
+        style={{
+          paddingBottom: "max(env(safe-area-inset-bottom, 0px), 8px)",
+          height: "calc(4.25rem + max(env(safe-area-inset-bottom, 0px), 8px))",
+        }}
       >
         <NavLink
           to="/"
@@ -125,7 +174,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           }
         >
           <LayoutDashboard className="h-5 w-5 icon-sway-pop" />
-          <span>Dashboard</span>
+          <span>{t("nav.dashboard")}</span>
         </NavLink>
 
         <NavLink
@@ -139,7 +188,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           }
         >
           <Users className="h-5 w-5 icon-sway-pop" />
-          <span>Farmers</span>
+          <span>{t("nav.characters")}</span>
         </NavLink>
 
         <NavLink
@@ -153,7 +202,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           }
         >
           <Cherry className="h-5 w-5 icon-sway-pop" />
-          <span>Berries</span>
+          <span>{t("nav.berries")}</span>
         </NavLink>
 
         <NavLink
@@ -167,7 +216,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           }
         >
           <Package className="h-5 w-5 icon-sway-pop" />
-          <span>Inventory</span>
+          <span>{t("nav.inventory")}</span>
         </NavLink>
 
         <button
@@ -176,7 +225,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           className="group flex flex-col items-center justify-center gap-1 flex-1 py-1 text-[10px] font-bold text-slate-400 light:text-slate-500 hover:text-slate-200 cursor-pointer"
         >
           <Menu className="h-5 w-5 icon-sway-pop" />
-          <span>More</span>
+          <span>{t("nav.more")}</span>
         </button>
       </nav>
 

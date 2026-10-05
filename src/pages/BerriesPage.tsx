@@ -6,11 +6,13 @@ import {
 } from "../data/berryDatabase";
 
 import { useSettings } from "../context/SettingsContext";
+import { useTranslation } from "../context/LanguageContext";
 
 export default function BerriesPage() {
   const {
     showDeveloperBerries,
   } = useSettings();
+  const { t } = useTranslation();
 
   const availableBerries =
     showDeveloperBerries
@@ -18,7 +20,7 @@ export default function BerriesPage() {
       : publicBerryDatabase;
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-6 sm:space-y-8">
 
       {/* =====================================
           Page Header
@@ -26,14 +28,17 @@ export default function BerriesPage() {
 
       <div
         className="
-          theme-card
-          rounded-2xl
-          p-6
-          shadow-xl
+          theme-hero
+          relative
+          overflow-hidden
+          rounded-xl
+          p-4
+          sm:p-6
           backdrop-blur-xl
+          shadow-xl
         "
       >
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4.5">
           <div
             className="
               flex
@@ -42,10 +47,13 @@ export default function BerriesPage() {
               shrink-0
               items-center
               justify-center
-              rounded-2xl
+              rounded-xl
+              border
+              border-emerald-500/30
               bg-emerald-500/10
               text-3xl
-              shadow-xs
+              shadow-lg
+              shadow-emerald-500/10
             "
           >
             🍓
@@ -54,21 +62,23 @@ export default function BerriesPage() {
           <div>
             <h1
               className="
-                text-3xl
-                font-bold
+                text-2xl
+                sm:text-3xl
+                font-extrabold
                 tracking-tight
                 text-white
                 light:text-slate-900
               "
             >
-              Berry Database
+              {t("nav.berries")}
             </h1>
 
             <p
               className="
                 mt-1
                 max-w-2xl
-                text-sm
+                text-xs
+                sm:text-sm
                 leading-relaxed
                 text-slate-400
                 light:text-slate-600
@@ -83,16 +93,17 @@ export default function BerriesPage() {
         {/* Database Summary */}
         <div
           className="
-            mt-6
+            mt-5
             flex
             items-center
             gap-3
             border-t
-            border-slate-800
+            border-white/[0.08]
             light:border-slate-200
-            pt-5
+            pt-4
           "
         >
+
           <span
             className="
               rounded-lg

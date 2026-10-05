@@ -1,5 +1,6 @@
 import { AlertTriangle, AlertCircle } from "lucide-react";
 import Modal from "./Modal";
+import { useTranslation } from "../../context/LanguageContext";
 
 type ConfirmDialogProps = {
   isOpen: boolean;
@@ -17,11 +18,16 @@ export default function ConfirmDialog({
   title,
   message,
   itemName,
-  confirmText = "Confirm",
-  cancelText = "Cancel",
+  confirmText,
+  cancelText,
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
+  const { t } = useTranslation();
+
+  const displayConfirm = confirmText || t("common.confirm");
+  const displayCancel = cancelText || t("common.cancel");
+
   return (
     <Modal
       isOpen={isOpen}
@@ -44,7 +50,7 @@ export default function ConfirmDialog({
         {itemName && (
           <div className="rounded-2xl border border-rose-500/25 light:border-rose-200 bg-rose-500/[0.08] light:bg-rose-50 p-4 text-center">
             <span className="text-[11px] font-bold uppercase tracking-wider text-rose-400 block mb-1">
-              Affected Target
+              {t("common.affectedTarget")}
             </span>
             <p className="text-base sm:text-lg font-bold text-white light:text-slate-900 truncate">
               🌿 {itemName}
@@ -55,7 +61,7 @@ export default function ConfirmDialog({
         {/* Caution Notice */}
         <div className="flex items-center gap-3 rounded-xl border border-amber-500/25 light:border-amber-200 bg-amber-500/10 light:bg-amber-50 px-4 py-3 text-xs sm:text-sm font-semibold text-amber-300 light:text-amber-800">
           <AlertCircle className="h-4 w-4 shrink-0 text-amber-400 light:text-amber-600" />
-          <span>This action cannot be undone.</span>
+          <span>{t("common.actionCannotBeUndone")}</span>
         </div>
 
         {/* Spacious Action Buttons */}
@@ -85,7 +91,7 @@ export default function ConfirmDialog({
               cursor-pointer
             "
           >
-            {cancelText}
+            {displayCancel}
           </button>
 
           <button
@@ -111,7 +117,7 @@ export default function ConfirmDialog({
               cursor-pointer
             "
           >
-            {confirmText}
+            {displayConfirm}
           </button>
         </div>
       </div>

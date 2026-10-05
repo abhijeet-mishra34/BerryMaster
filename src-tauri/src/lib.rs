@@ -125,13 +125,34 @@ fn save_backup_file(filename: String, content: String) -> Result<String, String>
     Err("Unable to write backup file to disk".to_string())
 }
 
+#[tauri::command]
+fn send_native_notification(app: tauri::AppHandle, title: String, body: String) -> Result<(), String> {
+    use tauri_plugin_notification::NotificationExt;
+    app.notification()
+        .builder()
+        .channel_id("berrymaster_alerts_v3")
+        .title(title)
+        .body(body)
+        .icon("ic_notification")
+        .large_icon("ic_launcher")
+        .sound("default")
+        .auto_cancel()
+        .show()
+        .map_err(|e| e.to_string())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     #[allow(unused_mut)]
     let mut builder = tauri::Builder::default()
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![open_external_url, set_minimize_to_tray, save_backup_file]);
+        .invoke_handler(tauri::generate_handler![
+            open_external_url,
+            set_minimize_to_tray,
+            save_backup_file,
+            send_native_notification
+        ]);
 
     #[cfg(desktop)]
     {

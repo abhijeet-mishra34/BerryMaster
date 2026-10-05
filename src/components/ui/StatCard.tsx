@@ -70,14 +70,14 @@ export default function StatCard({
         group
         relative
         flex
-        min-h-[140px]
+        min-h-[115px]
         sm:min-h-[170px]
         flex-col
         items-center
         justify-center
         overflow-hidden
         rounded-2xl
-        p-4
+        p-3
         sm:p-6
         text-center
         backdrop-blur-3xl
@@ -104,11 +104,11 @@ export default function StatCard({
         className={`
           relative
           z-10
-          mb-3
+          mb-2
           sm:mb-4
           flex
-          h-11
-          w-11
+          h-9
+          w-9
           sm:h-13
           sm:w-13
           items-center

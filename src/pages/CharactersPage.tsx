@@ -28,6 +28,7 @@ import PlantBerrySelector from "../components/berries/PlantBerrySelector";
 
 import { useCharacters } from "../context/CharacterContext";
 import { useToast } from '../context/ToastContext';
+import { useTranslation } from "../context/LanguageContext";
 import { getCharacterStatus } from "../utils/characterStatus";
 import { berryDatabase } from "../data/berryDatabase";
 
@@ -36,6 +37,7 @@ import type { Character } from "../types/Character";
 export default function CharactersPage() {
   const location = useLocation();
   const { addToast } = useToast();
+  const { t, getBerryName } = useTranslation();
 
   const {
     characters,
@@ -232,12 +234,15 @@ export default function CharactersPage() {
         const berry = character.plantedBerryId
           ? berryDatabase.find((b) => b.id === character.plantedBerryId)
           : null;
-        const matchesBerry = berry?.name.toLowerCase().includes(q) ?? false;
+        const localizedBerry = berry ? getBerryName(berry.id, berry.name) : "";
+        const matchesBerry =
+          (berry?.name.toLowerCase().includes(q) ?? false) ||
+          localizedBerry.toLowerCase().includes(q);
         return matchesName || matchesBerry;
       }
       return true;
     });
-  }, [characters, statusFilter, searchQuery]);
+  }, [characters, statusFilter, searchQuery, getBerryName]);
 
   // =====================================
   // Keyboard Shortcuts
@@ -498,8 +503,8 @@ export default function CharactersPage() {
             flex
             flex-col
             gap-6
-            p-6
-            sm:p-8
+            p-4
+            sm:p-6
             lg:flex-row
             lg:items-center
             lg:justify-between
@@ -535,16 +540,16 @@ export default function CharactersPage() {
 
             <div>
               <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white light:text-slate-900">
-                Characters
+                {t("characters.title")}
               </h1>
               <p className="mt-1 max-w-xl text-xs sm:text-sm leading-relaxed text-slate-400 light:text-slate-600">
-                Manage and monitor your berry farming characters.
+                {t("characters.subtitle")}
               </p>
             </div>
           </div>
 
           {/* Action Buttons: Bulk actions + Add Character */}
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 w-full lg:w-auto">
             {characters.length > 0 && (
               <button
                 type="button"
@@ -552,15 +557,20 @@ export default function CharactersPage() {
                 disabled={countNeedWater === 0}
                 title={countNeedWater > 0 ? `Water all ${countNeedWater} plots needing water` : "No plots need watering"}
                 className={`
+                  flex-1
+                  sm:flex-initial
                   inline-flex
                   items-center
                   justify-center
                   gap-2
                   rounded-xl
                   border
-                  px-4
-                  py-3.5
-                  text-sm
+                  px-3.5
+                  sm:px-4
+                  py-2.5
+                  sm:py-3.5
+                  text-xs
+                  sm:text-sm
                   font-bold
                   transition-all
                   duration-200
@@ -571,8 +581,8 @@ export default function CharactersPage() {
                   }
                 `}
               >
-                <Droplets className="h-4.5 w-4.5" />
-                <span>Water All ({countNeedWater})</span>
+                <Droplets className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
+                <span>{t("characters.waterAll", { count: countNeedWater })}</span>
               </button>
             )}
 
@@ -583,15 +593,20 @@ export default function CharactersPage() {
                 disabled={countHarvestReady === 0}
                 title={countHarvestReady > 0 ? `Harvest all ${countHarvestReady} ripe crops` : "No crops ready to harvest"}
                 className={`
+                  flex-1
+                  sm:flex-initial
                   inline-flex
                   items-center
                   justify-center
                   gap-2
                   rounded-xl
                   border
-                  px-4
-                  py-3.5
-                  text-sm
+                  px-3.5
+                  sm:px-4
+                  py-2.5
+                  sm:py-3.5
+                  text-xs
+                  sm:text-sm
                   font-bold
                   transition-all
                   duration-200
@@ -602,8 +617,8 @@ export default function CharactersPage() {
                   }
                 `}
               >
-                <Wheat className="h-4.5 w-4.5" />
-                <span>Harvest All ({countHarvestReady})</span>
+                <Wheat className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
+                <span>{t("characters.harvestAll", { count: countHarvestReady })}</span>
               </button>
             )}
 
@@ -611,6 +626,8 @@ export default function CharactersPage() {
               type="button"
               onClick={openAddModal}
               className="
+                w-full
+                sm:w-auto
                 group
                 relative
                 inline-flex
@@ -623,31 +640,28 @@ export default function CharactersPage() {
                 bg-gradient-to-r
                 from-emerald-500
                 to-teal-500
-                px-5
+                px-4
                 sm:px-6
-                py-3
+                py-2.5
                 sm:py-3.5
-                text-sm
-                font-bold
+                text-xs
+                sm:text-sm
+                font-extrabold
                 text-slate-950
                 shadow-lg
-                shadow-emerald-500/25
+                shadow-emerald-500/20
                 transition-all
                 duration-200
                 hover:-translate-y-1
-                hover:from-emerald-400
-                hover:to-teal-400
-                hover:shadow-xl
-                hover:shadow-emerald-500/45
-                active:translate-y-0
+                hover:shadow-emerald-500/35
+                hover:brightness-110
                 active:scale-95
+                active:translate-y-0
                 cursor-pointer
-                w-full
-                sm:w-auto
               "
             >
               <UserPlus className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
-              <span>Add Character</span>
+              <span>{t("characters.addCharacter")}</span>
             </button>
           </div>
         </div>
@@ -663,8 +677,8 @@ export default function CharactersPage() {
 
           <span className="text-xs sm:text-sm font-medium text-slate-400 light:text-slate-600">
             {characters.length === 1
-              ? "character in your farming team"
-              : "characters in your farming team"}
+              ? t("characters.characterInTeam")
+              : t("characters.charactersInTeam", { count: characters.length })}
           </span>
         </div>
 
@@ -673,15 +687,15 @@ export default function CharactersPage() {
           <div className="hidden sm:flex flex-wrap items-center gap-x-6 gap-y-2.5 border-t border-slate-800 light:border-slate-200 bg-slate-950/50 light:bg-slate-100/80 px-6 py-3.5 sm:px-8">
             <span className="flex items-center gap-1.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-amber-400 light:text-amber-700 mr-1">
               <span className="text-sm">⌨️</span>
-              <span>Shortcuts:</span>
+              <span>{t("characters.shortcuts")}</span>
             </span>
             {[
-              { key: "N", label: "Add Character" },
-              { key: "↑ ↓", label: "Navigate" },
-              { key: "E", label: "Edit" },
-              { key: "Del", label: "Delete" },
-              { key: "W", label: "Water" },
-              { key: "H", label: "Harvest" },
+              { key: "N", label: t("characters.addCharacter") },
+              { key: "↑ ↓", label: t("characters.navigate") },
+              { key: "E", label: t("common.edit") },
+              { key: "Del", label: t("common.delete") },
+              { key: "W", label: t("characters.water") },
+              { key: "H", label: t("characters.harvest") },
             ].map(({ key, label }) => (
               <span key={key} className="flex items-center gap-2">
                 <kbd className="inline-flex min-w-[26px] h-6 sm:h-7 items-center justify-center rounded-lg border border-slate-700 light:border-slate-300 bg-slate-800/95 light:bg-white px-2.5 font-mono text-xs sm:text-[13px] font-bold text-emerald-400 light:text-emerald-700 shadow-xs">
@@ -694,12 +708,9 @@ export default function CharactersPage() {
         )}
       </div>
 
-      {/* Search & Filter Bar with generous spacing from cards */}
+      {/* Search & Filter Bar */}
       {characters.length > 0 && (
-        <div
-          className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between mt-8 mb-8 sm:mt-10 sm:mb-10"
-          style={{ marginTop: "32px", marginBottom: "32px" }}
-        >
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between my-6 sm:my-8">
           {/* Search Input */}
           <div className="relative flex-1 max-w-md">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
@@ -709,9 +720,8 @@ export default function CharactersPage() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search characters or planted berries..."
-              style={{ paddingLeft: "46px" }}
-              className="w-full h-12 rounded-2xl border border-white/10 light:border-slate-300 bg-[#141728] light:bg-white pl-12 pr-10 text-sm text-white light:text-slate-900 placeholder-slate-500 transition-all focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+              placeholder={t("characters.searchPlaceholder")}
+              className="w-full h-11 sm:h-12 rounded-2xl border border-white/10 light:border-slate-300 bg-[#141728] light:bg-white pl-11 pr-10 text-sm text-white light:text-slate-900 placeholder-slate-500 transition-all focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
             />
             {searchQuery && (
               <button
@@ -729,13 +739,13 @@ export default function CharactersPage() {
           <div className="flex flex-wrap items-center gap-2">
             {(
               [
-                { id: "all" as const, label: "All", count: characters.length },
-                { id: "needWater" as const, label: "Needs Water", count: countNeedWater, icon: "💧" },
-                { id: "harvestReady" as const, label: "Harvest Ready", count: countHarvestReady, icon: "🌾" },
-                { id: "growing" as const, label: "Growing", count: countGrowing, icon: "🌱" },
-                { id: "ready" as const, label: "Ready to Plant", count: countReadyToPlant, icon: "⚪" },
+                { id: "all" as const, label: t("common.all"), count: characters.length },
+                { id: "needWater" as const, label: t("farming.needsWater"), count: countNeedWater, icon: "💧" },
+                { id: "harvestReady" as const, label: t("farming.harvestReady"), count: countHarvestReady, icon: "🌾" },
+                { id: "growing" as const, label: t("farming.growing"), count: countGrowing, icon: "🌱" },
+                { id: "ready" as const, label: t("characters.readyToPlant"), count: countReadyToPlant, icon: "⚪" },
                 ...(countWilted > 0
-                  ? [{ id: "wilted" as const, label: "Wilted", count: countWilted, icon: "🍂" }]
+                  ? [{ id: "wilted" as const, label: t("farming.wilted"), count: countWilted, icon: "🍂" }]
                   : []),
               ]
             ).map((pill) => {
@@ -803,11 +813,13 @@ export default function CharactersPage() {
             flex-col
             items-center
             justify-center
-            rounded-xl
+            rounded-2xl
             border
             border-dashed
-            border-slate-700
-            bg-slate-900/50
+            border-slate-800
+            light:border-slate-300
+            bg-slate-900/40
+            light:bg-slate-50
             px-6
             py-16
             text-center
@@ -819,15 +831,18 @@ export default function CharactersPage() {
           <div
             className="
               flex
-              h-24
-              w-24
+              h-20
+              w-20
               items-center
               justify-center
-              rounded-xl
+              rounded-2xl
               border
               border-emerald-400/20
+              light:border-emerald-200
               bg-emerald-500/10
-              text-5xl
+              light:bg-emerald-50
+              text-4xl
+              shadow-sm
             "
           >
             👤
@@ -836,13 +851,14 @@ export default function CharactersPage() {
 
           <h2
             className="
-              mt-7
+              mt-6
               text-2xl
               font-bold
               text-white
+              light:text-slate-900
             "
           >
-            No characters yet
+            {t("characters.noCharactersFound")}
           </h2>
 
 
@@ -853,9 +869,10 @@ export default function CharactersPage() {
               text-sm
               leading-relaxed
               text-slate-400
+              light:text-slate-600
             "
           >
-            Add your first character to begin managing your berry farming operation.
+            {t("characters.noCharactersSubtitle")}
           </p>
 
 
@@ -898,7 +915,7 @@ export default function CharactersPage() {
               "
             >
               <UserPlus className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
-              <span>Add Your First Character</span>
+              <span>{t("characters.addFirstCharacter")}</span>
             </button>
           </div>
 
@@ -911,10 +928,10 @@ export default function CharactersPage() {
             <Search className="h-7 w-7" />
           </div>
           <h3 className="text-lg font-bold text-white light:text-slate-900">
-            No matching characters
+            {t("characters.noMatchingCharacters")}
           </h3>
           <p className="mt-1 max-w-sm text-xs sm:text-sm text-slate-400 light:text-slate-600">
-            No characters match your current search or status filter.
+            {t("characters.noMatchingDesc")}
           </p>
           <button
             type="button"
@@ -925,7 +942,7 @@ export default function CharactersPage() {
             className="mt-5 inline-flex items-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-500/10 hover:bg-emerald-500/20 px-4 py-2 text-xs font-bold text-emerald-400 light:text-emerald-700 transition-colors cursor-pointer"
           >
             <RotateCcw className="h-3.5 w-3.5" />
-            <span>Reset Filters</span>
+            <span>{t("characters.resetFilters")}</span>
           </button>
         </div>
 
@@ -1042,14 +1059,14 @@ export default function CharactersPage() {
 
         title={
           editingCharacter
-            ? "Edit Character"
-            : "Add Character"
+            ? t("characters.editCharacter")
+            : t("characters.addCharacter")
         }
 
         saveButtonText={
           editingCharacter
-            ? "Save Changes"
-            : "Add Character"
+            ? t("characters.saveChanges")
+            : t("characters.addCharacter")
         }
 
         initialName={
@@ -1092,8 +1109,8 @@ export default function CharactersPage() {
         maxWidth="5xl"
         title={
           plantCharacter?.plantedBerryId
-            ? "🔄 Change Berry"
-            : "🌱 Plant Berry"
+            ? `🔄 ${t("characters.changeBerry")}`
+            : `🌱 ${t("characters.plantBerry")}`
         }
 
         onClose={() =>
@@ -1138,17 +1155,17 @@ export default function CharactersPage() {
           isDeleteOpen
         }
 
-        title="Delete Character"
+        title={t("characters.deleteConfirmTitle")}
 
-        message="Are you sure you want to delete this character?"
+        message={t("characters.deleteConfirmMsg")}
 
         itemName={
           selectedCharacter?.name
         }
 
-        confirmText="Delete"
+        confirmText={t("common.delete")}
 
-        cancelText="Cancel"
+        cancelText={t("common.cancel")}
 
         onConfirm={
           handleDelete
@@ -1178,17 +1195,17 @@ export default function CharactersPage() {
           isChangeBerryOpen
         }
 
-        title="Change Planted Berry"
+        title={t("characters.changeConfirmTitle")}
 
-        message="Changing the planted berry will reset the watering progress, harvest timer, wilt timer, and begin a brand-new farming cycle."
+        message={t("characters.changeConfirmMsg")}
 
         itemName={
           changeBerryCharacter?.name
         }
 
-        confirmText="Choose New Berry"
+        confirmText={t("characters.chooseNewBerry")}
 
-        cancelText="Cancel"
+        cancelText={t("common.cancel")}
 
         onConfirm={() => {
 
@@ -1230,17 +1247,17 @@ export default function CharactersPage() {
           isRemoveBerryOpen
         }
 
-        title="Remove Planted Berry"
+        title={t("characters.removeConfirmTitle")}
 
-        message="Are you sure you want to remove the currently planted berry? This will reset the current farming progress and cannot be undone."
+        message={t("characters.removeConfirmMsg")}
 
         itemName={
           removeBerryCharacter?.name
         }
 
-        confirmText="Remove Berry"
+        confirmText={t("characters.removeBerry")}
 
-        cancelText="Cancel"
+        cancelText={t("common.cancel")}
 
         onConfirm={
           handleRemoveBerry

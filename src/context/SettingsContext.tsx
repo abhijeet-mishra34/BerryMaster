@@ -21,6 +21,8 @@ type SettingsContextValue = {
   setNotifyOnHarvest: (value: boolean) => void;
   notifyOnWilt: boolean;
   setNotifyOnWilt: (value: boolean) => void;
+  enableUfoEasterEgg: boolean;
+  setEnableUfoEasterEgg: (value: boolean) => void;
 };
 
 const SettingsContext =
@@ -104,6 +106,17 @@ export function SettingsProvider({
     }
   });
 
+  const [enableUfoEasterEgg, setEnableUfoEasterEgg] = useState<boolean>(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return true;
+    try {
+      const parsed = JSON.parse(stored);
+      return parsed.enableUfoEasterEgg ?? true;
+    } catch {
+      return true;
+    }
+  });
+
   useEffect(() => {
     localStorage.setItem(
       STORAGE_KEY,
@@ -114,6 +127,7 @@ export function SettingsProvider({
         notifyOnWater,
         notifyOnHarvest,
         notifyOnWilt,
+        enableUfoEasterEgg,
       })
     );
 
@@ -140,6 +154,7 @@ export function SettingsProvider({
     notifyOnWater,
     notifyOnHarvest,
     notifyOnWilt,
+    enableUfoEasterEgg,
   ]);
 
   return (
@@ -157,6 +172,8 @@ export function SettingsProvider({
         setNotifyOnHarvest,
         notifyOnWilt,
         setNotifyOnWilt,
+        enableUfoEasterEgg,
+        setEnableUfoEasterEgg,
       }}
     >
       {children}
@@ -177,6 +194,8 @@ const DEFAULT_SETTINGS: SettingsContextValue = {
   setNotifyOnHarvest: () => {},
   notifyOnWilt: true,
   setNotifyOnWilt: () => {},
+  enableUfoEasterEgg: true,
+  setEnableUfoEasterEgg: () => {},
 };
 
 export function useSettings(): SettingsContextValue {

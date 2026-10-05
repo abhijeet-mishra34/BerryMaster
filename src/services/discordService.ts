@@ -3,8 +3,8 @@ import { CURRENT_APP_VERSION } from "./updateService";
 
 // ── Webhook ────────────────────────────────────────────────────────────────
 
-const WEBHOOK_URL =
-  "https://discord.com/api/webhooks/1537713052663943200/W3Nj69-QPG5Z4Lba-pamhG3KOtZk4cTHKmAS_Hd8ATjPUUZRGYyGGoKBgWX4jivm8ixX";
+const WEBHOOK_URL: string =
+  (import.meta.env.VITE_DISCORD_WEBHOOK_URL as string | undefined)?.trim() || "";
 
 // ── Visual config per category ─────────────────────────────────────────────
 
@@ -56,6 +56,13 @@ const SUBMISSION_COOLDOWN_MS = 5000;
 export async function sendFeedbackToDiscord(
   payload: DiscordFeedbackPayload
 ): Promise<void> {
+  if (!WEBHOOK_URL) {
+    console.warn(
+      "[BerryMaster] Discord webhook URL is not configured. Set VITE_DISCORD_WEBHOOK_URL in .env to receive feedbacks on Discord."
+    );
+    return;
+  }
+
   const now = Date.now();
   if (now - lastSubmittedAt < SUBMISSION_COOLDOWN_MS) {
     throw new Error("Please wait a few seconds before submitting more feedback.");
@@ -72,8 +79,8 @@ export async function sendFeedbackToDiscord(
   // Truncate fields to safe Discord limits
   const safeSubject = payload.subject.slice(0, 250);
   const safeMessage = payload.message.slice(0, 1900);
-  const safeEmail = payload.email ? payload.email.slice(0, 200) : "*Anonymous*";
-  const safeIgn = payload.ign ? payload.ign.slice(0, 100) : "*Not specified*";
+  const safeIgn = payload.ign && payload.ign.trim() ? payload.ign.trim().slice(0, 100) : "*Not provided*";
+  const safeEmail = payload.email && payload.email.trim() ? payload.email.trim().slice(0, 200) : "*Not provided*";
 
   const body = {
     username: "BerryMaster Feedback",
@@ -97,7 +104,7 @@ export async function sendFeedbackToDiscord(
             inline: true,
           },
           {
-            name: "🎮 Trainer IGN",
+            name: "🎮 Trainer (IGN)",
             value: safeIgn,
             inline: true,
           },

@@ -3,11 +3,27 @@
   "identifier": "default",
   "description": "enables the default permissions",
   "windows": [
-    "main"
+    "*"
+  ],
+  "webviews": [
+    "*"
   ],
   "permissions": [
     "core:default",
     "notification:default",
+    "notification:allow-notify",
+    "notification:allow-show",
+    "notification:allow-request-permission",
+    "notification:allow-is-permission-granted",
+    "notification:allow-check-permissions",
+    "notification:allow-create-channel",
+    "notification:allow-delete-channel",
+    "notification:allow-list-channels",
+    "notification:allow-cancel",
+    "notification:allow-get-pending",
+    "notification:allow-remove-active",
+    "notification:allow-get-active",
+    "notification:allow-batch",
     "opener:default",
     "opener:allow-open-url",
     "opener:allow-default-urls"

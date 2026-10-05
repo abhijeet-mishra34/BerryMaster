@@ -8,10 +8,12 @@ import FarmStatusChart from "./FarmStatusChart";
 import NeedsAttention from "./NeedsAttention";
 import RecentActivity from "./RecentActivity";
 import { calculateFarmStats } from "../../utils/farmStats";
+import { useTranslation } from "../../context/LanguageContext";
 
 export default function Dashboard() {
   const { characters } = useCharacters();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const stats = calculateFarmStats(characters);
 
   // Greeting
@@ -21,30 +23,30 @@ export default function Dashboard() {
 
   if (hour < 12) {
     greetingTitle = "Good Morning! 🌞";
-    greetingSubtitle = "Your berry farm is ready for another productive day.";
+    greetingSubtitle = t("dashboard.heroSubtitle");
   } else if (hour < 18) {
     greetingTitle = "Good Afternoon! ☀️";
-    greetingSubtitle = "Keep your berry farm healthy and thriving.";
+    greetingSubtitle = t("dashboard.heroSubtitle");
   } else {
     greetingTitle = "Good Evening! 🌙";
-    greetingSubtitle = "Time to check on your berries before calling it a day.";
+    greetingSubtitle = t("dashboard.heroSubtitle");
   }
 
   const topStats = [
     {
-      title: "Characters",
+      title: t("nav.characters"),
       value: stats.totalCharacters,
       icon: <Users className="h-5 w-5" />,
       color: "emerald" as const,
     },
     {
-      title: "Planted",
+      title: t("farming.growing"),
       value: `${stats.planted}/${stats.totalCharacters}`,
       icon: <Sprout className="h-5 w-5" />,
       color: "emerald" as const,
     },
     {
-      title: "Need Water",
+      title: t("farming.needsWater"),
       value: stats.needWater,
       icon: <Droplets className="h-5 w-5" />,
       color: "blue" as const,
@@ -53,13 +55,13 @@ export default function Dashboard() {
 
   const bottomStats = [
     {
-      title: "Harvest Ready",
+      title: t("farming.harvestReady"),
       value: stats.readyHarvest,
       icon: <Wheat className="h-5 w-5" />,
       color: "amber" as const,
     },
     {
-      title: "Wilted",
+      title: t("farming.wilted"),
       value: stats.wilted,
       icon: <AlertTriangle className="h-5 w-5" />,
       color: "red" as const,
@@ -112,23 +114,20 @@ export default function Dashboard() {
         title="Farm Overview"
         subtitle="A live summary of your farming progress."
       >
-        <div className="flex flex-col gap-6 sm:gap-8">
-          {/* Top Row: 3 cards */}
-          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-            {topStats.map((stat) => (
-              <StatCard
-                key={stat.title}
-                title={stat.title}
-                value={stat.value}
-                icon={stat.icon}
-                color={stat.color}
-              />
+        <div className="flex flex-col gap-4 sm:gap-6 lg:gap-8">
+          {/* Mobile: All 5 cards in a unified responsive grid; Desktop: 3 top + 2 centered bottom */}
+          <div className="grid gap-3 sm:gap-4 md:gap-6 grid-cols-2 lg:grid-cols-3">
+            {topStats.map((stat, idx) => (
+              <div key={stat.title} className={idx === 2 ? "col-span-2 sm:col-span-1 lg:col-span-1" : ""}>
+                <StatCard
+                  title={stat.title}
+                  value={stat.value}
+                  icon={stat.icon}
+                  color={stat.color}
+                />
+              </div>
             ))}
-          </div>
-
-          {/* Bottom Row: 2 cards centered */}
-          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-6">
-            <div className="lg:col-span-2 lg:col-start-2">
+            <div className="lg:hidden">
               <StatCard
                 title={bottomStats[0].title}
                 value={bottomStats[0].value}
@@ -136,7 +135,27 @@ export default function Dashboard() {
                 color={bottomStats[0].color}
               />
             </div>
-            <div className="lg:col-span-2">
+            <div className="lg:hidden">
+              <StatCard
+                title={bottomStats[1].title}
+                value={bottomStats[1].value}
+                icon={bottomStats[1].icon}
+                color={bottomStats[1].color}
+              />
+            </div>
+          </div>
+
+          {/* Desktop Only: Bottom Row with 2 cards centered */}
+          <div className="hidden lg:grid gap-6 grid-cols-6">
+            <div className="col-span-2 col-start-2">
+              <StatCard
+                title={bottomStats[0].title}
+                value={bottomStats[0].value}
+                icon={bottomStats[0].icon}
+                color={bottomStats[0].color}
+              />
+            </div>
+            <div className="col-span-2">
               <StatCard
                 title={bottomStats[1].title}
                 value={bottomStats[1].value}
