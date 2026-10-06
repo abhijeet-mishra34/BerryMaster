@@ -55,20 +55,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
     }
   };
 
-  // Ctrl/Cmd + H to toggle HUD Mode
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "h") {
-        const tag = (document.activeElement?.tagName ?? "").toLowerCase();
-        if (["input", "textarea", "select"].includes(tag)) return;
-        e.preventDefault();
-        setIsHUDMode((prev) => !prev);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
   function toggleSidebar() {
     setSidebarOpen((current) => !current);
   }
@@ -80,9 +66,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
         background: "var(--bg-app-gradient)",
       }}
     >
-      {/* Mini HUD Overlay Mode for PokeMMO */}
-      {isHUDMode && <MiniHUDOverlay onClose={() => setIsHUDMode(false)} />}
-
       {/* Farm background — sparkles and gentle ambient glow */}
       <FarmingBackground />
 

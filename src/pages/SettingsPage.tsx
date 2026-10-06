@@ -27,7 +27,6 @@ import {
   User,
   Globe,
   ChevronDown,
-  ChevronUp,
 } from "lucide-react";
 import { soundService } from "../services/soundService";
 import { hapticService } from "../services/hapticService";
