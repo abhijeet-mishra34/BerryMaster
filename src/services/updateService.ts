@@ -34,8 +34,8 @@ export const CURRENT_APP_VERSION = "1.0.5";
 
 export const DOWNLOAD_LINKS = {
   repo: "https://github.com/abhijeet-mishra34/BerryMaster",
-  pcSetup: `https://github.com/abhijeet-mishra34/BerryMaster/releases/download/pc-v${CURRENT_APP_VERSION}/BerryMaster-Windows-Setup.exe`,
-  androidApk: `https://github.com/abhijeet-mishra34/BerryMaster/releases/download/v${CURRENT_APP_VERSION}/BerryMaster-universal.apk`,
+  pcSetup: "https://github.com/abhijeet-mishra34/BerryMaster/releases/latest/download/BerryMaster-Windows-Setup.exe",
+  androidApk: "https://github.com/abhijeet-mishra34/BerryMaster/releases/latest/download/BerryMaster-universal.apk",
   allReleases: "https://github.com/abhijeet-mishra34/BerryMaster/releases",
 };
 

@@ -34,7 +34,9 @@ jobs:
           java-version: '17'
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
+        with:
+          packages: ''
 
       - name: Install Android NDK & Build Tools
         run: |
@@ -42,9 +44,11 @@ jobs:
 
       - name: Set Android Environment Variables
         run: |
-          echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
-          echo "NDK_HOME=$ANDROID_SDK_ROOT/ndk/26.1.10909125" >> $GITHUB_ENV
-          echo "PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH" >> $GITHUB_ENV
+          SDK_DIR="${ANDROID_HOME:-$ANDROID_SDK_ROOT}"
+          echo "ANDROID_HOME=$SDK_DIR" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=$SDK_DIR" >> $GITHUB_ENV
+          echo "NDK_HOME=$SDK_DIR/ndk/26.1.10909125" >> $GITHUB_ENV
+          echo "PATH=$SDK_DIR/cmdline-tools/latest/bin:$SDK_DIR/platform-tools:$PATH" >> $GITHUB_ENV
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

@@ -1769,16 +1769,33 @@ export default function SettingsPage() {
               </div>
 
               <div className="flex items-center gap-3 flex-wrap shrink-0">
+                {updateResult.hasUpdate && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const apkAsset = updateResult.release?.assets?.find((a) =>
+                        a.name.toLowerCase().endsWith(".apk")
+                      );
+                      openExternalUrl(
+                        apkAsset?.downloadUrl || DOWNLOAD_LINKS.androidApk
+                      );
+                    }}
+                    className="inline-flex items-center gap-2 rounded-xl border border-emerald-400/40 bg-emerald-500 px-6 py-3.5 text-sm font-bold text-slate-950 hover:bg-emerald-400 transition-all shadow-md shadow-emerald-500/20 active:scale-95 cursor-pointer"
+                  >
+                    <Download className="h-4.5 w-4.5" />
+                    <span>Download APK ({updateResult.latestVersion})</span>
+                  </button>
+                )}
                 {updateResult.release?.htmlUrl && (
                   <button
                     type="button"
                     onClick={() =>
                       openExternalUrl(updateResult.release?.htmlUrl || "")
                     }
-                    className="inline-flex items-center gap-2 rounded-xl border border-emerald-400/40 bg-emerald-500 px-6 py-3.5 text-sm font-bold text-slate-950 hover:bg-emerald-400 transition-all shadow-md shadow-emerald-500/20 active:scale-95 cursor-pointer"
+                    className="inline-flex items-center gap-2 rounded-xl border border-slate-700 light:border-slate-300 bg-slate-800/80 light:bg-white px-5 py-3.5 text-sm font-bold text-slate-200 light:text-slate-800 hover:bg-slate-700 transition-all active:scale-95 cursor-pointer"
                   >
                     <ExternalLink className="h-4.5 w-4.5" />
-                    <span>View Release & Downloads</span>
+                    <span>View Release</span>
                   </button>
                 )}
               </div>
