@@ -104,7 +104,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           >
             <div
               key={location.pathname}
-              className="app-main min-h-full p-3.5 sm:p-6 md:p-8 pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-10 page-enter"
+              className="app-main min-h-full p-3.5 sm:p-6 md:p-8 pb-[calc(7rem+env(safe-area-inset-bottom,0px))] md:pb-10 page-enter"
             >
               {children}
             </div>

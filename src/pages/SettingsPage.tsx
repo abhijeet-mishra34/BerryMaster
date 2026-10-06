@@ -336,7 +336,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto flex flex-col gap-8 pb-20">
+    <div className="max-w-4xl mx-auto flex flex-col gap-8 pb-28 sm:pb-20">
       {/* =====================================
           Header Hero Banner
       ===================================== */}
@@ -2150,6 +2150,9 @@ export default function SettingsPage() {
           </div>
         )}
       </section>
+
+      {/* Bottom breathing spacer on mobile to ensure the last category card is never obscured by the bottom navigation bar */}
+      <div className="h-28 md:hidden shrink-0 pointer-events-none" aria-hidden="true" />
 
       {/* Clear Activities Confirmation */}
       <ConfirmDialog

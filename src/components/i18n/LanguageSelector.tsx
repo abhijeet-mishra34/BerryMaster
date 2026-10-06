@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Globe, Check, ChevronDown } from "lucide-react";
+import { Globe, Check, ChevronDown, X } from "lucide-react";
 import { useTranslation } from "../../context/LanguageContext";
 import type { SupportedLanguage } from "../../i18n/types";
 
@@ -100,25 +100,39 @@ export default function LanguageSelector({ variant = "header" }: LanguageSelecto
         </button>
       )}
 
+      {/* Mobile Backdrop Overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs sm:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
       {/* Glassmorphism Dropdown Menu */}
       {isOpen && (
         <div
           className="
             theme-modal
-            absolute
-            right-0
-            top-11
+            fixed
+            inset-x-3
+            top-16
+            max-w-sm
+            mx-auto
+            sm:inset-x-auto
+            sm:absolute
+            sm:right-0
+            sm:top-11
+            sm:w-64
             z-50
-            w-64
-            max-h-[80vh]
+            max-h-[75vh]
             overflow-y-auto
             rounded-2xl
             border
             border-white/[0.12]
             light:border-slate-200
-            bg-slate-950/90
+            bg-slate-950/95
             light:bg-white/95
-            p-2
+            p-2.5
             shadow-2xl
             backdrop-blur-2xl
             animate-in
@@ -131,9 +145,19 @@ export default function LanguageSelector({ variant = "header" }: LanguageSelecto
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 light:text-slate-500">
               {t("header.language")}
             </span>
-            <span className="text-[10px] text-emerald-400 font-mono font-bold">
-              {currentLanguageInfo.code}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] text-emerald-400 font-mono font-bold">
+                {currentLanguageInfo.code}
+              </span>
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="sm:hidden flex h-6 w-6 items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-white/10"
+                aria-label="Close"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
           </div>
 
           <div className="flex flex-col gap-1">
