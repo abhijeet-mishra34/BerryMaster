@@ -8,7 +8,6 @@ import UFOEasterEgg from "../ambient/UFOEasterEgg";
 import FarmingBackground from "../background/FarmingBackground";
 import ToastContainer from "../ui/Toast";
 import FeedbackPromptBot from "../feedback/FeedbackPromptBot";
-import MiniHUDOverlay from "../overlay/MiniHUDOverlay";
 import { useAndroidBackHandler } from "../../hooks/useAndroidBackHandler";
 import { useSettings } from "../../context/SettingsContext";
 import { useTranslation } from "../../context/LanguageContext";
@@ -20,14 +19,11 @@ type AppLayoutProps = {
 export default function AppLayout({ children }: AppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isHUDMode, setIsHUDMode] = useState(false);
   const { enableUfoEasterEgg } = useSettings();
   const { t } = useTranslation();
 
   // Close mobile drawer on Android back gesture
   useAndroidBackHandler(mobileMenuOpen, () => setMobileMenuOpen(false));
-  // Exit HUD mode on Android back gesture
-  useAndroidBackHandler(isHUDMode, () => setIsHUDMode(false));
 
   const location = useLocation();
 
@@ -113,8 +109,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <div className="flex min-w-0 flex-1 flex-col rounded-none md:rounded-2xl border-0 md:border md:border-white/[0.08] light:md:border-slate-200/80 bg-slate-950/20 light:bg-white/40 backdrop-blur-md shadow-none md:shadow-2xl md:shadow-black/40 overflow-hidden">
           <Header
             onOpenMobileMenu={() => setMobileMenuOpen(true)}
-            onToggleHUD={() => setIsHUDMode((prev) => !prev)}
-            isHUDActive={isHUDMode}
           />
 
           <main

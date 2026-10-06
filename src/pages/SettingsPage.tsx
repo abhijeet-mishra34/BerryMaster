@@ -26,6 +26,8 @@ import {
   Eye,
   User,
   Globe,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { soundService } from "../services/soundService";
 import { hapticService } from "../services/hapticService";
@@ -91,6 +93,53 @@ export default function SettingsPage() {
   const [ignInput, setIgnInput] = useState(
     () => localStorage.getItem("berrymaster_saved_ign") || "CrimsonAbhi"
   );
+
+  // Collapsible dropdown sections state
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    profile: false,
+    language: false,
+    appearance: false,
+    notifications: false,
+    sound: false,
+    data: false,
+    updates: false,
+    danger: false,
+  });
+
+  const toggleSection = (id: string) => {
+    setOpenSections((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
+  const expandAll = () => {
+    setOpenSections({
+      profile: true,
+      language: true,
+      appearance: true,
+      notifications: true,
+      sound: true,
+      data: true,
+      updates: true,
+      danger: true,
+    });
+  };
+
+  const collapseAll = () => {
+    setOpenSections({
+      profile: false,
+      language: false,
+      appearance: false,
+      notifications: false,
+      sound: false,
+      data: false,
+      updates: false,
+      danger: false,
+    });
+  };
+
+  const allExpanded = Object.values(openSections).every(Boolean);
 
   function handleSaveIgn() {
     const trimmed = ignInput.trim();
@@ -346,163 +395,332 @@ export default function SettingsPage() {
         </div>
       </div>
 
+      {/* Directory & Quick Toggle Bar */}
+      <div className="flex items-center justify-between px-1 -mt-2">
+        <div className="flex items-center gap-2">
+          <span className="h-4 w-1 rounded-full bg-gradient-to-b from-emerald-400 to-teal-500 shadow-[0_0_8px_rgba(52,211,153,0.5)]" />
+          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 light:text-slate-500">
+            Settings Directory (8 Categories)
+          </span>
+        </div>
+        <button
+          type="button"
+          onClick={allExpanded ? collapseAll : expandAll}
+          className="inline-flex items-center gap-1.5 rounded-xl border border-white/[0.08] light:border-slate-300 bg-slate-900/60 light:bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-300 light:text-slate-700 hover:text-emerald-400 hover:border-emerald-500/40 transition-all cursor-pointer active:scale-95 shadow-xs"
+        >
+          <ChevronDown
+            className={`h-3.5 w-3.5 transition-transform duration-200 ${
+              allExpanded ? "rotate-180" : ""
+            }`}
+          />
+          <span>{allExpanded ? "Collapse All" : "Expand All"}</span>
+        </button>
+      </div>
+
       {/* =====================================
-          Trainer Profile (PokeMMO IGN)
+          1. Trainer Profile (PokeMMO IGN)
       ===================================== */}
       <section
-        className="
-          theme-card
-          rounded-xl
-          p-4
-          sm:p-8
-          md:p-10
-          shadow-xl
-          backdrop-blur-xl
-          flex
-          flex-col
-          gap-5
-        "
+        className={`theme-card rounded-xl overflow-hidden shadow-xl backdrop-blur-xl transition-all duration-300 border ${
+          openSections.profile
+            ? "border-emerald-500/40 bg-slate-950/60"
+            : "border-white/[0.08] hover:border-white/[0.18]"
+        }`}
       >
-        <div className="flex items-center gap-3.5">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400">
-            <User className="h-5 w-5" />
+        <button
+          type="button"
+          onClick={() => toggleSection("profile")}
+          className="w-full flex items-center justify-between p-4 sm:p-6 text-left cursor-pointer transition-colors hover:bg-white/[0.02]"
+          aria-expanded={openSections.profile}
+        >
+          <div className="flex items-center gap-3.5 min-w-0">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400">
+              <User className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
+              <h2 className="text-base sm:text-lg font-bold text-white light:text-slate-900 truncate">
+                Trainer Profile (PokeMMO IGN)
+              </h2>
+              <p className="text-xs text-slate-400 light:text-slate-500 truncate mt-0.5">
+                Set your in-game trainer name for characters & sync
+              </p>
+            </div>
           </div>
-          <div>
-            <h2 className="text-lg font-bold text-white light:text-slate-900">
-              Trainer Profile (PokeMMO IGN)
-            </h2>
-            <p className="text-xs text-slate-400 light:text-slate-500">
-              Set your in-game name to personalize your PokeMMO farmer companion and profile dropdown.
-            </p>
-          </div>
-        </div>
 
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
-          <div className="relative flex-1">
-            <input
-              type="text"
-              value={ignInput}
-              onChange={(e) => setIgnInput(e.target.value)}
-              placeholder="e.g. CrimsonAbhi"
-              maxLength={20}
-              className="
-                w-full
-                rounded-xl
-                border
-                border-slate-800
-                light:border-slate-300
-                bg-slate-950/80
-                light:bg-white
-                px-4
-                py-3
-                text-sm
-                font-semibold
-                text-white
-                light:text-slate-900
-                placeholder:text-slate-500
-                light:placeholder:text-slate-400
-                outline-none
-                focus:border-emerald-400
-                focus:ring-2
-                focus:ring-emerald-500/20
-                transition-all
-              "
-            />
+          <div className="flex items-center gap-3 shrink-0 ml-3">
+            <span className="hidden sm:inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-xs font-bold text-emerald-400">
+              {ignInput.trim() || "Not Set"}
+            </span>
+            <div
+              className={`flex h-8 w-8 items-center justify-center rounded-lg border border-white/[0.08] bg-slate-900/60 text-slate-400 transition-transform duration-200 ${
+                openSections.profile
+                  ? "rotate-180 text-emerald-400 border-emerald-500/30"
+                  : ""
+              }`}
+            >
+              <ChevronDown className="h-4 w-4" />
+            </div>
           </div>
-          <button
-            type="button"
-            onClick={handleSaveIgn}
-            className="
-              inline-flex
-              items-center
-              justify-center
-              gap-2
-              rounded-xl
-              border
-              border-emerald-400/40
-              bg-emerald-500
-              px-6
-              py-3
-              text-xs
-              font-bold
-              text-slate-950
-              hover:bg-emerald-400
-              transition-all
-              shadow-sm
-              active:scale-95
-              cursor-pointer
-              shrink-0
-            "
-          >
-            <Check className="h-4 w-4" />
-            <span>{t("settings.saveIgn")}</span>
-          </button>
-        </div>
+        </button>
+
+        {openSections.profile && (
+          <div className="p-4 sm:p-8 pt-2 sm:pt-4 border-t border-white/[0.06] light:border-slate-200/80 flex flex-col gap-5">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  value={ignInput}
+                  onChange={(e) => setIgnInput(e.target.value)}
+                  placeholder="e.g. CrimsonAbhi"
+                  maxLength={20}
+                  className="
+                    w-full
+                    rounded-xl
+                    border
+                    border-slate-800
+                    light:border-slate-300
+                    bg-slate-950/80
+                    light:bg-white
+                    px-4
+                    py-3
+                    text-sm
+                    font-semibold
+                    text-white
+                    light:text-slate-900
+                    placeholder:text-slate-500
+                    light:placeholder:text-slate-400
+                    outline-none
+                    focus:border-emerald-400
+                    focus:ring-2
+                    focus:ring-emerald-500/20
+                    transition-all
+                  "
+                />
+              </div>
+              <button
+                type="button"
+                onClick={handleSaveIgn}
+                className="
+                  inline-flex
+                  items-center
+                  justify-center
+                  gap-2
+                  rounded-xl
+                  border
+                  border-emerald-400/40
+                  bg-emerald-500
+                  px-6
+                  py-3
+                  text-xs
+                  font-bold
+                  text-slate-950
+                  hover:bg-emerald-400
+                  transition-all
+                  shadow-sm
+                  active:scale-95
+                  cursor-pointer
+                  shrink-0
+                "
+              >
+                <Check className="h-4 w-4" />
+                <span>{t("settings.saveIgn")}</span>
+              </button>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* =====================================
-          Language & Localization (语言与区域设置)
+          2. Language & Localization (语言与区域设置)
       ===================================== */}
       <section
-        className="
-          theme-card
-          rounded-xl
-          p-4
-          sm:p-8
-          md:p-10
-          shadow-xl
-          backdrop-blur-xl
-          flex
-          flex-col
-          gap-5
-        "
+        className={`theme-card rounded-xl overflow-hidden shadow-xl backdrop-blur-xl transition-all duration-300 border ${
+          openSections.language
+            ? "border-emerald-500/40 bg-slate-950/60"
+            : "border-white/[0.08] hover:border-white/[0.18]"
+        }`}
       >
-        <div className="flex items-center gap-3.5">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400">
-            <Globe className="h-5 w-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2.5">
-              <h2 className="text-lg font-bold text-white light:text-slate-900">
-                {t("settings.languageTitle")}
-              </h2>
-              <span className="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
-                10 Languages
-              </span>
+        <button
+          type="button"
+          onClick={() => toggleSection("language")}
+          className="w-full flex items-center justify-between p-4 sm:p-6 text-left cursor-pointer transition-colors hover:bg-white/[0.02]"
+          aria-expanded={openSections.language}
+        >
+          <div className="flex items-center gap-3.5 min-w-0">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400">
+              <Globe className="h-5 w-5" />
             </div>
-            <p className="text-xs text-slate-400 light:text-slate-500">
-              {t("settings.languageSubtitle")}
-            </p>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <h2 className="text-base sm:text-lg font-bold text-white light:text-slate-900 truncate">
+                  {t("settings.languageTitle")}
+                </h2>
+                <span className="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
+                  10 Languages
+                </span>
+              </div>
+              <p className="text-xs text-slate-400 light:text-slate-500 truncate mt-0.5">
+                {t("settings.languageSubtitle")}
+              </p>
+            </div>
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-2">
-          {supportedLanguages.map((lang) => {
-            const isSelected = lang.code === language;
-            return (
+          <div className="flex items-center gap-3 shrink-0 ml-3">
+            <span className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-xs font-bold text-emerald-400">
+              <span className="text-sm select-none">
+                {supportedLanguages.find((l) => l.code === language)?.flag || "🌐"}
+              </span>
+              <span>
+                {supportedLanguages.find((l) => l.code === language)?.name || language}
+              </span>
+            </span>
+            <div
+              className={`flex h-8 w-8 items-center justify-center rounded-lg border border-white/[0.08] bg-slate-900/60 text-slate-400 transition-transform duration-200 ${
+                openSections.language
+                  ? "rotate-180 text-emerald-400 border-emerald-500/30"
+                  : ""
+              }`}
+            >
+              <ChevronDown className="h-4 w-4" />
+            </div>
+          </div>
+        </button>
+
+        {openSections.language && (
+          <div className="p-4 sm:p-8 pt-2 sm:pt-4 border-t border-white/[0.06] light:border-slate-200/80 flex flex-col gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-2">
+              {supportedLanguages.map((lang) => {
+                const isSelected = lang.code === language;
+                return (
+                  <button
+                    key={lang.code}
+                    type="button"
+                    onClick={() => {
+                      setLanguage(lang.code);
+                      addToast(
+                        lang.code === "zh-CN"
+                          ? "语言已切换为简体中文"
+                          : lang.code === "zh-TW"
+                          ? "語言已切換為繁體中文"
+                          : `Language changed to ${lang.name}`,
+                        "success"
+                      );
+                    }}
+                    className={`
+                      group
+                      relative
+                      flex
+                      items-center
+                      justify-between
+                      rounded-xl
+                      border
+                      p-3.5
+                      text-left
+                      transition-all
+                      duration-200
+                      hover:scale-[1.01]
+                      active:scale-[0.99]
+                      cursor-pointer
+                      ${
+                        isSelected
+                          ? "border-emerald-500/60 bg-emerald-500/15 text-white ring-2 ring-emerald-500/30 shadow-lg shadow-emerald-950/20"
+                          : "border-white/[0.08] light:border-slate-200 bg-slate-950/40 light:bg-slate-50/80 text-slate-300 light:text-slate-700 hover:border-white/[0.15] light:hover:border-slate-300"
+                      }
+                    `}
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className="text-2xl leading-none select-none">{lang.flag}</span>
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-sm font-bold truncate">
+                          {lang.name}
+                        </span>
+                        <span className="text-[11px] text-slate-400 light:text-slate-500 truncate">
+                          {lang.englishName}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                      {lang.badge && (
+                        <span className="rounded-md bg-emerald-500/20 px-1.5 py-0.5 text-[9px] font-bold text-emerald-400 border border-emerald-500/30">
+                          {lang.badge}
+                        </span>
+                      )}
+                      {isSelected && (
+                        <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-500 text-slate-950 shadow-xs">
+                          <Check className="h-3.5 w-3.5 stroke-[3]" />
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* =====================================
+          3. Appearance & Theme
+      ===================================== */}
+      <section
+        className={`theme-card rounded-xl overflow-hidden shadow-xl backdrop-blur-xl transition-all duration-300 border ${
+          openSections.appearance
+            ? "border-emerald-500/40 bg-slate-950/60"
+            : "border-white/[0.08] hover:border-white/[0.18]"
+        }`}
+      >
+        <button
+          type="button"
+          onClick={() => toggleSection("appearance")}
+          className="w-full flex items-center justify-between p-4 sm:p-6 text-left cursor-pointer transition-colors hover:bg-white/[0.02]"
+          aria-expanded={openSections.appearance}
+        >
+          <div className="flex items-center gap-3.5 min-w-0">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400">
+              <Moon className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
+              <h2 className="text-base sm:text-lg font-bold text-white light:text-slate-900 truncate">
+                Appearance & Theme
+              </h2>
+              <p className="text-xs text-slate-400 light:text-slate-500 truncate mt-0.5">
+                Select interface style, dark/light mode, and ambient visual effects
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 shrink-0 ml-3">
+            <span className="hidden sm:inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-xs font-bold text-emerald-400">
+              {theme === "dark" ? "Dark Theme" : "Light Theme"}
+            </span>
+            <div
+              className={`flex h-8 w-8 items-center justify-center rounded-lg border border-white/[0.08] bg-slate-900/60 text-slate-400 transition-transform duration-200 ${
+                openSections.appearance
+                  ? "rotate-180 text-emerald-400 border-emerald-500/30"
+                  : ""
+              }`}
+            >
+              <ChevronDown className="h-4 w-4" />
+            </div>
+          </div>
+        </button>
+
+        {openSections.appearance && (
+          <div className="p-4 sm:p-8 pt-2 sm:pt-4 border-t border-white/[0.06] light:border-slate-200/80 flex flex-col gap-6">
+            <div className="grid gap-4 sm:grid-cols-2">
+              {/* Dark Mode */}
               <button
-                key={lang.code}
                 type="button"
-                onClick={() => {
-                  setLanguage(lang.code);
-                  addToast(
-                    lang.code === "zh-CN"
-                      ? "语言已切换为简体中文"
-                      : lang.code === "zh-TW"
-                      ? "語言已切換為繁體中文"
-                      : `Language changed to ${lang.name}`,
-                    "success"
-                  );
-                }}
+                onClick={() => setTheme("dark")}
                 className={`
                   group
-                  relative
                   flex
-                  items-center
-                  justify-between
+                  items-start
+                  gap-4
                   rounded-xl
                   border
-                  p-3.5
+                  p-6
                   text-left
                   transition-all
                   duration-200
@@ -510,1399 +728,1429 @@ export default function SettingsPage() {
                   active:scale-[0.99]
                   cursor-pointer
                   ${
-                    isSelected
-                      ? "border-emerald-500/60 bg-emerald-500/15 text-white ring-2 ring-emerald-500/30 shadow-lg shadow-emerald-950/20"
-                      : "border-white/[0.08] light:border-slate-200 bg-slate-950/40 light:bg-slate-50/80 text-slate-300 light:text-slate-700 hover:border-white/[0.15] light:hover:border-slate-300"
+                    theme === "dark"
+                      ? "border-emerald-500/60 bg-emerald-500/10 text-white ring-2 ring-emerald-500/30 shadow-lg shadow-emerald-950/30"
+                      : "border-white/[0.08] light:border-slate-200 bg-slate-950/40 light:bg-slate-50 text-slate-400 light:text-slate-600 hover:border-white/[0.15] light:hover:border-slate-300"
                   }
                 `}
               >
-                <div className="flex items-center gap-3 min-w-0">
-                  <span className="text-2xl leading-none select-none">{lang.flag}</span>
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-sm font-bold truncate">
-                      {lang.name}
-                    </span>
-                    <span className="text-[11px] text-slate-400 light:text-slate-500 truncate">
-                      {lang.englishName}
+                <div
+                  className={`
+                    flex
+                    h-11
+                    w-11
+                    shrink-0
+                    items-center
+                    justify-center
+                    rounded-xl
+                    border
+                    transition-transform
+                    duration-200
+                    group-hover:scale-105
+                    ${
+                      theme === "dark"
+                        ? "border-emerald-500/40 bg-emerald-500/20 text-emerald-300"
+                        : "border-slate-800 bg-slate-900 text-slate-400"
+                    }
+                  `}
+                >
+                  <Moon className="h-5 w-5" />
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold text-white light:text-slate-900">
+                      Dark Theme
+                    </h3>
+                    {theme === "dark" && (
+                      <span className="flex items-center gap-1 rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/30">
+                        <Check className="h-3 w-3" />
+                        Active
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-1.5 text-xs text-slate-400 light:text-slate-500 leading-relaxed">
+                    Obsidian slate palette with luminous emerald accents.
+                  </p>
+                </div>
+              </button>
+
+              {/* Light Mode */}
+              <button
+                type="button"
+                onClick={() => setTheme("light")}
+                className={`
+                  group
+                  flex
+                  items-start
+                  gap-4
+                  rounded-xl
+                  border
+                  p-6
+                  text-left
+                  transition-all
+                  duration-200
+                  hover:scale-[1.01]
+                  active:scale-[0.99]
+                  cursor-pointer
+                  ${
+                    theme === "light"
+                      ? "border-emerald-500/60 bg-emerald-500/10 text-white light:text-slate-900 ring-2 ring-emerald-500/30 shadow-lg shadow-emerald-950/30"
+                      : "border-white/[0.08] light:border-slate-200 bg-slate-950/40 light:bg-slate-50 text-slate-400 light:text-slate-600 hover:border-white/[0.15] light:hover:border-slate-300"
+                  }
+                `}
+              >
+                <div
+                  className={`
+                    flex
+                    h-11
+                    w-11
+                    shrink-0
+                    items-center
+                    justify-center
+                    rounded-xl
+                    border
+                    transition-transform
+                    duration-200
+                    group-hover:scale-105
+                    ${
+                      theme === "light"
+                        ? "border-emerald-500/40 bg-emerald-500/20 text-emerald-500"
+                        : "border-slate-800 light:border-slate-200 bg-slate-900 light:bg-white text-slate-400"
+                    }
+                  `}
+                >
+                  <Sun className="h-5 w-5" />
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold text-white light:text-slate-900">
+                      Light Theme
+                    </h3>
+                    {theme === "light" && (
+                      <span className="flex items-center gap-1 rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-[10px] font-bold text-emerald-500 border border-emerald-500/30">
+                        <Check className="h-3 w-3" />
+                        Active
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-1.5 text-xs text-slate-400 light:text-slate-500 leading-relaxed">
+                    Clean daylight slate palette with high contrast and sharp legibility.
+                  </p>
+                </div>
+              </button>
+            </div>
+
+            {/* UFO Easter Egg Control */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-teal-500/20 bg-teal-500/[0.04] light:bg-teal-50/60 p-4 sm:p-5">
+              <div className="flex items-center gap-3.5">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-teal-500/30 bg-teal-500/10 text-xl leading-none select-none">
+                  <span className="inline-flex items-center justify-center leading-none -translate-y-0.5">
+                    🛸
+                  </span>
+                </div>
+                <div>
+                  <div className="flex items-center gap-2.5">
+                    <h4 className="text-sm font-bold text-white light:text-slate-900">
+                      UFO Abduction Easter Egg
+                    </h4>
+                    <span
+                      className={`rounded-md px-2 py-0.5 text-[10px] font-bold border transition-colors ${
+                        enableUfoEasterEgg
+                          ? "border-teal-500/30 bg-teal-500/15 text-teal-400"
+                          : "border-slate-700 bg-slate-800/80 text-slate-400"
+                      }`}
+                    >
+                      {enableUfoEasterEgg ? "Active" : "Disabled"}
                     </span>
                   </div>
+                  <p className="text-xs text-slate-400 light:text-slate-500">
+                    A curious UFO hovers by occasionally to borrow a specimen and return it safely.
+                  </p>
                 </div>
-
-                <div className="flex items-center gap-1.5 shrink-0 ml-2">
-                  {lang.badge && (
-                    <span className="rounded-md bg-emerald-500/20 px-1.5 py-0.5 text-[9px] font-bold text-emerald-400 border border-emerald-500/30">
-                      {lang.badge}
-                    </span>
-                  )}
-                  {isSelected && (
-                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-500 text-slate-950 shadow-xs">
-                      <Check className="h-3.5 w-3.5 stroke-[3]" />
-                    </span>
-                  )}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* =====================================
-          1. Appearance & Theme
-      ===================================== */}
-      <section
-        className="
-          theme-card
-          rounded-xl
-          p-4
-          sm:p-8
-          md:p-10
-          shadow-xl
-          backdrop-blur-xl
-          flex
-          flex-col
-          gap-7
-        "
-      >
-        <div className="flex items-center gap-3.5">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400">
-            <Moon className="h-5 w-5" />
-          </div>
-          <div>
-            <h2 className="text-lg font-bold text-white light:text-slate-900">
-              Appearance & Theme
-            </h2>
-            <p className="text-xs text-slate-400 light:text-slate-500">
-              Select the interface style tailored for your setup.
-            </p>
-          </div>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          {/* Dark Mode */}
-          <button
-            type="button"
-            onClick={() => setTheme("dark")}
-            className={`
-              group
-              flex
-              items-start
-              gap-4
-              rounded-xl
-              border
-              p-6
-              text-left
-              transition-all
-              duration-200
-              hover:scale-[1.01]
-              active:scale-[0.99]
-              cursor-pointer
-              ${
-                theme === "dark"
-                  ? "border-emerald-500/60 bg-emerald-500/10 text-white ring-2 ring-emerald-500/30 shadow-lg shadow-emerald-950/30"
-                  : "border-white/[0.08] light:border-slate-200 bg-slate-950/40 light:bg-slate-50 text-slate-400 light:text-slate-600 hover:border-white/[0.15] light:hover:border-slate-300"
-              }
-            `}
-          >
-            <div
-              className={`
-                flex
-                h-11
-                w-11
-                shrink-0
-                items-center
-                justify-center
-                rounded-xl
-                border
-                transition-transform
-                duration-200
-                group-hover:scale-105
-                ${
-                  theme === "dark"
-                    ? "border-emerald-500/40 bg-emerald-500/20 text-emerald-300"
-                    : "border-slate-800 bg-slate-900 text-slate-400"
-                }
-              `}
-            >
-              <Moon className="h-5 w-5" />
-            </div>
-
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold text-white light:text-slate-900">
-                  Dark Theme
-                </h3>
-                {theme === "dark" && (
-                  <span className="flex items-center gap-1 rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/30">
-                    <Check className="h-3 w-3" />
-                    Active
-                  </span>
-                )}
               </div>
-              <p className="mt-1.5 text-xs text-slate-400 light:text-slate-500 leading-relaxed">
-                Obsidian slate palette with luminous emerald accents.
-              </p>
-            </div>
-          </button>
 
-          {/* Light Mode */}
-          <button
-            type="button"
-            onClick={() => setTheme("light")}
-            className={`
-              group
-              flex
-              items-start
-              gap-4
-              rounded-xl
-              border
-              p-6
-              text-left
-              transition-all
-              duration-200
-              hover:scale-[1.01]
-              active:scale-[0.99]
-              cursor-pointer
-              ${
-                theme === "light"
-                  ? "border-emerald-500/60 bg-emerald-500/10 text-white light:text-slate-900 ring-2 ring-emerald-500/30 shadow-lg shadow-emerald-950/30"
-                  : "border-white/[0.08] light:border-slate-200 bg-slate-950/40 light:bg-slate-50 text-slate-400 light:text-slate-600 hover:border-white/[0.15] light:hover:border-slate-300"
-              }
-            `}
-          >
-            <div
-              className={`
-                flex
-                h-11
-                w-11
-                shrink-0
-                items-center
-                justify-center
-                rounded-xl
-                border
-                transition-transform
-                duration-200
-                group-hover:scale-105
-                ${
-                  theme === "light"
-                    ? "border-emerald-500/40 bg-emerald-500/20 text-emerald-500"
-                    : "border-slate-800 light:border-slate-200 bg-slate-900 light:bg-white text-slate-400"
-                }
-              `}
-            >
-              <Sun className="h-5 w-5" />
-            </div>
-
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold text-white light:text-slate-900">
-                  Light Theme
-                </h3>
-                {theme === "light" && (
-                  <span className="flex items-center gap-1 rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-[10px] font-bold text-emerald-500 border border-emerald-500/30">
-                    <Check className="h-3 w-3" />
-                    Active
-                  </span>
+              <div className="flex items-center gap-3 self-end sm:self-auto shrink-0">
+                {enableUfoEasterEgg && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      window.dispatchEvent(new CustomEvent("berrymaster:summon-ufo"))
+                    }
+                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-teal-500/30 bg-teal-500/20 px-3.5 py-2 text-xs font-bold text-teal-300 hover:bg-teal-500 hover:text-slate-950 light:bg-teal-600 light:text-white transition-all cursor-pointer shadow-xs active:scale-95"
+                  >
+                    <span className="inline-flex items-center justify-center text-sm leading-none -translate-y-0.5">
+                      🛸
+                    </span>
+                    <span className="leading-none">Summon Now</span>
+                  </button>
                 )}
-              </div>
-              <p className="mt-1.5 text-xs text-slate-400 light:text-slate-500 leading-relaxed">
-                Clean daylight slate palette with high contrast and sharp legibility.
-              </p>
-            </div>
-          </button>
-        </div>
 
-
-        {/* UFO Easter Egg Control */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-teal-500/20 bg-teal-500/[0.04] light:bg-teal-50/60 p-4 sm:p-5">
-          <div className="flex items-center gap-3.5">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-teal-500/30 bg-teal-500/10 text-xl leading-none select-none">
-              <span className="inline-flex items-center justify-center leading-none -translate-y-0.5">
-                🛸
-              </span>
-            </div>
-            <div>
-              <div className="flex items-center gap-2.5">
-                <h4 className="text-sm font-bold text-white light:text-slate-900">
-                  UFO Abduction Easter Egg
-                </h4>
-                <span
-                  className={`rounded-md px-2 py-0.5 text-[10px] font-bold border transition-colors ${
-                    enableUfoEasterEgg
-                      ? "border-teal-500/30 bg-teal-500/15 text-teal-400"
-                      : "border-slate-700 bg-slate-800/80 text-slate-400"
-                  }`}
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={enableUfoEasterEgg}
+                  aria-label="Toggle UFO Easter Egg"
+                  onClick={() => setEnableUfoEasterEgg(!enableUfoEasterEgg)}
+                  className={`
+                    relative
+                    h-7
+                    w-13
+                    shrink-0
+                    cursor-pointer
+                    rounded-full
+                    p-1
+                    transition-colors
+                    duration-200
+                    focus:outline-none
+                    focus:ring-2
+                    focus:ring-teal-500/40
+                    ${enableUfoEasterEgg ? "bg-teal-500" : "bg-slate-700"}
+                  `}
                 >
-                  {enableUfoEasterEgg ? "Active" : "Disabled"}
-                </span>
-              </div>
-              <p className="text-xs text-slate-400 light:text-slate-500">
-                A curious UFO hovers by occasionally to borrow a specimen and return it safely.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 self-end sm:self-auto shrink-0">
-            {enableUfoEasterEgg && (
-              <button
-                type="button"
-                onClick={() =>
-                  window.dispatchEvent(new CustomEvent("berrymaster:summon-ufo"))
-                }
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-teal-500/30 bg-teal-500/20 px-3.5 py-2 text-xs font-bold text-teal-300 hover:bg-teal-500 hover:text-slate-950 light:bg-teal-600 light:text-white transition-all cursor-pointer shadow-xs active:scale-95"
-              >
-                <span className="inline-flex items-center justify-center text-sm leading-none -translate-y-0.5">
-                  🛸
-                </span>
-                <span className="leading-none">Summon Now</span>
-              </button>
-            )}
-
-            <button
-              type="button"
-              role="switch"
-              aria-checked={enableUfoEasterEgg}
-              aria-label="Toggle UFO Easter Egg"
-              onClick={() => setEnableUfoEasterEgg(!enableUfoEasterEgg)}
-              className={`
-                relative
-                h-7
-                w-13
-                shrink-0
-                cursor-pointer
-                rounded-full
-                p-1
-                transition-colors
-                duration-200
-                focus:outline-none
-                focus:ring-2
-                focus:ring-teal-500/40
-                ${enableUfoEasterEgg ? "bg-teal-500" : "bg-slate-700"}
-              `}
-            >
-              <span
-                className={`
-                  block
-                  h-5
-                  w-5
-                  rounded-full
-                  bg-white
-                  shadow-md
-                  transition-transform
-                  duration-200
-                  ${enableUfoEasterEgg ? "translate-x-6" : "translate-x-0"}
-                `}
-              />
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================
-          2. Notifications & Background Alarms
-      ===================================== */}
-      <section
-        className="
-          theme-card
-          rounded-xl
-          p-4
-          sm:p-8
-          md:p-10
-          shadow-xl
-          backdrop-blur-xl
-          flex
-          flex-col
-          gap-7
-        "
-      >
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex items-center gap-3.5">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400">
-              <Bell className="h-5 w-5" />
-            </div>
-            <div>
-              <h2 className="text-lg font-bold text-white light:text-slate-900">
-                Notifications & Alerts
-              </h2>
-              <p className="text-xs text-slate-400 light:text-slate-500">
-                Configure farming alerts and background execution.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2.5">
-            <span
-              className={`
-                inline-flex
-                items-center
-                gap-1.5
-                rounded-xl
-                px-3.5
-                py-1.5
-                text-xs
-                font-bold
-                border
-                ${
-                  permissionState === "granted"
-                    ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
-                    : permissionState === "denied"
-                    ? "border-rose-500/30 bg-rose-500/10 text-rose-400"
-                    : "border-amber-500/30 bg-amber-500/10 text-amber-400"
-                }
-              `}
-            >
-              {permissionState === "granted" ? (
-                <>
-                  <Check className="h-3.5 w-3.5" />
-                  <span>Alerts Enabled</span>
-                </>
-              ) : (
-                <>
-                  <ShieldAlert className="h-3.5 w-3.5" />
-                  <span>Permission Needed</span>
-                </>
-              )}
-            </span>
-
-            {permissionState !== "granted" && (
-              <button
-                type="button"
-                onClick={handleRequestPermission}
-                className="rounded-xl border border-emerald-400/40 bg-emerald-500 px-4 py-1.5 text-xs font-bold text-slate-950 hover:bg-emerald-400 transition-all shadow-sm active:scale-95 cursor-pointer"
-              >
-                Grant
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* PC System Tray Mode Row */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-white/[0.08] bg-slate-950/40 light:bg-slate-50/80 p-6">
-          <div className="flex items-start gap-4">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-800 light:bg-slate-200 text-emerald-400 border border-slate-700/50">
-              <Monitor className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2.5">
-                <h3 className="text-sm font-bold text-white light:text-slate-900">
-                  PC System Tray Mode
-                </h3>
-                <span className="rounded-md bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/20">
-                  Desktop
-                </span>
-              </div>
-              <p className="mt-1 text-xs text-slate-400 light:text-slate-500 leading-relaxed max-w-xl">
-                When closed, BerryMaster minimizes to the Windows taskbar / system tray to fire precise watering and harvest alarms in the background.
-              </p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            role="switch"
-            aria-checked={desktopMinimizeToTray}
-            onClick={() => setDesktopMinimizeToTray(!desktopMinimizeToTray)}
-            className={`
-              relative
-              h-7
-              w-13
-              shrink-0
-              cursor-pointer
-              rounded-full
-              p-1
-              transition-colors
-              duration-200
-              focus:outline-none
-              focus:ring-2
-              focus:ring-emerald-500/40
-              ${desktopMinimizeToTray ? "bg-emerald-500" : "bg-slate-700"}
-            `}
-          >
-            <span
-              className={`
-                block
-                h-5
-                w-5
-                rounded-full
-                bg-white
-                shadow-md
-                transition-transform
-                duration-200
-                ${desktopMinimizeToTray ? "translate-x-6" : "translate-x-0"}
-              `}
-            />
-          </button>
-        </div>
-
-        {/* Always-on-Top Pin Mode Explanation */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-white/[0.08] bg-slate-950/40 light:bg-slate-50/80 p-6">
-          <div className="flex items-start gap-4">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-800 light:bg-slate-200 text-sky-400 border border-slate-700/50">
-              <Pin className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2.5">
-                <h3 className="text-sm font-bold text-white light:text-slate-900">
-                  Always-on-Top Floating Mode
-                </h3>
-                <span className="rounded-md bg-sky-500/10 px-2 py-0.5 text-[10px] font-bold text-sky-400 border border-sky-500/20">
-                  Ctrl + T
-                </span>
-              </div>
-              <p className="mt-1 text-xs text-slate-400 light:text-slate-500 leading-relaxed max-w-xl">
-                Floats BerryMaster over your PokéMMO game client so you never have to Alt-Tab while tending crops. Toggle with the Pin icon in the top header or press <kbd className="rounded bg-slate-800 px-1.5 py-0.5 font-mono text-[11px] text-slate-200 border border-slate-700">Ctrl + T</kbd>.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* 3 Event Filter Cards */}
-        <div className="grid gap-4 sm:grid-cols-3">
-          {/* Water Needed */}
-          <div className="flex items-center justify-between rounded-xl border border-white/[0.08] bg-slate-950/30 light:bg-slate-50/60 p-5 transition-all hover:border-white/[0.15]">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20">
-                <Droplets className="h-4.5 w-4.5" />
-              </div>
-              <div>
-                <h4 className="text-xs font-bold text-white light:text-slate-900">
-                  Water Needed
-                </h4>
-                <p className="text-[11px] text-slate-400 light:text-slate-500">
-                  Dry soil reminders
-                </p>
+                  <span
+                    className={`
+                      block
+                      h-5
+                      w-5
+                      rounded-full
+                      bg-white
+                      shadow-md
+                      transition-transform
+                      duration-200
+                      ${enableUfoEasterEgg ? "translate-x-6" : "translate-x-0"}
+                    `}
+                  />
+                </button>
               </div>
             </div>
-
-            <button
-              type="button"
-              role="switch"
-              aria-checked={notifyOnWater}
-              onClick={() => setNotifyOnWater(!notifyOnWater)}
-              className={`
-                relative
-                h-6
-                w-11
-                shrink-0
-                cursor-pointer
-                rounded-full
-                p-0.5
-                transition-colors
-                duration-200
-                ${notifyOnWater ? "bg-emerald-500" : "bg-slate-700"}
-              `}
-            >
-              <span
-                className={`
-                  block
-                  h-5
-                  w-5
-                  rounded-full
-                  bg-white
-                  shadow-sm
-                  transition-transform
-                  duration-200
-                  ${notifyOnWater ? "translate-x-5" : "translate-x-0"}
-                `}
-              />
-            </button>
-          </div>
-
-          {/* Harvest Ready */}
-          <div className="flex items-center justify-between rounded-xl border border-white/[0.08] bg-slate-950/30 light:bg-slate-50/60 p-5 transition-all hover:border-white/[0.15]">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                <Sparkles className="h-4.5 w-4.5" />
-              </div>
-              <div>
-                <h4 className="text-xs font-bold text-white light:text-slate-900">
-                  Harvest Ready
-                </h4>
-                <p className="text-[11px] text-slate-400 light:text-slate-500">
-                  Ripe crop alerts
-                </p>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              role="switch"
-              aria-checked={notifyOnHarvest}
-              onClick={() => setNotifyOnHarvest(!notifyOnHarvest)}
-              className={`
-                relative
-                h-6
-                w-11
-                shrink-0
-                cursor-pointer
-                rounded-full
-                p-0.5
-                transition-colors
-                duration-200
-                ${notifyOnHarvest ? "bg-emerald-500" : "bg-slate-700"}
-              `}
-            >
-              <span
-                className={`
-                  block
-                  h-5
-                  w-5
-                  rounded-full
-                  bg-white
-                  shadow-sm
-                  transition-transform
-                  duration-200
-                  ${notifyOnHarvest ? "translate-x-5" : "translate-x-0"}
-                `}
-              />
-            </button>
-          </div>
-
-          {/* Wilt Warnings */}
-          <div className="flex items-center justify-between rounded-xl border border-white/[0.08] bg-slate-950/30 light:bg-slate-50/60 p-5 transition-all hover:border-white/[0.15]">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/20">
-                <ShieldAlert className="h-4.5 w-4.5" />
-              </div>
-              <div>
-                <h4 className="text-xs font-bold text-white light:text-slate-900">
-                  Wilt Warnings
-                </h4>
-                <p className="text-[11px] text-slate-400 light:text-slate-500">
-                  Expiring plant alarms
-                </p>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              role="switch"
-              aria-checked={notifyOnWilt}
-              onClick={() => setNotifyOnWilt(!notifyOnWilt)}
-              className={`
-                relative
-                h-6
-                w-11
-                shrink-0
-                cursor-pointer
-                rounded-full
-                p-0.5
-                transition-colors
-                duration-200
-                ${notifyOnWilt ? "bg-emerald-500" : "bg-slate-700"}
-              `}
-            >
-              <span
-                className={`
-                  block
-                  h-5
-                  w-5
-                  rounded-full
-                  bg-white
-                  shadow-sm
-                  transition-transform
-                  duration-200
-                  ${notifyOnWilt ? "translate-x-5" : "translate-x-0"}
-                `}
-              />
-            </button>
-          </div>
-        </div>
-
-        {/* Test Notification Row */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04] p-6">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              <Activity className="h-5 w-5" />
-            </div>
-            <div>
-              <h3 className="text-sm font-bold text-white light:text-slate-900">
-                Test Notification Alert
-              </h3>
-              <p className="mt-0.5 text-xs text-slate-400 light:text-slate-500 leading-relaxed max-w-lg">
-                Dispatch an instant test notification to check your taskbar alerts and background alarms.
-              </p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            disabled={isSendingTest}
-            onClick={handleSendTestNotification}
-            className="
-              inline-flex
-              items-center
-              justify-center
-              gap-2
-              rounded-xl
-              border
-              border-emerald-400/40
-              bg-emerald-500
-              px-6
-              py-3
-              text-xs
-              font-bold
-              text-slate-950
-              transition-all
-              hover:bg-emerald-400
-              hover:shadow-lg
-              hover:shadow-emerald-500/20
-              active:scale-95
-              disabled:opacity-60
-              disabled:cursor-not-allowed
-              shrink-0
-              cursor-pointer
-            "
-          >
-            <Bell className={`h-4 w-4 ${isSendingTest ? "animate-pulse" : ""}`} />
-            <span>{isSendingTest ? "Sending Test..." : "Send Test Notification"}</span>
-          </button>
-        </div>
-
-        {testNotificationStatus && (
-          <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-3.5 text-xs font-medium text-emerald-300 flex items-center gap-2.5">
-            <span className="text-sm">ℹ️</span>
-            <span>{testNotificationStatus}</span>
           </div>
         )}
       </section>
 
       {/* =====================================
-          3. Sound & Audio Effects
+          4. Notifications & Alerts
       ===================================== */}
       <section
-        className="
-          theme-card
-          rounded-xl
-          p-4
-          sm:p-8
-          md:p-10
-          shadow-xl
-          backdrop-blur-xl
-          flex
-          flex-col
-          gap-7
-        "
+        className={`theme-card rounded-xl overflow-hidden shadow-xl backdrop-blur-xl transition-all duration-300 border ${
+          openSections.notifications
+            ? "border-emerald-500/40 bg-slate-950/60"
+            : "border-white/[0.08] hover:border-white/[0.18]"
+        }`}
       >
-        <div className="flex items-center justify-between">
+        <button
+          type="button"
+          onClick={() => toggleSection("notifications")}
+          className="w-full flex items-center justify-between p-4 sm:p-6 text-left cursor-pointer transition-colors hover:bg-white/[0.02]"
+          aria-expanded={openSections.notifications}
+        >
+          <div className="flex items-center gap-3.5 min-w-0">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400">
+              <Bell className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
+              <h2 className="text-base sm:text-lg font-bold text-white light:text-slate-900 truncate">
+                Notifications & Alerts
+              </h2>
+              <p className="text-xs text-slate-400 light:text-slate-500 truncate mt-0.5">
+                Configure farming alerts, background alarms, and system tray mode
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 shrink-0 ml-3">
+            <span
+              className={`hidden sm:inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-bold ${
+                permissionState === "granted"
+                  ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                  : "border-amber-500/30 bg-amber-500/10 text-amber-400"
+              }`}
+            >
+              {permissionState === "granted" ? "Alerts Enabled" : "Permission Needed"}
+            </span>
+            <div
+              className={`flex h-8 w-8 items-center justify-center rounded-lg border border-white/[0.08] bg-slate-900/60 text-slate-400 transition-transform duration-200 ${
+                openSections.notifications
+                  ? "rotate-180 text-emerald-400 border-emerald-500/30"
+                  : ""
+              }`}
+            >
+              <ChevronDown className="h-4 w-4" />
+            </div>
+          </div>
+        </button>
+
+        {openSections.notifications && (
+          <div className="p-4 sm:p-8 pt-2 sm:pt-4 border-t border-white/[0.06] light:border-slate-200/80 flex flex-col gap-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <p className="text-xs sm:text-sm text-slate-300 light:text-slate-700">
+                  Native OS notification status:
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2.5">
+                <span
+                  className={`
+                    inline-flex
+                    items-center
+                    gap-1.5
+                    rounded-xl
+                    px-3.5
+                    py-1.5
+                    text-xs
+                    font-bold
+                    border
+                    ${
+                      permissionState === "granted"
+                        ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                        : permissionState === "denied"
+                        ? "border-rose-500/30 bg-rose-500/10 text-rose-400"
+                        : "border-amber-500/30 bg-amber-500/10 text-amber-400"
+                    }
+                  `}
+                >
+                  {permissionState === "granted" ? (
+                    <>
+                      <Check className="h-3.5 w-3.5" />
+                      <span>Alerts Active</span>
+                    </>
+                  ) : (
+                    <>
+                      <ShieldAlert className="h-3.5 w-3.5" />
+                      <span>Permission Needed</span>
+                    </>
+                  )}
+                </span>
+
+                {permissionState !== "granted" && (
+                  <button
+                    type="button"
+                    onClick={handleRequestPermission}
+                    className="rounded-xl border border-emerald-400/40 bg-emerald-500 px-4 py-1.5 text-xs font-bold text-slate-950 hover:bg-emerald-400 transition-all shadow-sm active:scale-95 cursor-pointer"
+                  >
+                    Grant
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* PC System Tray Mode Row */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-white/[0.08] bg-slate-950/40 light:bg-slate-50/80 p-6">
+              <div className="flex items-start gap-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-800 light:bg-slate-200 text-emerald-400 border border-slate-700/50">
+                  <Monitor className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2.5">
+                    <h3 className="text-sm font-bold text-white light:text-slate-900">
+                      PC System Tray Mode
+                    </h3>
+                    <span className="rounded-md bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/20">
+                      Desktop
+                    </span>
+                  </div>
+                  <p className="mt-1 text-xs text-slate-400 light:text-slate-500 leading-relaxed max-w-xl">
+                    When closed, BerryMaster minimizes to the Windows taskbar / system tray to fire precise watering and harvest alarms in the background.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                role="switch"
+                aria-checked={desktopMinimizeToTray}
+                onClick={() => setDesktopMinimizeToTray(!desktopMinimizeToTray)}
+                className={`
+                  relative
+                  h-7
+                  w-13
+                  shrink-0
+                  cursor-pointer
+                  rounded-full
+                  p-1
+                  transition-colors
+                  duration-200
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-emerald-500/40
+                  ${desktopMinimizeToTray ? "bg-emerald-500" : "bg-slate-700"}
+                `}
+              >
+                <span
+                  className={`
+                    block
+                    h-5
+                    w-5
+                    rounded-full
+                    bg-white
+                    shadow-md
+                    transition-transform
+                    duration-200
+                    ${desktopMinimizeToTray ? "translate-x-6" : "translate-x-0"}
+                  `}
+                />
+              </button>
+            </div>
+
+            {/* Always-on-Top Floating Mode Explanation */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-white/[0.08] bg-slate-950/40 light:bg-slate-50/80 p-6">
+              <div className="flex items-start gap-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-800 light:bg-slate-200 text-sky-400 border border-slate-700/50">
+                  <Pin className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2.5">
+                    <h3 className="text-sm font-bold text-white light:text-slate-900">
+                      Always-on-Top Floating Shortcut
+                    </h3>
+                    <span className="rounded-md bg-sky-500/10 px-2 py-0.5 text-[10px] font-bold text-sky-400 border border-sky-500/20">
+                      Ctrl + T
+                    </span>
+                  </div>
+                  <p className="mt-1 text-xs text-slate-400 light:text-slate-500 leading-relaxed max-w-xl">
+                    Press <kbd className="rounded bg-slate-800 px-1.5 py-0.5 font-mono text-[11px] text-slate-200 border border-slate-700">Ctrl + T</kbd> anytime on desktop to pin BerryMaster above your PokéMMO game client.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* 3 Event Filter Cards */}
+            <div className="grid gap-4 sm:grid-cols-3">
+              {/* Water Needed */}
+              <div className="flex items-center justify-between rounded-xl border border-white/[0.08] bg-slate-950/30 light:bg-slate-50/60 p-5 transition-all hover:border-white/[0.15]">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                    <Droplets className="h-4.5 w-4.5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-white light:text-slate-900">
+                      Water Needed
+                    </h4>
+                    <p className="text-[11px] text-slate-400 light:text-slate-500">
+                      Dry soil reminders
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={notifyOnWater}
+                  onClick={() => setNotifyOnWater(!notifyOnWater)}
+                  className={`
+                    relative
+                    h-6
+                    w-11
+                    shrink-0
+                    cursor-pointer
+                    rounded-full
+                    p-0.5
+                    transition-colors
+                    duration-200
+                    ${notifyOnWater ? "bg-emerald-500" : "bg-slate-700"}
+                  `}
+                >
+                  <span
+                    className={`
+                      block
+                      h-5
+                      w-5
+                      rounded-full
+                      bg-white
+                      shadow-sm
+                      transition-transform
+                      duration-200
+                      ${notifyOnWater ? "translate-x-5" : "translate-x-0"}
+                    `}
+                  />
+                </button>
+              </div>
+
+              {/* Harvest Ready */}
+              <div className="flex items-center justify-between rounded-xl border border-white/[0.08] bg-slate-950/30 light:bg-slate-50/60 p-5 transition-all hover:border-white/[0.15]">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                    <Sparkles className="h-4.5 w-4.5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-white light:text-slate-900">
+                      Harvest Ready
+                    </h4>
+                    <p className="text-[11px] text-slate-400 light:text-slate-500">
+                      Ripe crop alerts
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={notifyOnHarvest}
+                  onClick={() => setNotifyOnHarvest(!notifyOnHarvest)}
+                  className={`
+                    relative
+                    h-6
+                    w-11
+                    shrink-0
+                    cursor-pointer
+                    rounded-full
+                    p-0.5
+                    transition-colors
+                    duration-200
+                    ${notifyOnHarvest ? "bg-emerald-500" : "bg-slate-700"}
+                  `}
+                >
+                  <span
+                    className={`
+                      block
+                      h-5
+                      w-5
+                      rounded-full
+                      bg-white
+                      shadow-sm
+                      transition-transform
+                      duration-200
+                      ${notifyOnHarvest ? "translate-x-5" : "translate-x-0"}
+                    `}
+                  />
+                </button>
+              </div>
+
+              {/* Wilt Warnings */}
+              <div className="flex items-center justify-between rounded-xl border border-white/[0.08] bg-slate-950/30 light:bg-slate-50/60 p-5 transition-all hover:border-white/[0.15]">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                    <ShieldAlert className="h-4.5 w-4.5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-white light:text-slate-900">
+                      Wilt Warnings
+                    </h4>
+                    <p className="text-[11px] text-slate-400 light:text-slate-500">
+                      Expiring plant alarms
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={notifyOnWilt}
+                  onClick={() => setNotifyOnWilt(!notifyOnWilt)}
+                  className={`
+                    relative
+                    h-6
+                    w-11
+                    shrink-0
+                    cursor-pointer
+                    rounded-full
+                    p-0.5
+                    transition-colors
+                    duration-200
+                    ${notifyOnWilt ? "bg-emerald-500" : "bg-slate-700"}
+                  `}
+                >
+                  <span
+                    className={`
+                      block
+                      h-5
+                      w-5
+                      rounded-full
+                      bg-white
+                      shadow-sm
+                      transition-transform
+                      duration-200
+                      ${notifyOnWilt ? "translate-x-5" : "translate-x-0"}
+                    `}
+                  />
+                </button>
+              </div>
+            </div>
+
+            {/* Test Notification Row */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04] p-6">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  <Activity className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white light:text-slate-900">
+                    Test Notification Alert
+                  </h3>
+                  <p className="mt-0.5 text-xs text-slate-400 light:text-slate-500 leading-relaxed max-w-lg">
+                    Dispatch an instant test notification to check your taskbar alerts and background alarms.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                disabled={isSendingTest}
+                onClick={handleSendTestNotification}
+                className="
+                  inline-flex
+                  items-center
+                  justify-center
+                  gap-2
+                  rounded-xl
+                  border
+                  border-emerald-400/40
+                  bg-emerald-500
+                  px-6
+                  py-3
+                  text-xs
+                  font-bold
+                  text-slate-950
+                  transition-all
+                  hover:bg-emerald-400
+                  hover:shadow-lg
+                  hover:shadow-emerald-500/20
+                  active:scale-95
+                  disabled:opacity-60
+                  disabled:cursor-not-allowed
+                  shrink-0
+                  cursor-pointer
+                "
+              >
+                <Bell className={`h-4 w-4 ${isSendingTest ? "animate-pulse" : ""}`} />
+                <span>{isSendingTest ? "Sending Test..." : "Send Test Notification"}</span>
+              </button>
+            </div>
+
+            {testNotificationStatus && (
+              <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-3.5 text-xs font-medium text-emerald-300 flex items-center gap-2.5">
+                <span className="text-sm">ℹ️</span>
+                <span>{testNotificationStatus}</span>
+              </div>
+            )}
+          </div>
+        )}
+      </section>
+
+      {/* =====================================
+          5. Audio, Haptics & Screen
+      ===================================== */}
+      <section className="theme-card rounded-xl overflow-hidden shadow-xl backdrop-blur-xl border border-white/[0.08] light:border-slate-200/80 transition-all">
+        <button
+          type="button"
+          onClick={() => toggleSection("sound")}
+          className="w-full p-4 sm:p-6 md:p-8 flex items-center justify-between text-left transition-colors hover:bg-white/[0.02] light:hover:bg-slate-900/[0.02] cursor-pointer"
+        >
           <div className="flex items-center gap-3.5">
             <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400">
               <Music className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white light:text-slate-900">
-                Audio & Sound Chimes
-              </h2>
-              <p className="text-xs text-slate-400 light:text-slate-500">
-                Procedural audio chimes for watering, harvesting, and timer alarms.
-              </p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            role="switch"
-            aria-checked={soundEnabled}
-            onClick={handleToggleSound}
-            className={`
-              relative
-              h-7
-              w-13
-              shrink-0
-              cursor-pointer
-              rounded-full
-              p-1
-              transition-colors
-              duration-200
-              ${soundEnabled ? "bg-emerald-500" : "bg-slate-700"}
-            `}
-          >
-            <span
-              className={`
-                block
-                h-5
-                w-5
-                rounded-full
-                bg-white
-                shadow-md
-                transition-transform
-                duration-200
-                ${soundEnabled ? "translate-x-6" : "translate-x-0"}
-              `}
-            />
-          </button>
-        </div>
-
-        {/* Volume Slider & Previews */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-white/[0.08] bg-slate-950/40 light:bg-slate-50/80 p-6">
-          <div className="flex items-center gap-4 flex-1">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-800 text-emerald-400 border border-slate-700/50">
-              {soundEnabled ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5 text-slate-500" />}
-            </div>
-            <div className="flex-1 max-w-xs">
-              <div className="flex justify-between text-xs font-bold mb-1.5">
-                <span className="text-white light:text-slate-900">Chime Volume</span>
-                <span className="text-emerald-400">{Math.round(soundVolume * 100)}%</span>
-              </div>
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.05"
-                disabled={!soundEnabled}
-                value={soundVolume}
-                onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
-                className="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-400 disabled:opacity-40"
-              />
-            </div>
-          </div>
-
-          {/* Test Chime Buttons */}
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              disabled={!soundEnabled}
-              onClick={() => soundService.playWaterSound()}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-sky-500/30 bg-sky-500/10 hover:bg-sky-500/20 px-3 py-2 text-xs font-bold text-sky-300 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              <Droplets className="h-3.5 w-3.5" />
-              <span>Water Chime</span>
-            </button>
-            <button
-              type="button"
-              disabled={!soundEnabled}
-              onClick={() => soundService.playHarvestSound()}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 px-3 py-2 text-xs font-bold text-amber-300 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              <Sparkles className="h-3.5 w-3.5" />
-              <span>Harvest Fanfare</span>
-            </button>
-            <button
-              type="button"
-              disabled={!soundEnabled}
-              onClick={() => soundService.playAlertSound()}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 px-3 py-2 text-xs font-bold text-emerald-300 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              <Bell className="h-3.5 w-3.5" />
-              <span>Alert Ping</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Haptic Vibration Feedback Row */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-white/[0.08] bg-slate-950/40 light:bg-slate-50/80 p-6">
-          <div className="flex items-start gap-4">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-800 text-emerald-400 border border-slate-700/50">
-              <Vibrate className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2.5">
-                <h3 className="text-sm font-bold text-white light:text-slate-900">
-                  Haptic Vibration Feedback
-                </h3>
-                <span className="rounded-md bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/20">
-                  Mobile / Android
+              <div className="flex items-center gap-2">
+                <h2 className="text-base sm:text-lg font-bold text-white light:text-slate-900">
+                  Audio, Haptics & Screen
+                </h2>
+                <span className="hidden sm:inline-block rounded-md bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/20">
+                  Feedback
                 </span>
               </div>
-              <p className="mt-1 text-xs text-slate-400 light:text-slate-500 leading-relaxed max-w-xl">
-                Crisp tactile vibration pulses on Android when watering, harvesting, clicking buttons, and completing farming rounds.
+              <p className="text-xs text-slate-400 light:text-slate-500 line-clamp-1">
+                Procedural audio chimes, Android haptic vibrations, and screen wake lock.
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              disabled={!hapticEnabled}
-              onClick={() => hapticService.harvest()}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 px-3 py-1.5 text-xs font-bold text-emerald-300 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+          <div className="flex items-center gap-3 shrink-0">
+            <span className="hidden sm:inline-block rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 font-mono text-[11px] font-bold text-emerald-400">
+              {soundEnabled ? `${Math.round(soundVolume * 100)}% Volume` : "Muted"}
+            </span>
+            <div
+              className={`flex h-8 w-8 items-center justify-center rounded-lg border border-white/[0.08] bg-slate-900/60 text-slate-400 transition-transform duration-200 ${
+                openSections.sound
+                  ? "rotate-180 text-emerald-400 border-emerald-500/30"
+                  : ""
+              }`}
             >
-              <span>Test Pulse</span>
-            </button>
+              <ChevronDown className="h-4 w-4" />
+            </div>
+          </div>
+        </button>
 
-            <button
-              type="button"
-              role="switch"
-              aria-checked={hapticEnabled}
-              onClick={handleToggleHaptic}
-              className={`
-                relative
-                h-7
-                w-13
-                shrink-0
-                cursor-pointer
-                rounded-full
-                p-1
-                transition-colors
-                duration-200
-                focus:outline-none
-                focus:ring-2
-                focus:ring-emerald-500/40
-                ${hapticEnabled ? "bg-emerald-500" : "bg-slate-700"}
-              `}
-            >
-              <span
+        {openSections.sound && (
+          <div className="p-4 sm:p-8 pt-2 sm:pt-4 border-t border-white/[0.06] light:border-slate-200/80 flex flex-col gap-6">
+            {/* Master Sound Switch Row */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-white/[0.08] bg-slate-950/40 light:bg-slate-50/80 p-6">
+              <div className="flex items-start gap-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-800 text-emerald-400 border border-slate-700/50">
+                  <Volume2 className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white light:text-slate-900">
+                    Master Audio Chimes
+                  </h3>
+                  <p className="mt-1 text-xs text-slate-400 light:text-slate-500 leading-relaxed max-w-xl">
+                    Enable synthesized procedural chimes when watering, harvesting, and alerting.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                role="switch"
+                aria-checked={soundEnabled}
+                onClick={handleToggleSound}
                 className={`
-                  block
-                  h-5
-                  w-5
+                  relative
+                  h-7
+                  w-13
+                  shrink-0
+                  cursor-pointer
                   rounded-full
-                  bg-white
-                  shadow-md
-                  transition-transform
+                  p-1
+                  transition-colors
                   duration-200
-                  ${hapticEnabled ? "translate-x-6" : "translate-x-0"}
+                  ${soundEnabled ? "bg-emerald-500" : "bg-slate-700"}
                 `}
-              />
-            </button>
-          </div>
-        </div>
+              >
+                <span
+                  className={`
+                    block
+                    h-5
+                    w-5
+                    rounded-full
+                    bg-white
+                    shadow-md
+                    transition-transform
+                    duration-200
+                    ${soundEnabled ? "translate-x-6" : "translate-x-0"}
+                  `}
+                />
+              </button>
+            </div>
 
-        {/* Keep Screen Awake Row */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-white/[0.08] bg-slate-950/40 light:bg-slate-50/80 p-6">
-          <div className="flex items-start gap-4">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-800 text-emerald-400 border border-slate-700/50">
-              <Eye className="h-5 w-5" />
+            {/* Volume Slider & Previews */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-white/[0.08] bg-slate-950/40 light:bg-slate-50/80 p-6">
+              <div className="flex items-center gap-4 flex-1">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-800 text-emerald-400 border border-slate-700/50">
+                  {soundEnabled ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5 text-slate-500" />}
+                </div>
+                <div className="flex-1 max-w-xs">
+                  <div className="flex justify-between text-xs font-bold mb-1.5">
+                    <span className="text-white light:text-slate-900">Chime Volume</span>
+                    <span className="text-emerald-400">{Math.round(soundVolume * 100)}%</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    disabled={!soundEnabled}
+                    value={soundVolume}
+                    onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
+                    className="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-400 disabled:opacity-40"
+                  />
+                </div>
+              </div>
+
+              {/* Test Chime Buttons */}
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  disabled={!soundEnabled}
+                  onClick={() => soundService.playWaterSound()}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-sky-500/30 bg-sky-500/10 hover:bg-sky-500/20 px-3 py-2 text-xs font-bold text-sky-300 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <Droplets className="h-3.5 w-3.5" />
+                  <span>Water Chime</span>
+                </button>
+                <button
+                  type="button"
+                  disabled={!soundEnabled}
+                  onClick={() => soundService.playHarvestSound()}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 px-3 py-2 text-xs font-bold text-amber-300 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span>Harvest Fanfare</span>
+                </button>
+                <button
+                  type="button"
+                  disabled={!soundEnabled}
+                  onClick={() => soundService.playAlertSound()}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 px-3 py-2 text-xs font-bold text-emerald-300 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <Bell className="h-3.5 w-3.5" />
+                  <span>Alert Ping</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Haptic Vibration Feedback Row */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-white/[0.08] bg-slate-950/40 light:bg-slate-50/80 p-6">
+              <div className="flex items-start gap-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-800 text-emerald-400 border border-slate-700/50">
+                  <Vibrate className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2.5">
+                    <h3 className="text-sm font-bold text-white light:text-slate-900">
+                      Haptic Vibration Feedback
+                    </h3>
+                    <span className="rounded-md bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/20">
+                      Mobile / Android
+                    </span>
+                  </div>
+                  <p className="mt-1 text-xs text-slate-400 light:text-slate-500 leading-relaxed max-w-xl">
+                    Crisp tactile vibration pulses on Android when watering, harvesting, clicking buttons, and completing farming rounds.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  disabled={!hapticEnabled}
+                  onClick={() => hapticService.harvest()}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 px-3 py-1.5 text-xs font-bold text-emerald-300 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <span>Test Pulse</span>
+                </button>
+
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={hapticEnabled}
+                  onClick={handleToggleHaptic}
+                  className={`
+                    relative
+                    h-7
+                    w-13
+                    shrink-0
+                    cursor-pointer
+                    rounded-full
+                    p-1
+                    transition-colors
+                    duration-200
+                    focus:outline-none
+                    focus:ring-2
+                    focus:ring-emerald-500/40
+                    ${hapticEnabled ? "bg-emerald-500" : "bg-slate-700"}
+                  `}
+                >
+                  <span
+                    className={`
+                      block
+                      h-5
+                      w-5
+                      rounded-full
+                      bg-white
+                      shadow-md
+                      transition-transform
+                      duration-200
+                      ${hapticEnabled ? "translate-x-6" : "translate-x-0"}
+                    `}
+                  />
+                </button>
+              </div>
+            </div>
+
+            {/* Keep Screen Awake Row */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-white/[0.08] bg-slate-950/40 light:bg-slate-50/80 p-6">
+              <div className="flex items-start gap-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-800 text-emerald-400 border border-slate-700/50">
+                  <Eye className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2.5">
+                    <h3 className="text-sm font-bold text-white light:text-slate-900">
+                      Keep Screen Awake
+                    </h3>
+                    <span className="rounded-md bg-sky-500/10 px-2 py-0.5 text-[10px] font-bold text-sky-400 border border-sky-500/20">
+                      Screen Lock
+                    </span>
+                    {wakeLockActive && (
+                      <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
+                    )}
+                  </div>
+                  <p className="mt-1 text-xs text-slate-400 light:text-slate-500 leading-relaxed max-w-xl">
+                    Prevents your mobile or tablet screen from sleeping or timing out while farming in PokéMMO.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                role="switch"
+                aria-checked={wakeLockActive}
+                onClick={handleToggleWakeLock}
+                className={`
+                  relative
+                  h-7
+                  w-13
+                  shrink-0
+                  cursor-pointer
+                  rounded-full
+                  p-1
+                  transition-colors
+                  duration-200
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-emerald-500/40
+                  ${wakeLockActive ? "bg-emerald-500" : "bg-slate-700"}
+                `}
+              >
+                <span
+                  className={`
+                    block
+                    h-5
+                    w-5
+                    rounded-full
+                    bg-white
+                    shadow-md
+                    transition-transform
+                    duration-200
+                    ${wakeLockActive ? "translate-x-6" : "translate-x-0"}
+                  `}
+                />
+              </button>
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* =====================================
+          6. Data Management & Backups
+      ===================================== */}
+      <section className="theme-card rounded-xl overflow-hidden shadow-xl backdrop-blur-xl border border-white/[0.08] light:border-slate-200/80 transition-all">
+        <button
+          type="button"
+          onClick={() => toggleSection("data")}
+          className="w-full p-4 sm:p-6 md:p-8 flex items-center justify-between text-left transition-colors hover:bg-white/[0.02] light:hover:bg-slate-900/[0.02] cursor-pointer"
+        >
+          <div className="flex items-center gap-3.5">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400">
+              <Database className="h-5 w-5" />
             </div>
             <div>
-              <div className="flex items-center gap-2.5">
-                <h3 className="text-sm font-bold text-white light:text-slate-900">
-                  Keep Screen Awake
-                </h3>
-                <span className="rounded-md bg-sky-500/10 px-2 py-0.5 text-[10px] font-bold text-sky-400 border border-sky-500/20">
-                  Screen Lock
+              <div className="flex items-center gap-2">
+                <h2 className="text-base sm:text-lg font-bold text-white light:text-slate-900">
+                  Data Management & Backups
+                </h2>
+                <span className="hidden sm:inline-block rounded-md bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/20">
+                  Storage
                 </span>
-                {wakeLockActive && (
-                  <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-                )}
               </div>
-              <p className="mt-1 text-xs text-slate-400 light:text-slate-500 leading-relaxed max-w-xl">
-                Prevents your mobile or tablet screen from sleeping or timing out while farming in PokéMMO.
+              <p className="text-xs text-slate-400 light:text-slate-500 line-clamp-1">
+                Export, import, and backup your local characters, favorites, and farming logs.
               </p>
             </div>
           </div>
 
-          <button
-            type="button"
-            role="switch"
-            aria-checked={wakeLockActive}
-            onClick={handleToggleWakeLock}
-            className={`
-              relative
-              h-7
-              w-13
-              shrink-0
-              cursor-pointer
-              rounded-full
-              p-1
-              transition-colors
-              duration-200
-              focus:outline-none
-              focus:ring-2
-              focus:ring-emerald-500/40
-              ${wakeLockActive ? "bg-emerald-500" : "bg-slate-700"}
-            `}
-          >
-            <span
-              className={`
-                block
-                h-5
-                w-5
-                rounded-full
-                bg-white
-                shadow-md
-                transition-transform
-                duration-200
-                ${wakeLockActive ? "translate-x-6" : "translate-x-0"}
-              `}
+          <div className="flex items-center gap-3 shrink-0">
+            <span className="hidden sm:inline-block rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 font-mono text-[11px] font-bold text-emerald-400">
+              JSON Backup
+            </span>
+            <div
+              className={`flex h-8 w-8 items-center justify-center rounded-lg border border-white/[0.08] bg-slate-900/60 text-slate-400 transition-transform duration-200 ${
+                openSections.data
+                  ? "rotate-180 text-emerald-400 border-emerald-500/30"
+                  : ""
+              }`}
+            >
+              <ChevronDown className="h-4 w-4" />
+            </div>
+          </div>
+        </button>
+
+        {openSections.data && (
+          <div className="p-4 sm:p-8 pt-2 sm:pt-4 border-t border-white/[0.06] light:border-slate-200/80 flex flex-col gap-6">
+            <div className="grid gap-4 md:grid-cols-3">
+              {/* Export Card */}
+              <div className="flex flex-col justify-between rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04] p-6 transition-all hover:border-emerald-500/40">
+                <div>
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <Download className="h-5 w-5" />
+                  </div>
+
+                  <h3 className="mt-4 text-sm font-bold text-white light:text-slate-900">
+                    Export Data
+                  </h3>
+
+                  <p className="mt-1 text-xs text-slate-400 light:text-slate-500 leading-relaxed">
+                    Save a full JSON backup of all characters, favorites, and activity history to disk.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  disabled={isExporting}
+                  onClick={handleExportData}
+                  className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-500/20 px-5 py-3.5 text-sm font-bold text-emerald-300 transition-all hover:bg-emerald-500 hover:text-slate-950 hover:shadow-md hover:shadow-emerald-500/20 active:scale-[0.98] disabled:opacity-60 cursor-pointer"
+                >
+                  <Download className={`h-4.5 w-4.5 ${isExporting ? "animate-bounce" : ""}`} />
+                  <span>{isExporting ? "Exporting Backup..." : "Download Backup"}</span>
+                </button>
+              </div>
+
+              {/* Import Card */}
+              <div className="flex flex-col justify-between rounded-xl border border-white/[0.08] bg-slate-950/40 light:bg-slate-50 p-6 transition-all hover:border-white/[0.15]">
+                <div>
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-800 light:bg-slate-200 text-slate-300 light:text-slate-700 border border-slate-700/50">
+                    <Upload className="h-5 w-5" />
+                  </div>
+
+                  <h3 className="mt-4 text-sm font-bold text-white light:text-slate-900">
+                    Import Data
+                  </h3>
+
+                  <p className="mt-1 text-xs text-slate-400 light:text-slate-500 leading-relaxed">
+                    Restore characters and database records from a previously exported backup file.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleImportClick}
+                  className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-800/80 px-5 py-3.5 text-sm font-bold text-slate-200 hover:bg-slate-700 hover:text-white transition-all active:scale-[0.98] cursor-pointer"
+                >
+                  <Upload className="h-4.5 w-4.5" />
+                  Restore Backup
+                </button>
+              </div>
+
+              {/* Clear Activity Card */}
+              <div className="flex flex-col justify-between rounded-xl border border-rose-500/20 bg-rose-500/[0.03] p-6 transition-all hover:border-rose-500/40">
+                <div>
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                    <Trash2 className="h-5 w-5" />
+                  </div>
+
+                  <h3 className="mt-4 text-sm font-bold text-rose-400">
+                    Clear Activity
+                  </h3>
+
+                  <p className="mt-1 text-xs text-slate-400 light:text-slate-500 leading-relaxed">
+                    Wipe logged farming activity timestamps while leaving all characters intact.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsClearActivitiesOpen(true)}
+                  className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-5 py-3.5 text-sm font-bold text-rose-300 transition-all hover:bg-rose-500 hover:text-white hover:shadow-md hover:shadow-rose-500/20 active:scale-[0.98] cursor-pointer"
+                >
+                  <Trash2 className="h-4.5 w-4.5" />
+                  Clear Logs
+                </button>
+              </div>
+            </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json,application/json"
+              onChange={handleFileSelected}
+              className="hidden"
             />
-          </button>
-        </div>
-      </section>
 
-      {/* =====================================
-          4. Data Management & Backups
-      ===================================== */}
-      <section
-        className="
-          theme-card
-          rounded-xl
-          p-4
-          sm:p-8
-          md:p-10
-          shadow-xl
-          backdrop-blur-xl
-          flex
-          flex-col
-          gap-7
-        "
-      >
-        <div className="flex items-center gap-3.5">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-500/25 bg-emerald-500/10 text-emerald-400">
-            <Database className="h-5 w-5" />
-          </div>
-          <div>
-            <h2 className="text-lg font-bold text-white light:text-slate-900">
-              Data Management & Backups
-            </h2>
-            <p className="text-xs text-slate-400 light:text-slate-500">
-              Export, import, and backup your local characters, favorites, and farming logs.
-            </p>
-          </div>
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-3">
-          {/* Export Card */}
-          <div className="flex flex-col justify-between rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04] p-6 transition-all hover:border-emerald-500/40">
-            <div>
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                <Download className="h-5 w-5" />
+            {exportMessage && (
+              <div
+                className={`rounded-xl border px-5 py-3.5 text-xs font-medium ${
+                  exportError
+                    ? "border-rose-500/30 bg-rose-500/10 text-rose-400"
+                    : "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                }`}
+              >
+                {exportMessage}
               </div>
+            )}
 
-              <h3 className="mt-4 text-sm font-bold text-white light:text-slate-900">
-                Export Data
-              </h3>
-
-              <p className="mt-1 text-xs text-slate-400 light:text-slate-500 leading-relaxed">
-                Save a full JSON backup of all characters, favorites, and activity history to disk.
-              </p>
-            </div>
-
-            <button
-              type="button"
-              disabled={isExporting}
-              onClick={handleExportData}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-500/20 px-5 py-3.5 text-sm font-bold text-emerald-300 transition-all hover:bg-emerald-500 hover:text-slate-950 hover:shadow-md hover:shadow-emerald-500/20 active:scale-[0.98] disabled:opacity-60 cursor-pointer"
-            >
-              <Download className={`h-4.5 w-4.5 ${isExporting ? "animate-bounce" : ""}`} />
-              <span>{isExporting ? "Exporting Backup..." : "Download Backup"}</span>
-            </button>
-          </div>
-
-          {/* Import Card */}
-          <div className="flex flex-col justify-between rounded-xl border border-white/[0.08] bg-slate-950/40 light:bg-slate-50 p-6 transition-all hover:border-white/[0.15]">
-            <div>
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-800 light:bg-slate-200 text-slate-300 light:text-slate-700 border border-slate-700/50">
-                <Upload className="h-5 w-5" />
+            {importMessage && (
+              <div
+                className={`rounded-xl border px-5 py-3.5 text-xs font-medium ${
+                  importError
+                    ? "border-rose-500/30 bg-rose-500/10 text-rose-400"
+                    : "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                }`}
+              >
+                {importMessage}
               </div>
-
-              <h3 className="mt-4 text-sm font-bold text-white light:text-slate-900">
-                Import Data
-              </h3>
-
-              <p className="mt-1 text-xs text-slate-400 light:text-slate-500 leading-relaxed">
-                Restore characters and database records from a previously exported backup file.
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={handleImportClick}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-800/80 px-5 py-3.5 text-sm font-bold text-slate-200 hover:bg-slate-700 hover:text-white transition-all active:scale-[0.98] cursor-pointer"
-            >
-              <Upload className="h-4.5 w-4.5" />
-              Restore Backup
-            </button>
-          </div>
-
-          {/* Clear Activity Card */}
-          <div className="flex flex-col justify-between rounded-xl border border-rose-500/20 bg-rose-500/[0.03] p-6 transition-all hover:border-rose-500/40">
-            <div>
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20">
-                <Trash2 className="h-5 w-5" />
-              </div>
-
-              <h3 className="mt-4 text-sm font-bold text-rose-400">
-                Clear Activity
-              </h3>
-
-              <p className="mt-1 text-xs text-slate-400 light:text-slate-500 leading-relaxed">
-                Wipe logged farming activity timestamps while leaving all characters intact.
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setIsClearActivitiesOpen(true)}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-5 py-3.5 text-sm font-bold text-rose-300 transition-all hover:bg-rose-500 hover:text-white hover:shadow-md hover:shadow-rose-500/20 active:scale-[0.98] cursor-pointer"
-            >
-              <Trash2 className="h-4.5 w-4.5" />
-              Clear Logs
-            </button>
-          </div>
-        </div>
-
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".json,application/json"
-          onChange={handleFileSelected}
-          className="hidden"
-        />
-
-        {exportMessage && (
-          <div
-            className={`rounded-xl border px-5 py-3.5 text-xs font-medium ${
-              exportError
-                ? "border-rose-500/30 bg-rose-500/10 text-rose-400"
-                : "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
-            }`}
-          >
-            {exportMessage}
-          </div>
-        )}
-
-        {importMessage && (
-          <div
-            className={`rounded-xl border px-5 py-3.5 text-xs font-medium ${
-              importError
-                ? "border-rose-500/30 bg-rose-500/10 text-rose-400"
-                : "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
-            }`}
-          >
-            {importMessage}
+            )}
           </div>
         )}
       </section>
 
       {/* =====================================
-          4. App Updates & Downloads
+          7. App Updates & Downloads
       ===================================== */}
-      <section
-        className="
-          theme-card
-          rounded-xl
-          p-4
-          sm:p-8
-          md:p-10
-          shadow-xl
-          backdrop-blur-xl
-          flex
-          flex-col
-          gap-7
-        "
-      >
-        <div className="flex items-center justify-between">
+      <section className="theme-card rounded-xl overflow-hidden shadow-xl backdrop-blur-xl border border-white/[0.08] light:border-slate-200/80 transition-all">
+        <button
+          type="button"
+          onClick={() => toggleSection("updates")}
+          className="w-full p-4 sm:p-6 md:p-8 flex items-center justify-between text-left transition-colors hover:bg-white/[0.02] light:hover:bg-slate-900/[0.02] cursor-pointer"
+        >
           <div className="flex items-center gap-3.5">
             <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-sky-500/25 bg-sky-500/10 text-sky-400">
               <RefreshCw className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white light:text-slate-900">
-                App Updates & Downloads
-              </h2>
-              <p className="text-xs text-slate-400 light:text-slate-500">
-                Download the latest desktop installer (EXE), Android APK, or check for online updates.
+              <div className="flex items-center gap-2">
+                <h2 className="text-base sm:text-lg font-bold text-white light:text-slate-900">
+                  App Updates & Downloads
+                </h2>
+                <span className="hidden sm:inline-block rounded-md bg-sky-500/10 px-2 py-0.5 text-[10px] font-bold text-sky-400 border border-sky-500/20">
+                  Releases
+                </span>
+              </div>
+              <p className="text-xs text-slate-400 light:text-slate-500 line-clamp-1">
+                Download latest desktop EXE, Android APK, or check online GitHub releases.
               </p>
             </div>
           </div>
 
-          <span className="rounded-full border border-sky-500/30 bg-sky-500/10 px-4 py-1.5 font-mono text-xs font-bold text-sky-400">
-            v{CURRENT_APP_VERSION}
-          </span>
-        </div>
+          <div className="flex items-center gap-3 shrink-0">
+            <span className="rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 font-mono text-[11px] font-bold text-sky-400">
+              v{CURRENT_APP_VERSION}
+            </span>
+            <div
+              className={`flex h-8 w-8 items-center justify-center rounded-lg border border-white/[0.08] bg-slate-900/60 text-slate-400 transition-transform duration-200 ${
+                openSections.updates
+                  ? "rotate-180 text-sky-400 border-sky-500/30"
+                  : ""
+              }`}
+            >
+              <ChevronDown className="h-4 w-4" />
+            </div>
+          </div>
+        </button>
 
-        {/* Prominent Quick-Download Cards (Windows EXE & Android APK) */}
-        <div className="grid gap-4 sm:grid-cols-2">
-          {/* Windows Setup EXE */}
-          <div className="flex flex-col justify-between rounded-2xl border border-sky-500/20 light:border-sky-200 bg-sky-950/20 light:bg-sky-50/60 p-6 transition-all hover:border-sky-500/40">
-            <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-sky-500/15 text-sky-400 light:text-sky-700 border border-sky-500/30">
-                <Monitor className="h-6 w-6" />
+        {openSections.updates && (
+          <div className="p-4 sm:p-8 pt-2 sm:pt-4 border-t border-white/[0.06] light:border-slate-200/80 flex flex-col gap-6">
+            {/* Prominent Quick-Download Cards (Windows EXE & Android APK) */}
+            <div className="grid gap-4 sm:grid-cols-2">
+              {/* Windows Setup EXE */}
+              <div className="flex flex-col justify-between rounded-2xl border border-sky-500/20 light:border-sky-200 bg-sky-950/20 light:bg-sky-50/60 p-6 transition-all hover:border-sky-500/40">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-sky-500/15 text-sky-400 light:text-sky-700 border border-sky-500/30">
+                    <Monitor className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold text-white light:text-slate-900">
+                      Windows Desktop Setup
+                    </h3>
+                    <p className="mt-1 text-xs text-slate-400 light:text-slate-600 leading-relaxed">
+                      Official Windows installer with automatic system tray support and local notifications.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => openExternalUrl(DOWNLOAD_LINKS.pcSetup)}
+                  className="
+                    mt-5
+                    flex
+                    w-full
+                    items-center
+                    justify-center
+                    gap-2.5
+                    rounded-xl
+                    border
+                    border-sky-400/40
+                    bg-sky-500
+                    px-6
+                    py-3.5
+                    text-sm
+                    font-bold
+                    text-slate-950
+                    shadow-md
+                    shadow-sky-500/20
+                    transition-all
+                    duration-200
+                    hover:bg-sky-400
+                    hover:shadow-lg
+                    hover:shadow-sky-500/30
+                    active:scale-[0.98]
+                    cursor-pointer
+                  "
+                >
+                  <Download className="h-4.5 w-4.5" />
+                  <span>Download Windows Setup (.exe)</span>
+                </button>
               </div>
-              <div>
-                <h3 className="text-base font-bold text-white light:text-slate-900">
-                  Windows Desktop Setup
-                </h3>
-                <p className="mt-1 text-xs text-slate-400 light:text-slate-600 leading-relaxed">
-                  Official Windows installer with automatic system tray support and local notifications.
-                </p>
+
+              {/* Android APK */}
+              <div className="flex flex-col justify-between rounded-2xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-950/20 light:bg-emerald-50/60 p-6 transition-all hover:border-emerald-500/40">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-400 light:text-emerald-700 border border-emerald-500/30">
+                    <Smartphone className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold text-white light:text-slate-900">
+                      Android Mobile APK
+                    </h3>
+                    <p className="mt-1 text-xs text-slate-400 light:text-slate-600 leading-relaxed">
+                      Universal Android mobile application with offline tracking and background alarms.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => openExternalUrl(DOWNLOAD_LINKS.androidApk)}
+                  className="
+                    mt-5
+                    flex
+                    w-full
+                    items-center
+                    justify-center
+                    gap-2.5
+                    rounded-xl
+                    border
+                    border-emerald-400/40
+                    bg-emerald-500
+                    px-6
+                    py-3.5
+                    text-sm
+                    font-bold
+                    text-slate-950
+                    shadow-md
+                    shadow-emerald-500/20
+                    transition-all
+                    duration-200
+                    hover:bg-emerald-400
+                    hover:shadow-lg
+                    hover:shadow-emerald-500/30
+                    active:scale-[0.98]
+                    cursor-pointer
+                  "
+                >
+                  <Download className="h-4.5 w-4.5" />
+                  <span>Download Android APK (.apk)</span>
+                </button>
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={() => openExternalUrl(DOWNLOAD_LINKS.pcSetup)}
-              className="
-                mt-5
-                flex
-                w-full
-                items-center
-                justify-center
-                gap-2.5
-                rounded-xl
-                border
-                border-sky-400/40
-                bg-sky-500
-                px-6
-                py-3.5
-                text-sm
-                font-bold
-                text-slate-950
-                shadow-md
-                shadow-sky-500/20
-                transition-all
-                duration-200
-                hover:bg-sky-400
-                hover:shadow-lg
-                hover:shadow-sky-500/30
-                active:scale-[0.98]
-                cursor-pointer
-              "
-            >
-              <Download className="h-4.5 w-4.5" />
-              <span>Download Windows Setup (.exe)</span>
-            </button>
-          </div>
-
-          {/* Android APK */}
-          <div className="flex flex-col justify-between rounded-2xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-950/20 light:bg-emerald-50/60 p-6 transition-all hover:border-emerald-500/40">
-            <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-400 light:text-emerald-700 border border-emerald-500/30">
-                <Smartphone className="h-6 w-6" />
-              </div>
+            {/* Update Check Control Row */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-white/[0.08] light:border-slate-200 bg-slate-950/40 light:bg-slate-50/80 p-6">
               <div>
-                <h3 className="text-base font-bold text-white light:text-slate-900">
-                  Android Mobile APK
+                <h3 className="text-sm font-bold text-white light:text-slate-900">
+                  Check for Online Updates
                 </h3>
-                <p className="mt-1 text-xs text-slate-400 light:text-slate-600 leading-relaxed">
-                  Universal Android mobile application with offline tracking and background alarms.
-                </p>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => openExternalUrl(DOWNLOAD_LINKS.androidApk)}
-              className="
-                mt-5
-                flex
-                w-full
-                items-center
-                justify-center
-                gap-2.5
-                rounded-xl
-                border
-                border-emerald-400/40
-                bg-emerald-500
-                px-6
-                py-3.5
-                text-sm
-                font-bold
-                text-slate-950
-                shadow-md
-                shadow-emerald-500/20
-                transition-all
-                duration-200
-                hover:bg-emerald-400
-                hover:shadow-lg
-                hover:shadow-emerald-500/30
-                active:scale-[0.98]
-                cursor-pointer
-              "
-            >
-              <Download className="h-4.5 w-4.5" />
-              <span>Download Android APK (.apk)</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Update Check Control Row */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-white/[0.08] light:border-slate-200 bg-slate-950/40 light:bg-slate-50/80 p-6">
-          <div>
-            <h3 className="text-sm font-bold text-white light:text-slate-900">
-              Check for Online Updates
-            </h3>
-            <p className="mt-1 text-xs text-slate-400 light:text-slate-500 max-w-md leading-relaxed">
-              Verify with GitHub Releases to check if a newer patch or feature version has been published.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3 flex-wrap shrink-0">
-            <button
-              type="button"
-              onClick={() => openExternalUrl(DOWNLOAD_LINKS.allReleases)}
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-700 light:border-slate-300 bg-slate-800/80 light:bg-white px-6 py-3.5 text-sm font-bold text-slate-200 light:text-slate-800 hover:bg-slate-700 light:hover:bg-slate-100 hover:text-white light:hover:text-slate-900 transition-all cursor-pointer active:scale-95 shadow-xs"
-            >
-              <ExternalLink className="h-4.5 w-4.5" />
-              <span>All Releases</span>
-            </button>
-
-
-            <button
-              type="button"
-              disabled={isCheckingUpdate}
-              onClick={handleCheckUpdate}
-              className="inline-flex items-center gap-2.5 rounded-xl border border-sky-400/30 light:border-sky-300 bg-sky-500/20 light:bg-sky-100 px-6 py-3.5 text-sm font-bold text-sky-300 light:text-sky-800 hover:bg-sky-500 hover:text-slate-950 light:hover:text-slate-950 transition-all active:scale-95 disabled:opacity-50 cursor-pointer shadow-xs"
-            >
-              <RefreshCw className={`h-4.5 w-4.5 ${isCheckingUpdate ? "animate-spin" : ""}`} />
-              <span>{isCheckingUpdate ? "Checking GitHub..." : "Check for Updates"}</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Update Check Results */}
-        {updateResult && (
-          <div
-            className={`rounded-2xl border p-6 sm:p-7 ${
-              updateResult.hasUpdate
-                ? "border-emerald-500/40 bg-emerald-950/20 light:bg-emerald-50/70 shadow-lg shadow-emerald-500/10"
-                : updateResult.error
-                ? "border-rose-500/30 bg-rose-500/10"
-                : "border-sky-500/30 bg-sky-500/10"
-            }`}
-          >
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
-              <div>
-                <p className="text-base font-bold text-white light:text-slate-900">
-                  {updateResult.error
-                    ? "Update Check Failed"
-                    : updateResult.hasUpdate
-                    ? `🎉 New Version Available: ${updateResult.latestVersion}`
-                    : "✨ You are running the latest version"}
-                </p>
-                <p className="mt-1 text-xs sm:text-sm text-slate-300 light:text-slate-600 leading-relaxed">
-                  {updateResult.error ||
-                    (updateResult.hasUpdate
-                      ? `Version ${updateResult.latestVersion} has been released on GitHub with new improvements.`
-                      : `BerryMaster v${CURRENT_APP_VERSION} is currently up to date.`)}
+                <p className="mt-1 text-xs text-slate-400 light:text-slate-500 max-w-md leading-relaxed">
+                  Verify with GitHub Releases to check if a newer patch or feature version has been published.
                 </p>
               </div>
 
               <div className="flex items-center gap-3 flex-wrap shrink-0">
-                {updateResult.hasUpdate && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const apkAsset = updateResult.release?.assets?.find((a) =>
-                        a.name.toLowerCase().endsWith(".apk")
-                      );
-                      openExternalUrl(
-                        apkAsset?.downloadUrl || DOWNLOAD_LINKS.androidApk
-                      );
-                    }}
-                    className="inline-flex items-center gap-2 rounded-xl border border-emerald-400/40 bg-emerald-500 px-6 py-3.5 text-sm font-bold text-slate-950 hover:bg-emerald-400 transition-all shadow-md shadow-emerald-500/20 active:scale-95 cursor-pointer"
-                  >
-                    <Download className="h-4.5 w-4.5" />
-                    <span>Download APK ({updateResult.latestVersion})</span>
-                  </button>
-                )}
-                {updateResult.release?.htmlUrl && (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      openExternalUrl(updateResult.release?.htmlUrl || "")
-                    }
-                    className="inline-flex items-center gap-2 rounded-xl border border-slate-700 light:border-slate-300 bg-slate-800/80 light:bg-white px-5 py-3.5 text-sm font-bold text-slate-200 light:text-slate-800 hover:bg-slate-700 transition-all active:scale-95 cursor-pointer"
-                  >
-                    <ExternalLink className="h-4.5 w-4.5" />
-                    <span>View Release</span>
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={() => openExternalUrl(DOWNLOAD_LINKS.allReleases)}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-700 light:border-slate-300 bg-slate-800/80 light:bg-white px-6 py-3.5 text-sm font-bold text-slate-200 light:text-slate-800 hover:bg-slate-700 light:hover:bg-slate-100 hover:text-white light:hover:text-slate-900 transition-all cursor-pointer active:scale-95 shadow-xs"
+                >
+                  <ExternalLink className="h-4.5 w-4.5" />
+                  <span>All Releases</span>
+                </button>
+
+                <button
+                  type="button"
+                  disabled={isCheckingUpdate}
+                  onClick={handleCheckUpdate}
+                  className="inline-flex items-center gap-2.5 rounded-xl border border-sky-400/30 light:border-sky-300 bg-sky-500/20 light:bg-sky-100 px-6 py-3.5 text-sm font-bold text-sky-300 light:text-sky-800 hover:bg-sky-500 hover:text-slate-950 light:hover:text-slate-950 transition-all active:scale-95 disabled:opacity-50 cursor-pointer shadow-xs"
+                >
+                  <RefreshCw className={`h-4.5 w-4.5 ${isCheckingUpdate ? "animate-spin" : ""}`} />
+                  <span>{isCheckingUpdate ? "Checking GitHub..." : "Check for Updates"}</span>
+                </button>
               </div>
             </div>
+
+            {/* Update Check Results */}
+            {updateResult && (
+              <div
+                className={`rounded-2xl border p-6 sm:p-7 ${
+                  updateResult.hasUpdate
+                    ? "border-emerald-500/40 bg-emerald-950/20 light:bg-emerald-50/70 shadow-lg shadow-emerald-500/10"
+                    : updateResult.error
+                    ? "border-rose-500/30 bg-rose-500/10"
+                    : "border-sky-500/30 bg-sky-500/10"
+                }`}
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+                  <div>
+                    <p className="text-base font-bold text-white light:text-slate-900">
+                      {updateResult.error
+                        ? "Update Check Failed"
+                        : updateResult.hasUpdate
+                        ? `🎉 New Version Available: ${updateResult.latestVersion}`
+                        : "✨ You are running the latest version"}
+                    </p>
+                    <p className="mt-1 text-xs sm:text-sm text-slate-300 light:text-slate-600 leading-relaxed">
+                      {updateResult.error ||
+                        (updateResult.hasUpdate
+                          ? `Version ${updateResult.latestVersion} has been released on GitHub with new improvements.`
+                          : `BerryMaster v${CURRENT_APP_VERSION} is currently up to date.`)}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-3 flex-wrap shrink-0">
+                    {updateResult.hasUpdate && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const apkAsset = updateResult.release?.assets?.find((a) =>
+                            a.name.toLowerCase().endsWith(".apk")
+                          );
+                          openExternalUrl(
+                            apkAsset?.downloadUrl || DOWNLOAD_LINKS.androidApk
+                          );
+                        }}
+                        className="inline-flex items-center gap-2 rounded-xl border border-emerald-400/40 bg-emerald-500 px-6 py-3.5 text-sm font-bold text-slate-950 hover:bg-emerald-400 transition-all shadow-md shadow-emerald-500/20 active:scale-95 cursor-pointer"
+                      >
+                        <Download className="h-4.5 w-4.5" />
+                        <span>Download APK ({updateResult.latestVersion})</span>
+                      </button>
+                    )}
+                    {updateResult.release?.htmlUrl && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          openExternalUrl(updateResult.release?.htmlUrl || "")
+                        }
+                        className="inline-flex items-center gap-2 rounded-xl border border-slate-700 light:border-slate-300 bg-slate-800/80 light:bg-white px-5 py-3.5 text-sm font-bold text-slate-200 light:text-slate-800 hover:bg-slate-700 transition-all active:scale-95 cursor-pointer"
+                      >
+                        <ExternalLink className="h-4.5 w-4.5" />
+                        <span>View Release</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </section>
 
       {/* =====================================
-          5. Advanced & Danger Zone
+          8. Advanced & Danger Zone
       ===================================== */}
-      <div className="flex flex-col gap-6">
-        {/* Developer Mode Card */}
-        <section className="theme-card rounded-xl border border-amber-500/20 light:border-amber-200 bg-amber-500/[0.03] light:bg-amber-50/40 p-8 sm:p-9 backdrop-blur-xl">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
-            <div className="flex items-start gap-4">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                <Wrench className="h-5 w-5" />
-              </div>
-              <div>
-                <h2 className="text-base font-bold text-white light:text-slate-900">
-                  Developer Mode
-                </h2>
-                <p className="mt-1 text-xs text-slate-400 light:text-slate-500 max-w-xl leading-relaxed">
-                  Reveal developer debug tools and test items (including the Debug Berry) in charts and catalogs.
-                </p>
-                {showDeveloperBerries && (
-                  <p className="mt-2 text-xs font-semibold text-amber-400 flex items-center gap-1.5">
-                    <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
-                    Developer features are currently active
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <button
-              type="button"
-              role="switch"
-              aria-checked={showDeveloperBerries}
-              onClick={() => setShowDeveloperBerries(!showDeveloperBerries)}
-              className={`
-                relative
-                h-7
-                w-13
-                shrink-0
-                cursor-pointer
-                rounded-full
-                p-1
-                transition-colors
-                duration-200
-                ${showDeveloperBerries ? "bg-emerald-500" : "bg-slate-700"}
-              `}
-            >
-              <span
-                className={`
-                  block
-                  h-5
-                  w-5
-                  rounded-full
-                  bg-white
-                  shadow-md
-                  transition-transform
-                  duration-200
-                  ${showDeveloperBerries ? "translate-x-6" : "translate-x-0"}
-                `}
-              />
-            </button>
-          </div>
-        </section>
-
-        {/* Danger Zone Card */}
-        <section className="theme-card rounded-xl border border-rose-500/30 light:border-rose-200 bg-rose-500/[0.03] light:bg-rose-50/40 p-8 sm:p-10 shadow-xl backdrop-blur-xl flex flex-col gap-6">
+      <section className="theme-card rounded-xl overflow-hidden shadow-xl backdrop-blur-xl border border-rose-500/20 light:border-rose-200/60 transition-all">
+        <button
+          type="button"
+          onClick={() => toggleSection("danger")}
+          className="w-full p-4 sm:p-6 md:p-8 flex items-center justify-between text-left transition-colors hover:bg-rose-500/[0.02] cursor-pointer"
+        >
           <div className="flex items-center gap-3.5">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-rose-500/25 bg-rose-500/10 text-rose-400">
               <ShieldAlert className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-rose-400">
-                Danger Zone
-              </h2>
-              <p className="text-xs text-slate-400 light:text-slate-500">
-                Irreversible actions that completely reset your application state.
+              <div className="flex items-center gap-2">
+                <h2 className="text-base sm:text-lg font-bold text-white light:text-slate-900">
+                  Advanced & Danger Zone
+                </h2>
+                <span className="hidden sm:inline-block rounded-md bg-rose-500/10 px-2 py-0.5 text-[10px] font-bold text-rose-400 border border-rose-500/20">
+                  System
+                </span>
+              </div>
+              <p className="text-xs text-slate-400 light:text-slate-500 line-clamp-1">
+                Developer tools, debug items toggle, and full factory application reset.
               </p>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-rose-500/20 bg-rose-500/[0.04] p-6">
-            <div>
-              <h3 className="text-sm font-bold text-white light:text-slate-900">
-                Reset BerryMaster Application
-              </h3>
-              <p className="mt-1 text-xs text-slate-400 light:text-slate-500 max-w-lg leading-relaxed">
-                Permanently erase all characters, planted plot timers, favorite berries, inventory, and settings from local storage.
-              </p>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setIsResetOpen(true)}
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-rose-500/40 bg-rose-500/20 px-6 py-3 text-xs font-bold text-rose-300 hover:bg-rose-500 hover:text-white transition-all shadow-lg hover:shadow-rose-500/25 active:scale-95 shrink-0 cursor-pointer"
+          <div className="flex items-center gap-3 shrink-0">
+            <span className="hidden sm:inline-block rounded-full border border-rose-500/30 bg-rose-500/10 px-3 py-1 font-mono text-[11px] font-bold text-rose-400">
+              {showDeveloperBerries ? "Dev Active" : "Default"}
+            </span>
+            <div
+              className={`flex h-8 w-8 items-center justify-center rounded-lg border border-white/[0.08] bg-slate-900/60 text-slate-400 transition-transform duration-200 ${
+                openSections.danger
+                  ? "rotate-180 text-rose-400 border-rose-500/30"
+                  : ""
+              }`}
             >
-              <ShieldAlert className="h-4 w-4" />
-              Reset Everything
-            </button>
+              <ChevronDown className="h-4 w-4" />
+            </div>
           </div>
-        </section>
-      </div>
+        </button>
+
+        {openSections.danger && (
+          <div className="p-4 sm:p-8 pt-2 sm:pt-4 border-t border-rose-500/10 light:border-rose-200/60 flex flex-col gap-6">
+            {/* Developer Mode Card */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-amber-500/20 light:border-amber-200 bg-amber-500/[0.03] light:bg-amber-50/40 p-6">
+              <div className="flex items-start gap-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                  <Wrench className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white light:text-slate-900">
+                    Developer Mode
+                  </h3>
+                  <p className="mt-1 text-xs text-slate-400 light:text-slate-500 max-w-xl leading-relaxed">
+                    Reveal developer debug tools and test items (including the Debug Berry) in charts and catalogs.
+                  </p>
+                  {showDeveloperBerries && (
+                    <p className="mt-2 text-xs font-semibold text-amber-400 flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
+                      Developer features are currently active
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <button
+                type="button"
+                role="switch"
+                aria-checked={showDeveloperBerries}
+                onClick={() => setShowDeveloperBerries(!showDeveloperBerries)}
+                className={`
+                  relative
+                  h-7
+                  w-13
+                  shrink-0
+                  cursor-pointer
+                  rounded-full
+                  p-1
+                  transition-colors
+                  duration-200
+                  ${showDeveloperBerries ? "bg-emerald-500" : "bg-slate-700"}
+                `}
+              >
+                <span
+                  className={`
+                    block
+                    h-5
+                    w-5
+                    rounded-full
+                    bg-white
+                    shadow-md
+                    transition-transform
+                    duration-200
+                    ${showDeveloperBerries ? "translate-x-6" : "translate-x-0"}
+                  `}
+                />
+              </button>
+            </div>
+
+            {/* Reset BerryMaster Application */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 rounded-xl border border-rose-500/20 bg-rose-500/[0.04] p-6">
+              <div>
+                <h3 className="text-sm font-bold text-white light:text-slate-900">
+                  Reset BerryMaster Application
+                </h3>
+                <p className="mt-1 text-xs text-slate-400 light:text-slate-500 max-w-lg leading-relaxed">
+                  Permanently erase all characters, planted plot timers, favorite berries, inventory, and settings from local storage.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsResetOpen(true)}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-rose-500/40 bg-rose-500/20 px-6 py-3 text-xs font-bold text-rose-300 hover:bg-rose-500 hover:text-white transition-all shadow-lg hover:shadow-rose-500/25 active:scale-95 shrink-0 cursor-pointer"
+              >
+                <ShieldAlert className="h-4 w-4" />
+                Reset Everything
+              </button>
+            </div>
+          </div>
+        )}
+      </section>
 
       {/* Clear Activities Confirmation */}
       <ConfirmDialog
